@@ -1,0 +1,1 @@
+CoinPool-TipBot
