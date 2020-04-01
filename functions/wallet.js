@@ -184,6 +184,29 @@ module.exports = {
                 }   
             });
         });
+    },
+
+    /* ------------------------------------------------------------------------------ */
+    // Get block chain info
+    /* ------------------------------------------------------------------------------ */
+
+    wallet_chain_info: function () {
+        return new Promise((resolve, reject) => {
+            coinClient.getblockchaininfo(function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_chain_info: Wallet query problem. (getblockchaininfo)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
+            });
+        });
     }
 
 };

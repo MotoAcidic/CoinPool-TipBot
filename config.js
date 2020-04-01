@@ -441,7 +441,8 @@ module.exports = {
             "walletprotocolversion": "Protocolversion",
             "walletconnections": "Connections",
             "walletblocks": "Blocks",
-            "walletdifficulty": "Difficulty"
+            "walletdifficulty": "Difficulty",
+            "walletbestblockhash": "Blockhash"
           }
     }
 };

@@ -2005,20 +2005,27 @@ module.exports = {
 
     command_version: async function(userID,userName,messageType,msg){
         var walletInfo = await wallet.wallet_get_info();
+        var walletChain = await wallet.wallet_chain_info();
         // If wallet not reachable
         if(walletInfo === 'error'){
             chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
             return;
         }
+        if (walletChain === 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+            return;
+        }
+
         var botVersion = config.bot.version;
         var walletVersion = walletInfo.version;
         var walletProtocolversion = walletInfo.protocolversion;
         var walletConnections = walletInfo.connections;
         var walletBlocks = walletInfo.blocks;
         var walletDifficulty = walletInfo.difficulty;
+        var walletBlockhash = walletChain.bestblockhash;
         //log.log_write_console(walletVersion);
         //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-        chat.chat_reply(msg,'embed',false,messageType,config.colors.success,false,config.messages.version.title,[[config.messages.version.botversion,botVersion,false],[config.messages.version.walletversion,walletVersion,true],[config.messages.version.walletprotocolversion,walletProtocolversion,true],[config.messages.version.walletconnections,walletConnections,true],[config.messages.version.walletblocks,walletBlocks,true],[config.messages.version.walletdifficulty,walletDifficulty,true]],false,false,false,false,false); 
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.version.title, [[config.messages.version.botversion, botVersion, false], [config.messages.version.walletversion, walletVersion, true], [config.messages.version.walletprotocolversion, walletProtocolversion, true], [config.messages.version.walletconnections, walletConnections, true], [config.messages.version.walletblocks, walletBlocks, true], [config.messages.version.walletdifficulty, walletDifficulty, true], [config.messages.version.walletbestblockhash, walletBlockhash, true]], false, false, false, false, false); 
         return;
     },
 
