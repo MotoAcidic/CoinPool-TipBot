@@ -2030,18 +2030,26 @@ module.exports = {
 
     command_chain: async function (userID, userName, messageType, msg) {
         var chainInfo = await wallet.wallet_chain_info();
+        var poolInfo = await wallet.wallet_pool_info();
         // If wallet not reachable
         if (chainInfo === 'error') {
             chat.chat_reply(msg, 'embed', userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
             return;
         }
+        if (poolInfo === 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.poolWalletOffline, false, false, false, false);
+            return;
+        }
+
+        var poolBlock = poolInfo.blocks;
+        var poolBlockhash = poolInfo.bestblockhash;
 
         var chainExplorerBlock = config.wallet.explorerBlockCount;
         var chainBlock = chainInfo.blocks;
         var chainBlockhash = chainInfo.bestblockhash;
         //log.log_write_console(chainBlockhash);
         //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp config.wallet.explorerLinkAddress+userDepositAddress
-        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockbot, chainBlock, true], [config.messages.chain.chainblockexplorer, chainExplorerBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, true]], false, false, false, false);
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockbot, chainBlock, true], [config.messages.chain.poolblockbot, poolBlock, true], [config.messages.chain.chainblockexplorer, chainExplorerBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, true], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
         return;
     },
 

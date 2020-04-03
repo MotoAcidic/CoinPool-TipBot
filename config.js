@@ -142,6 +142,7 @@ module.exports = {
         "notValidCommand": "This is not a valid command. Type **+help** for a list and try again.",
         "notAllowedCommand": "You are not allowed to use this command!",
         "walletOffline": "The wallet is not reachable. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
+        "poolWalletOffline": "The Pool wallet is not reachable. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "wentWrong": "Somethig went wrong with your request. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "comingSoon":"Coming soon!",
         "accountNotRegistered": "You are not registered. \nPlease type **+register** to create an account.",
@@ -452,8 +453,10 @@ module.exports = {
         },
         "chain": {
             "chainblockbot": "Current Block (Bot)",
-            "chainblockexplorer": "Current Block (Explorer)",
-            "chainbestblockhash": "Block hash (Bot)"
+            "chainblockexplorer": "Block (Explorer)",
+            "chainbestblockhash": "Block hash (Bot)",
+            "poolblockbot": "Current Block (Pool)",
+            "poolbestblockhash": "Block hash (Pool)"
 
         }
     }
