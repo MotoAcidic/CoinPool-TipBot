@@ -40,6 +40,10 @@ module.exports = {
         "user": "XXX", // Wallet username
         "password": "XXX", // Wallet password
         "port": "1234", // Wallet port
+        //"poolserver": "127.0.0.1", // Wallet server
+        //"pooluser": "XXX", // Wallet username
+        //"poolpassword": "XXX", // Wallet password
+        //"poolport": "1234", // Wallet port
         // TODO ENCRYPTION KEY FOR WALLET
         "coinSymbol": "Coin (CoinSymbol)", // Coin name
         "coinSymbolShort": "Symbol", // Coin name
@@ -55,7 +59,8 @@ module.exports = {
         "withdrawalsHistoryDisplayCount": 5, // How many withdrawals get shown on withdrawal history command !! Max value 5 !!
         "paymentHistoryCoun": 7, // How many payments get shown on withdrawals payments command !! Max value 7 !!
         "explorerLinkAddress": "https://explorer.link/#/address/", // Explorer link address for addresses
-        "explorerLinkTransaction": "ttps://explorer.link/#/tx/", // Explorer link transaction
+        "explorerLinkTransaction": "https://explorer.link/#/tx/", // Explorer link transaction
+        "explorerBlockCount": "https://explorer.link/api/getblockcount", // Explorers block count
         "transactionFee": 0.01, // Fee taken for a transaction a user makes - Change value also on help command
         "minWithdrawalValue": 0.00000001, // Minimum value for withdrawal
         "minTipValue": 0.00000001, // Minimum value for tip 
@@ -118,7 +123,8 @@ module.exports = {
         "stake": false,
         "unstake": false,
         "notify": true,
-        "version": true
+        "version": true,
+        "chain": true
     },
     "colors": {
         "normal": "0xecf0f1", // grey
@@ -273,6 +279,7 @@ module.exports = {
             "notifyTitle": "+notify <on/off>",
             "notifyValue": "Enable or disable to get mentioned by the bot.",
             "versionTitle": "+version || +v",
+            "chainTitle": "+chain || +c",
             "versionValue": "Get current bot and wallet information.",
             "admin": {
                 "title":"Admin commands",
@@ -441,8 +448,13 @@ module.exports = {
             "walletprotocolversion": "Protocolversion",
             "walletconnections": "Connections",
             "walletblocks": "Blocks",
-            "walletdifficulty": "Difficulty",
-            "walletbestblockhash": "Blockhash"
-          }
+            "walletdifficulty": "Difficulty"
+        },
+        "chain": {
+            "chainblockbot": "Current Block (Bot)",
+            "chainblockexplorer": "Current Block (Explorer)",
+            "chainbestblockhash": "Block hash (Bot)"
+
+        }
     }
 };

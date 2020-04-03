@@ -16,6 +16,7 @@ var log = require('./log.js');
 // A node.js library for communicating with Bitcoin daemon. -> https://www.npmjs.com/package/altcoin-rpc
 const Client = require('altcoin-rpc');
 const coinClient = new Client({ host: config.wallet.server, username: config.wallet.user, password: config.wallet.password, port: config.wallet.port });
+//const poolClient = new Client({ host: config.wallet.poolserver, username: config.wallet.pooluser, password: config.wallet.poolpassword, port: config.wallet.poolport });
 
 const Big = require('big.js'); // https://github.com/MikeMcl/big.js -> http://mikemcl.github.io/big.js/
 
@@ -192,9 +193,9 @@ module.exports = {
 
     wallet_chain_info: function () {
         return new Promise((resolve, reject) => {
-            coinClient.getblockchaininfo(function (error, result) {
+            coinClient.getBlockchainInfo(function (error, result) {
                 if (error) {
-                    var errorMessage = "wallet_chain_info: Wallet query problem. (getblockchaininfo)";
+                    var errorMessage = "wallet_chain_info: Wallet query problem. (getBlockchainInfo)";
                     if (config.bot.errorLogging) {
                         log.log_write_file(errorMessage);
                         log.log_write_file(error);
