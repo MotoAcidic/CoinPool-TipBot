@@ -921,7 +921,9 @@ module.exports = {
         if(config.commands.notify)
             enabledUserCommands.push([config.messages.help.notifyTitle,config.messages.help.notifyValue,false]);
         if(config.commands.version)
-            enabledUserCommands.push([config.messages.help.versionTitle,config.messages.help.versionValue,false]);
+            enabledUserCommands.push([config.messages.help.versionTitle, config.messages.help.versionValue, false]);
+        if (config.commands.chain)
+            enabledUserCommands.push([config.messages.help.chainTitle, config.messages.help.chainValue, false]);
         
         // Admin commands
         var enabledAdminCommands = []; 
@@ -2010,6 +2012,7 @@ module.exports = {
             chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
             return;
         }
+
         var botVersion = config.bot.version;
         var walletVersion = walletInfo.version;
         var walletProtocolversion = walletInfo.protocolversion;
@@ -2018,7 +2021,35 @@ module.exports = {
         var walletDifficulty = walletInfo.difficulty;
         //log.log_write_console(walletVersion);
         //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-        chat.chat_reply(msg,'embed',false,messageType,config.colors.success,false,config.messages.version.title,[[config.messages.version.botversion,botVersion,false],[config.messages.version.walletversion,walletVersion,true],[config.messages.version.walletprotocolversion,walletProtocolversion,true],[config.messages.version.walletconnections,walletConnections,true],[config.messages.version.walletblocks,walletBlocks,true],[config.messages.version.walletdifficulty,walletDifficulty,true]],false,false,false,false,false); 
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.version.title, [[config.messages.version.botversion, botVersion, false], [config.messages.version.walletversion, walletVersion, true], [config.messages.version.walletprotocolversion, walletProtocolversion, true], [config.messages.version.walletconnections, walletConnections, true], [config.messages.version.walletblocks, walletBlocks, true], [config.messages.version.walletdifficulty, walletDifficulty, true]], false, false, false, false, false); 
+        return;
+    },
+    /* ------------------------------------------------------------------------------ */
+    // !chain -> Get current bot and wallet infos
+    /* ------------------------------------------------------------------------------ */
+
+    command_chain: async function (userID, userName, messageType, msg) {
+        var chainInfo = await wallet.wallet_chain_info();
+        var poolInfo = await wallet.wallet_pool_info();
+        // If wallet not reachable
+        if (chainInfo === 'error') {
+            chat.chat_reply(msg, 'embed', userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
+            return;
+        }
+        if (poolInfo === 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.poolWalletOffline, false, false, false, false);
+            return;
+        }
+
+        var poolBlock = poolInfo.blocks;
+        var poolBlockhash = poolInfo.bestblockhash;
+
+        var chainExplorerBlock = config.wallet.explorerBlockCount;
+        var chainBlock = chainInfo.blocks;
+        var chainBlockhash = chainInfo.bestblockhash;
+        //log.log_write_console(chainBlockhash);
+        //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp config.wallet.explorerLinkAddress+userDepositAddress
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockbot, chainBlock, true], [config.messages.chain.poolblockbot, poolBlock, true], [config.messages.chain.chainblockexplorer, chainExplorerBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, true], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
         return;
     },
 
@@ -2249,6 +2280,11 @@ module.exports = {
             case 'version':
                 if(config.commands.version){
                     this.command_version(userID,userName,messageType,msg);
+                }
+                return;            
+            case 'chain':
+                if (config.commands.chain) {
+                    this.command_chain(userID, userName, messageType, msg);
                 }
                 return;
             case 'w':

@@ -34,6 +34,8 @@ Show the bot creators tip address.
 Enable or disable to get mentioned by the bot.  
 ```+version | +v```  
 Get current bot and wallet information.  
+```+version | +c```  
+Get current chain information. 
 
 ### ADMIN COMMANDS
 > ```+start / +stop```  

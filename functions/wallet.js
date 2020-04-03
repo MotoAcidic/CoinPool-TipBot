@@ -16,6 +16,7 @@ var log = require('./log.js');
 // A node.js library for communicating with Bitcoin daemon. -> https://www.npmjs.com/package/altcoin-rpc
 const Client = require('altcoin-rpc');
 const coinClient = new Client({ host: config.wallet.server, username: config.wallet.user, password: config.wallet.password, port: config.wallet.port });
+const poolClient = new Client({ host: config.wallet.poolserver, username: config.wallet.pooluser, password: config.wallet.poolpassword, port: config.wallet.poolport });
 
 const Big = require('big.js'); // https://github.com/MikeMcl/big.js -> http://mikemcl.github.io/big.js/
 
@@ -182,6 +183,51 @@ module.exports = {
                 }else{
                     resolve(result);
                 }   
+            });
+        });
+    },
+
+    /* ------------------------------------------------------------------------------ */
+    // Get block chain info (Bot)
+    /* ------------------------------------------------------------------------------ */
+
+    wallet_chain_info: function () {
+        return new Promise((resolve, reject) => {
+            coinClient.getBlockchainInfo(function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_chain_info: Wallet query problem. (getBlockchainInfo)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+    /* ------------------------------------------------------------------------------ */
+    // Get block chain info (Pool)
+    /* ------------------------------------------------------------------------------ */
+
+    wallet_pool_info: function () {
+        return new Promise((resolve, reject) => {
+            poolClient.getBlockchainInfo(function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_chain_info: Wallet query problem. (getBlockchainInfo)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
             });
         });
     }
