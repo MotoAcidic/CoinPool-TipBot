@@ -3,7 +3,7 @@ module.exports = {
         "version": "1.3.2", // Current bot version
         "setNewAvatar": false, // Bot does crash if avatar gets changed too often! If you set a new image, set the value to true and the bot sets the new avatar. After change the value back to false!!!!
         "avatar":"./avatar.png", // Set bot avatar img -> local file path
-        "gameMessage":"bot game message | +help", // Message under the bot name in the discord user list
+        "gameMessage":"+r | +help", // Message under the bot name in the discord user list
         "adminMode": false, // If enabled the bot only accepts commands from admins
         "errorLogging": true, // Enable error logging to file discordbot.log
         "commandPrefix": "+", // Bot prefix to trigger the bot <- if symbol changed it needs to get allowed on check.js
@@ -14,7 +14,7 @@ module.exports = {
         "moderatorIDs": [ "XXX" ], // This discrod user IDs are able to use moderator commands and bypass cooldowns
         "vipGroupName": "Dev Team", // Users of this group are able to use vip commands and bypass cooldowns
         "respondChannelIDs": [ "XXX" ], // Discord server channel IDs the bot does listen to
-        "commandIgnor": ["battle","cversion","destroy","gift","kill","lock","me","rez","top","use","me","cstart","cstop","cstart","jackpot","summary","shop","activate","mention","claim"], // commands to ignor because of other bots
+        "commandIgnor": [""], // commands to ignor because of other bots
         "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
         "allowDM": true, // Allow or disable direct messages for commands to the bot with true or false
         "botToken": "XXX", // Discord bot token
@@ -124,7 +124,8 @@ module.exports = {
         "unstake": false,
         "notify": true,
         "version": true,
-        "chain": true
+        "chain": true,
+        "ticket": true
     },
     "colors": {
         "normal": "0xecf0f1", // grey
@@ -143,6 +144,10 @@ module.exports = {
         "notAllowedCommand": "You are not allowed to use this command!",
         "walletOffline": "The wallet is not reachable. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "poolWalletOffline": "The Pool wallet is not reachable. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
+        "ticketModRole": "This server has not defined the Moderator role to the bots Administrator, so the ticket won't be opened.\nIf you are an Administrator, please leave a message in the discord channel: https://discord.gg/eWB5z2E",
+        "ticketAlreadyOpen": "You already have a ticket open.",
+        "ticketCreated": "Your ticket has been created in.",
+        "ticketBeWithYou": "Our **Support Team** will be with you shortly. Please explain your reason for opening the ticket in as much detail as possible.",
         "wentWrong": "Somethig went wrong with your request. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "comingSoon":"Coming soon!",
         "accountNotRegistered": "You are not registered. \nPlease type **+register** to create an account.",
@@ -280,8 +285,11 @@ module.exports = {
             "notifyTitle": "+notify <on/off>",
             "notifyValue": "Enable or disable to get mentioned by the bot.",
             "versionTitle": "+version || +v",
-            "chainTitle": "+chain || +c",
             "versionValue": "Get current bot and wallet information.",
+            "chainTitle": "+chain",
+            "chainValue": "Blockchain information.",
+            "newticketTitle": "+newticket || +nt",
+            "newticketValue": "Create a new support ticket.",
             "admin": {
                 "title":"Admin commands",
                 "startStopTitle":"+start / +stop",
@@ -452,11 +460,18 @@ module.exports = {
             "walletdifficulty": "Difficulty"
         },
         "chain": {
+            "title": "Blockchain information",
             "chainblockbot": "Current Block (Bot)",
             "chainblockexplorer": "Block (Explorer)",
             "chainbestblockhash": "Block hash (Bot)",
             "poolblockbot": "Current Block (Pool)",
             "poolbestblockhash": "Block hash (Pool)"
+
+        },
+        "newticket": {
+
+        },
+        "closeticket": {
 
         }
     }
