@@ -924,8 +924,8 @@ module.exports = {
             enabledUserCommands.push([config.messages.help.versionTitle, config.messages.help.versionValue, false]);
         if (config.commands.chain)
             enabledUserCommands.push([config.messages.help.chainTitle, config.messages.help.chainValue, false]);
-        if (config.commands.ticket)
-            enabledUserCommands.push([config.messages.help.newticketTitle, config.messages.help.newticketValue, false]);
+        if (config.commands.support)
+            enabledUserCommands.push([config.messages.help.supportTitle, config.messages.help.supportValue, false]);
         
         // Admin commands
         var enabledAdminCommands = []; 
@@ -2056,11 +2056,10 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
-    // !ticket -> Start new support ticket
+    // !support -> Start new support case
     /* ------------------------------------------------------------------------------ */
 
-    command_ticket: async function (userID, userName, messageType, msg, userRole) {
-        //const reason = message.content.split(" ").slice(1).join(" ");
+    command_support: async function (userID, userName, messageType, msg, userRole) {
 
         var isUserRegistered = await user.user_registered_check(userID);
         if (isUserRegistered == 'error') {
@@ -2074,25 +2073,6 @@ module.exports = {
             return;
         }
 
-        message.guild.createChannel(`ticket-${message.author.username}`, "text").then(c => {
-
-            c.overwritePermissions(2,userRole, {
-                SEND_MESSAGES: true,
-                READ_MESSAGES: true
-            });
-            c.overwritePermissions(1,userRole, {
-                SEND_MESSAGES: false,
-                READ_MESSAGES: false
-            });
-            c.overwritePermissions(message.author, {
-                SEND_MESSAGES: true,
-                READ_MESSAGES: true
-            });
-
-            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.ticketCreated, false, false, false, false);
-            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.ticketBeWithYou, false, false, false, false);
-
-        }).catch(console.error);
     },
 
     /* ------------------------------------------------------------------------------ */
@@ -2329,16 +2309,10 @@ module.exports = {
                     this.command_chain(userID, userName, messageType, msg);
                 }
                 return;
-            case 'nt':
-            case 'newticket':
-                if (config.commands.ticket) {
-                    this.command_ticket(userID, userName, messageType, msg);
-                }
-                return;
-            case 'ct':
-            case 'closeticket':
-                if (config.commands.ticket) {
-                    this.command_ticket(2, userName, messageType, userRole, msg);
+            case 'sp':
+            case 'support':
+                if (config.commands.support) {
+                    this.command_support(userID, userName, messageType, msg);
                 }
                 return;
             case 'w':

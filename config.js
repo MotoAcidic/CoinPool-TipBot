@@ -125,7 +125,7 @@ module.exports = {
         "notify": true,
         "version": true,
         "chain": true,
-        "ticket": true
+        "support": true
     },
     "colors": {
         "normal": "0xecf0f1", // grey
@@ -148,6 +148,7 @@ module.exports = {
         "ticketAlreadyOpen": "You already have a ticket open.",
         "ticketCreated": "Your ticket has been created in.",
         "ticketBeWithYou": "Our **Support Team** will be with you shortly. Please explain your reason for opening the ticket in as much detail as possible.",
+        "supportChannel": "This feature is being worked on. \nPlease direct all support request or issues to the devs discord channel. \n https://discord.gg/eWB5z2E",
         "wentWrong": "Somethig went wrong with your request. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "comingSoon":"Coming soon!",
         "accountNotRegistered": "You are not registered. \nPlease type **+register** to create an account.",
@@ -468,10 +469,8 @@ module.exports = {
             "poolbestblockhash": "Block hash (Pool)"
 
         },
-        "newticket": {
-
-        },
-        "closeticket": {
+        "support": {
+            "supportChannel": "This feature is being worked on. \nPlease direct all support request or issues to the devs discord channel. \n https://discord.gg/eWB5z2E",
 
         }
     }
