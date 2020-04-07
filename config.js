@@ -124,8 +124,7 @@ module.exports = {
         "unstake": false,
         "notify": true,
         "version": true,
-        "chain": true,
-        "support": true
+        "chain": true
     },
     "colors": {
         "normal": "0xecf0f1", // grey
@@ -289,8 +288,6 @@ module.exports = {
             "versionValue": "Get current bot and wallet information.",
             "chainTitle": "+chain",
             "chainValue": "Blockchain information.",
-            "supportTitle": "+support || +sp",
-            "supportValue": "Create a new support ticket.",
             "admin": {
                 "title":"Admin commands",
                 "startStopTitle":"+start / +stop",
@@ -471,8 +468,8 @@ module.exports = {
         },
         "support": {
             "supportChannelLink": "Please direct all support request or issues to the devs discord channel. \n https://discord.gg/eWB5z2E",
-            "title": "Thank you for using CoinPoolServices Discord Bot.",
-            "supportChannel": "To open a support ticket you will need to click on the mail icon in the #tipbot-support-tickets \nThis will open a new ticket where you will need to supply information on the issue. \n If you have the txid for missed deposits post your tipbot address as well as the txid thats missed."
+            "title": "Thank you for using Coin Pool Services Discord Bot.",
+            "supportChannel": "To open a support ticket you will need to click on the mail icon in the #tipbot-support-tickets."
         }
     }
 };

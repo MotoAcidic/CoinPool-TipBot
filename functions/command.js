@@ -2056,26 +2056,6 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
-    // !support -> Start new support case
-    /* ------------------------------------------------------------------------------ */
-
-    command_support: async function (userID, userName, messageType, msg, userRole) {
-
-        var isUserRegistered = await user.user_registered_check(userID);
-        if (isUserRegistered == 'error') {
-            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.wentWrong, false, false, false, false);
-            return;
-        }
-        if (!isUserRegistered) {
-            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.accountNotRegistered, false, false, false, false);
-            return;
-        }
-        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.support.title, [[config.support.supportChannel, true], [config.support.supportChannelLink, true]], false, false, false, false, false); 
-    },
-
-    /* ------------------------------------------------------------------------------ */
     // !withdraw address amount -> withdraw balance to external wallet
     /* ------------------------------------------------------------------------------ */
 
