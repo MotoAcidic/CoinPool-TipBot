@@ -2072,7 +2072,7 @@ module.exports = {
             chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.accountNotRegistered, false, false, false, false);
             return;
         }
-
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.support.title, [[config.support.supportChannel, true], [config.support.supportChannelLink, true]], false, false, false, false, false); 
     },
 
     /* ------------------------------------------------------------------------------ */
