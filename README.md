@@ -75,35 +75,6 @@ walletnotify=/path/to/your/bot/folder/transaction.sh %s
 3. Enalbe staking options on the config file  
 4. Check if transactionns are coming in to database
 
-## Projects using the bot - Feel free to contact me to get added
-- Limitless (VIP) - Discord: https://discord.gg/wtz6QYX - Website: http://vip.limitlessvip.co.za/
-- BARE Coin (BARE) - Discord: https://discord.gg/xmQbzNH - Website: https://bare.network/
-
-
-To rename Mysql data base make this script
-```
-#!/bin/bash
-
-dbuser=xxxx
-dbpass=xxxx
-olddb=xxxx
-newdb=xxxx
-
-mysqlconn="mysql -u $dbuser -p$dbpass -h localhost"
-
-$mysqlconn -e "CREATE DATABASE $newdb"
-params=$($mysqlconn -N -e "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='$olddb'")
-
-for name in $params; do
-      $mysqlconn -e "RENAME TABLE $olddb.$name to $newdb.$name";
-      echo "Renamed $olddb.$name to $newdb.$name";
-done;
-
-#$mysqlconn -e "DROP DATABASE $olddb"
-```
-
-
-
 Internal Notes
 below files do not rely on rpc commands from each wallet
 ```

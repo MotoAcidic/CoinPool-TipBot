@@ -3,7 +3,7 @@ module.exports = {
         "version": "1.3.2", // Current bot version
         "setNewAvatar": false, // Bot does crash if avatar gets changed too often! If you set a new image, set the value to true and the bot sets the new avatar. After change the value back to false!!!!
         "avatar":"./avatar.png", // Set bot avatar img -> local file path
-        "gameMessage":"bot game message | +help", // Message under the bot name in the discord user list
+        "gameMessage":"+r | +help", // Message under the bot name in the discord user list
         "adminMode": false, // If enabled the bot only accepts commands from admins
         "errorLogging": true, // Enable error logging to file discordbot.log
         "commandPrefix": "+", // Bot prefix to trigger the bot <- if symbol changed it needs to get allowed on check.js
@@ -14,10 +14,11 @@ module.exports = {
         "moderatorIDs": [ "XXX" ], // This discrod user IDs are able to use moderator commands and bypass cooldowns
         "vipGroupName": "Dev Team", // Users of this group are able to use vip commands and bypass cooldowns
         "respondChannelIDs": [ "XXX" ], // Discord server channel IDs the bot does listen to
-        "commandIgnor": ["battle","cversion","destroy","gift","kill","lock","me","rez","top","use","me","cstart","cstop","cstart","jackpot","summary","shop","activate","mention","claim"], // commands to ignor because of other bots
+        "commandIgnor": [""], // commands to ignor because of other bots
         "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
         "allowDM": true, // Allow or disable direct messages for commands to the bot with true or false
         "botToken": "XXX", // Discord bot token
+        "discordLink": "https://discord.gg/eWB5z2E", // Main channel discord link
         "listUsers": 30, // Define how many users get listed in one message on rain or drop <- Take care about 2200 letters limit from discord
         "dropBotReactIcon":"✅", // If change -> http://twitter.github.io/twemoji/2/test/preview.html -> click icon copy from popup and past it into the string!, // SOME ARE NOT WORKING!! TEST IT BEFORE MAKE IT LIVE
         "dropReactIcon":"🍀", // If change -> http://twitter.github.io/twemoji/2/test/preview.html -> click icon copy from popup and past it into the string!, // SOME ARE NOT WORKING!! TEST IT BEFORE MAKE IT LIVE
@@ -40,10 +41,11 @@ module.exports = {
         "user": "XXX", // Wallet username
         "password": "XXX", // Wallet password
         "port": "1234", // Wallet port
-        //"poolserver": "127.0.0.1", // Wallet server
-        //"pooluser": "XXX", // Wallet username
-        //"poolpassword": "XXX", // Wallet password
-        //"poolport": "1234", // Wallet port
+        //Bellow pool settings are for mining pool rpc connection
+        "poolserver": "127.0.0.1", // Wallet server
+        "pooluser": "XXX", // Wallet username
+        "poolpassword": "XXX", // Wallet password
+        "poolport": "1234", // Wallet port
         // TODO ENCRYPTION KEY FOR WALLET
         "coinSymbol": "Coin (CoinSymbol)", // Coin name
         "coinSymbolShort": "Symbol", // Coin name
@@ -60,7 +62,7 @@ module.exports = {
         "paymentHistoryCoun": 7, // How many payments get shown on withdrawals payments command !! Max value 7 !!
         "explorerLinkAddress": "https://explorer.link/#/address/", // Explorer link address for addresses
         "explorerLinkTransaction": "https://explorer.link/#/tx/", // Explorer link transaction
-        "explorerBlockCount": "https://explorer.link/api/getblockcount", // Explorers block count
+        "explorerLink": "https://explorer.link/", // Main Explorer Link
         "transactionFee": 0.01, // Fee taken for a transaction a user makes - Change value also on help command
         "minWithdrawalValue": 0.00000001, // Minimum value for withdrawal
         "minTipValue": 0.00000001, // Minimum value for tip 
@@ -280,8 +282,11 @@ module.exports = {
             "notifyTitle": "+notify <on/off>",
             "notifyValue": "Enable or disable to get mentioned by the bot.",
             "versionTitle": "+version || +v",
-            "chainTitle": "+chain || +c",
             "versionValue": "Get current bot and wallet information.",
+            "chainTitle": "+chain",
+            "chainValue": "Blockchain information.",
+            "supportTitle": "+support || +sp",
+            "supportValue": "Support Channel Info.",
             "admin": {
                 "title":"Admin commands",
                 "startStopTitle":"+start / +stop",
@@ -452,12 +457,19 @@ module.exports = {
             "walletdifficulty": "Difficulty"
         },
         "chain": {
+            "title": "Blockchain information",
             "chainblockbot": "Current Block (Bot)",
             "chainblockexplorer": "Block (Explorer)",
             "chainbestblockhash": "Block hash (Bot)",
             "poolblockbot": "Current Block (Pool)",
             "poolbestblockhash": "Block hash (Pool)"
 
+        },
+        "support": {
+            "supportChannel": "To open a support ticket you will need to click on the mail icon in the #tipbot-support-tickets.",
+            "title": "Thank you for using Coin Pool Services Discord Bot.",
+            "howToMakeTicket": "Please direct all support request or issues to the devs discord channel.",
+            "discordTitle": "Coin Pool Services Discord Support Link"
         }
     }
 };
