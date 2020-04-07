@@ -18,6 +18,7 @@ module.exports = {
         "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
         "allowDM": true, // Allow or disable direct messages for commands to the bot with true or false
         "botToken": "XXX", // Discord bot token
+        "discordLink": "https://discord.gg/eWB5z2E", // Main channel discord link
         "listUsers": 30, // Define how many users get listed in one message on rain or drop <- Take care about 2200 letters limit from discord
         "dropBotReactIcon":"✅", // If change -> http://twitter.github.io/twemoji/2/test/preview.html -> click icon copy from popup and past it into the string!, // SOME ARE NOT WORKING!! TEST IT BEFORE MAKE IT LIVE
         "dropReactIcon":"🍀", // If change -> http://twitter.github.io/twemoji/2/test/preview.html -> click icon copy from popup and past it into the string!, // SOME ARE NOT WORKING!! TEST IT BEFORE MAKE IT LIVE
@@ -40,10 +41,11 @@ module.exports = {
         "user": "XXX", // Wallet username
         "password": "XXX", // Wallet password
         "port": "1234", // Wallet port
-        //"poolserver": "127.0.0.1", // Wallet server
-        //"pooluser": "XXX", // Wallet username
-        //"poolpassword": "XXX", // Wallet password
-        //"poolport": "1234", // Wallet port
+        //Bellow pool settings are for mining pool rpc connection
+        "poolserver": "127.0.0.1", // Wallet server
+        "pooluser": "XXX", // Wallet username
+        "poolpassword": "XXX", // Wallet password
+        "poolport": "1234", // Wallet port
         // TODO ENCRYPTION KEY FOR WALLET
         "coinSymbol": "Coin (CoinSymbol)", // Coin name
         "coinSymbolShort": "Symbol", // Coin name
@@ -60,7 +62,7 @@ module.exports = {
         "paymentHistoryCoun": 7, // How many payments get shown on withdrawals payments command !! Max value 7 !!
         "explorerLinkAddress": "https://explorer.link/#/address/", // Explorer link address for addresses
         "explorerLinkTransaction": "https://explorer.link/#/tx/", // Explorer link transaction
-        "explorerBlockCount": "https://explorer.link/api/getblockcount", // Explorers block count
+        "explorerLink": "https://explorer.link/", // Main Explorer Link
         "transactionFee": 0.01, // Fee taken for a transaction a user makes - Change value also on help command
         "minWithdrawalValue": 0.00000001, // Minimum value for withdrawal
         "minTipValue": 0.00000001, // Minimum value for tip 
@@ -143,11 +145,6 @@ module.exports = {
         "notAllowedCommand": "You are not allowed to use this command!",
         "walletOffline": "The wallet is not reachable. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "poolWalletOffline": "The Pool wallet is not reachable. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
-        "ticketModRole": "This server has not defined the Moderator role to the bots Administrator, so the ticket won't be opened.\nIf you are an Administrator, please leave a message in the discord channel: https://discord.gg/eWB5z2E",
-        "ticketAlreadyOpen": "You already have a ticket open.",
-        "ticketCreated": "Your ticket has been created in.",
-        "ticketBeWithYou": "Our **Support Team** will be with you shortly. Please explain your reason for opening the ticket in as much detail as possible.",
-        "supportChannel": "This feature is being worked on. \nPlease direct all support request or issues to the devs discord channel. \n https://discord.gg/eWB5z2E",
         "wentWrong": "Somethig went wrong with your request. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "comingSoon":"Coming soon!",
         "accountNotRegistered": "You are not registered. \nPlease type **+register** to create an account.",
@@ -288,6 +285,8 @@ module.exports = {
             "versionValue": "Get current bot and wallet information.",
             "chainTitle": "+chain",
             "chainValue": "Blockchain information.",
+            "supportTitle": "+support || +sp",
+            "supportValue": "Support Channel Info.",
             "admin": {
                 "title":"Admin commands",
                 "startStopTitle":"+start / +stop",
@@ -467,9 +466,10 @@ module.exports = {
 
         },
         "support": {
-            "supportChannelLink": "Please direct all support request or issues to the devs discord channel. \n https://discord.gg/eWB5z2E",
+            "supportChannel": "To open a support ticket you will need to click on the mail icon in the #tipbot-support-tickets.",
             "title": "Thank you for using Coin Pool Services Discord Bot.",
-            "supportChannel": "To open a support ticket you will need to click on the mail icon in the #tipbot-support-tickets."
+            "howToMakeTicket": "Please direct all support request or issues to the devs discord channel.",
+            "discordTitle": "Coin Pool Services Discord Support Link"
         }
     }
 };

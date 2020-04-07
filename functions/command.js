@@ -2046,13 +2046,37 @@ module.exports = {
         var poolBlock = poolInfo.blocks;
         var poolBlockhash = poolInfo.bestblockhash;
 
-        var chainExplorerBlock = config.wallet.explorerBlockCount;
+        var chainExplorer = config.wallet.explorerLink;
         var chainBlock = chainInfo.blocks;
         var chainBlockhash = chainInfo.bestblockhash;
         //log.log_write_console(chainBlockhash);
         //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp config.wallet.explorerLinkAddress+userDepositAddress
-        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockbot, chainBlock, true], [config.messages.chain.poolblockbot, poolBlock, true], [config.messages.chain.chainblockexplorer, chainExplorerBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, true], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockbot, chainBlock, true], [config.messages.chain.poolblockbot, poolBlock, true], [config.messages.chain.chainblockexplorer, chainExplorer, false], [config.messages.chain.chainbestblockhash, chainBlockhash, true], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
         return;
+    },
+
+    /* ------------------------------------------------------------------------------ */
+    // !support -> Start new support case
+    /* ------------------------------------------------------------------------------ */
+
+    command_support: async function (userID, userName, messageType, msg) {
+        var supportDiscord = config.bot.discordLink;
+        var supportTicketInfo = config.messages.support.supportChannel;
+        var isUserRegistered = await user.user_registered_check(userID);
+
+        if (isUserRegistered == 'error') {
+            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.wentWrong, false, false, false, false);
+            return;
+        }
+        if (!isUserRegistered) {
+            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.accountNotRegistered, false, false, false, false);
+            return;
+        }
+
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.support.title, [[config.messages.support.howToMakeTicket, supportTicketInfo, false],[config.messages.support.discordTitle, supportDiscord, false]], false, false, false, false);
+         return;
     },
 
     /* ------------------------------------------------------------------------------ */
