@@ -126,7 +126,8 @@ module.exports = {
         "unstake": false,
         "notify": true,
         "version": true,
-        "chain": true
+        "chain": true,
+        "support": true
     },
     "colors": {
         "normal": "0xecf0f1", // grey
