@@ -188,6 +188,52 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
+    // Get wallet info BTC 0.17 RPC
+    /* ------------------------------------------------------------------------------ */
+
+    wallet_wallet_info: function () {
+        return new Promise((resolve, reject) => {
+            coinClient.getWalletInfo(function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_wallet_info: Wallet query problem. (getWalletInfo)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+
+    /* ------------------------------------------------------------------------------ */
+    // Get network info BTC 0.17 RPC
+    /* ------------------------------------------------------------------------------ */
+
+    wallet_network_info: function () {
+        return new Promise((resolve, reject) => {
+            coinClient.getNetworkInfo(function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_network_info: Wallet query problem. (getNetworkInfo)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+
+    /* ------------------------------------------------------------------------------ */
     // Get block chain info (Bot)
     /* ------------------------------------------------------------------------------ */
 

@@ -63,6 +63,7 @@ module.exports = {
         "explorerLinkAddress": "https://explorer.link/#/address/", // Explorer link address for addresses
         "explorerLinkTransaction": "https://explorer.link/#/tx/", // Explorer link transaction
         "explorerLink": "https://explorer.link/", // Main Explorer Link
+        "explorerBackupLink": "https://explorer.link/", // Main Explorer Link
         "transactionFee": 0.01, // Fee taken for a transaction a user makes - Change value also on help command
         "minWithdrawalValue": 0.00000001, // Minimum value for withdrawal
         "minTipValue": 0.00000001, // Minimum value for tip 
@@ -460,7 +461,8 @@ module.exports = {
         "chain": {
             "title": "Blockchain information",
             "chainblockbot": "Current Block (Bot)",
-            "chainblockexplorer": "Block (Explorer)",
+            "chainblockexplorer": "Main (Explorer)",
+            "chainblockbackupexplorer": "Backup (Explorer)",
             "chainbestblockhash": "Block hash (Bot)",
             "poolblockbot": "Current Block (Pool)",
             "poolbestblockhash": "Block hash (Pool)"
