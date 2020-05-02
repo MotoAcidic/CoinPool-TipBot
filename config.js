@@ -64,6 +64,8 @@ module.exports = {
         "explorerLinkTransaction": "https://explorer.link/#/tx/", // Explorer link transaction
         "explorerLink": "https://explorer.link/", // Main Explorer Link
         "explorerBackupLink": "https://explorer.link/", // Main Explorer Link
+        "githubLink": "https://github.link/", // Main Explorer Link
+        "githubCurrentReleaseLink": "https://github.link/releases/latest", // Main Explorer Link
         "transactionFee": 0.01, // Fee taken for a transaction a user makes - Change value also on help command
         "minWithdrawalValue": 0.00000001, // Minimum value for withdrawal
         "minTipValue": 0.00000001, // Minimum value for tip 
@@ -453,10 +455,14 @@ module.exports = {
             "title": "Bot and wallet information",
             "botversion": "Version (Bot)",
             "walletversion": "Version (Wallet)",
+            "walletsubversion": "SubVersion (Wallet)",
             "walletprotocolversion": "Protocolversion",
             "walletconnections": "Connections",
             "walletblocks": "Blocks",
-            "walletdifficulty": "Difficulty"
+            "walletpowdifficulty": "PoW Difficulty",
+            "walletposdifficulty": "PoS Difficulty",
+            "githublink": "Github Link",
+            "githubcurrentrelease": "Current Release"
         },
         "chain": {
             "title": "Blockchain information",
