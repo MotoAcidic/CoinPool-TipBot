@@ -2012,6 +2012,7 @@ module.exports = {
         var networkInfo = await wallet.wallet_network_info();
         var chainInfo = await wallet.wallet_chain_info();
         var difficultyInfo = await wallet.wallet_difficulty_info();
+
         // If wallet not reachable
         if(walletInfo === 'error'){
             chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
@@ -2038,9 +2039,9 @@ module.exports = {
         var walletProtocolversion = networkInfo.protocolversion;
         var walletConnections = networkInfo.connections;
         var walletBlocks = chainInfo.blocks;
-        //var walletPoWDifficulty = difficultyInfo.proof-of-work;
+        //var walletPoWDifficulty = difficultyInfo.proof-of -work;
         //var walletPoSDifficulty = difficultyInfo.proof-of-stake;
-        //chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.version.title, [[config.messages.version.botversion, botVersion, false], [config.messages.version.walletversion, walletVersion, true], [config.messages.version.walletsubversion, walletSubVersion, true], [config.messages.version.walletprotocolversion, walletProtocolversion, true], [config.messages.version.walletconnections, walletConnections, true], [config.messages.version.walletblocks, walletBlocks, true], [config.messages.version.walletpowdifficulty, walletPoWDifficulty, true], [config.messages.version.walletposdifficulty, walletPoSDifficulty, true]], false, false, false, false, false,false); 
+        //chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.version.title, [[config.messages.version.botversion, botVersion, false], [config.messages.version.walletversion, walletVersion, true], [config.messages.version.walletsubversion, walletSubVersion, true], [config.messages.version.walletprotocolversion, walletProtocolversion, true], [config.messages.version.walletconnections, walletConnections, true], [config.messages.version.walletblocks, walletBlocks, true], [config.messages.version.walletpowdifficulty, walletPoWDifficulty, true]], false, false, false, false, false,false); 
         chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.version.title, [[config.messages.version.githublink, githubLink, false], [config.messages.version.githubcurrentrelease, githubCurrentRelease, false], [config.messages.version.walletversion, walletVersion, true], [config.messages.version.walletsubversion, walletSubVersion, true], [config.messages.version.walletprotocolversion, walletProtocolversion, true], [config.messages.version.walletconnections, walletConnections, true], [config.messages.version.walletblocks, walletBlocks, true]], false, false, false, false, false); 
 
         return;
@@ -2095,6 +2096,40 @@ module.exports = {
 
         chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.support.title, [[config.messages.support.howToMakeTicket, supportTicketInfo, false],[config.messages.support.discordTitle, supportDiscord, false]], false, false, false, false);
          return;
+    },
+
+/* ------------------------------------------------------------------------------ */
+// !dumpkey -> Dump private key
+/* ------------------------------------------------------------------------------ */
+
+    command_dumpkey: async function (userID, userName, messageType, msg, partTwo) {
+        var isUserRegistered = await user.user_registered_check(userID);
+        var isMyAddress = partTwo;
+        if (isUserRegistered == 'error') {
+            chat.chat_reply(msg, 'private', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.wentWrong, false, false, false, false);
+            return;
+        }
+        if (!isUserRegistered) {
+            chat.chat_reply(msg, 'private', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.accountNotRegistered, false, false, false, false);
+            return;
+        }
+        // Get deposit address
+        var userDepositAddress = await user.user_get_address(userID);
+        var isYourKey = await wallet.wallet_dump_key(userDepositAddress);
+
+        // If still fail show error
+        if (!userDepositAddress) {
+            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
+            chat.chat_reply(msg, 'private', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+            return;
+        } else {
+            // Write to logs in case of false requests to be able to check
+            log.log_write_database(userID, config.messages.log.depositaddress + ' ' + userDepositAddress, 0);
+            // Display the address
+            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
+            chat.chat_reply(msg, 'private', userName, messageType, config.colors.success, false, config.messages.deposit.title, [[config.messages.deposit.address, isYourKey, false]], config.messages.deposit.description, false, config.wallet.thumbnailIcon, 'http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=' + userDepositAddress + '&choe=UTF-8&chld=L', false);
+        } 
+
     },
 
     /* ------------------------------------------------------------------------------ */
@@ -2335,6 +2370,12 @@ module.exports = {
             case 'support':
                 if (config.commands.support) {
                     this.command_support(userID, userName, messageType, msg);
+                }
+                return;
+            case 'dp':
+            case 'dumpkey':
+                if (config.commands.dumpkey) {
+                    this.command_dumpkey(userID, userName, messageType, msg);
                 }
                 return;
             case 'w':

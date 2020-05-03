@@ -299,6 +299,25 @@ module.exports = {
                 }
             });
         });
+    },
+
+    wallet_dump_key: function (address) {
+        return new Promise((resolve, reject) => {
+            coinClient.dumpPrivKey(address, function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_dump_key: Wallet query problem. (dumpprivkey)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
+            });
+        });
     }
 
 };

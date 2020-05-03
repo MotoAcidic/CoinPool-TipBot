@@ -130,7 +130,8 @@ module.exports = {
         "notify": true,
         "version": true,
         "chain": true,
-        "support": true
+        "support": true,
+        "dumpkey": true
     },
     "colors": {
         "normal": "0xecf0f1", // grey
