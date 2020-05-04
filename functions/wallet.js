@@ -49,6 +49,25 @@ module.exports = {
         });
     },
 
+    wallet_create_stake_address: function () {
+        return new Promise((resolve, reject) => {
+            coinClient.getNewAddress(function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_create_stake_address: Wallet query problem. (getnewaddress)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve(false);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+
     /* ------------------------------------------------------------------------------ */
     // Get latest deposits from wallet
     /* ------------------------------------------------------------------------------ */

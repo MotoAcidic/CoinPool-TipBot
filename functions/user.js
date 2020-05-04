@@ -302,6 +302,47 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
+    // Get user stake address by id
+    /* ------------------------------------------------------------------------------ */
+
+    user_get_stake_address: function (userID) {
+        return new Promise((resolve, reject) => {
+            mysqlPool.getConnection(function (error, connection) {
+                if (error) {
+                    try {
+                        mysqlPool.releaseConnection(connection);
+                    }
+                    catch (e) { }
+                    var errorMessage = "user_get_address: MySQL connection problem.";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve(false);
+                } else {
+                    connection.execute("SELECT stake_address FROM user WHERE discord_id = ? LIMIT 1", [userID], function (error, results, fields) {
+                        mysqlPool.releaseConnection(connection);
+                        if (error) {
+                            var errorMessage = "user_get_stake_address: MySQL query problem. (SELECT stake_address FROM user WHERE discord_id = ? LIMIT 1)";
+                            if (config.bot.errorLogging) {
+                                log.log_write_file(errorMessage);
+                                log.log_write_file(error);
+                            }
+                            log.log_write_console(errorMessage);
+                            log.log_write_console(error);
+                            resolve(false);
+                        } else {
+                            resolve(results[0].deposit_address);
+                        }
+                    });
+                }
+            });
+        });
+    },
+
+    /* ------------------------------------------------------------------------------ */
     // Credit balance to user by address
     /* ------------------------------------------------------------------------------ */
 
@@ -560,6 +601,47 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
+    // Add stake address
+    /* ------------------------------------------------------------------------------ */
+
+    user_add_stake_address: function (stakeAddress, userID) {
+        return new Promise((resolve, reject) => {
+            mysqlPool.getConnection(function (error, connection) {
+                if (error) {
+                    try {
+                        mysqlPool.releaseConnection(connection);
+                    }
+                    catch (e) { }
+                    var errorMessage = "user_add_stake_address: MySQL connection problem.";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve(false);
+                } else {
+                    connection.execute("UPDATE user SET stake_address = ? WHERE discord_id = ?", [stakeAddress, userID], function (error, results, fields) {
+                        mysqlPool.releaseConnection(connection);
+                        if (error) {
+                            var errorMessage = "user_add_stake_address: MySQL query problem. (UPDATE user SET balance = balance + ? WHERE stake_address = ?)";
+                            if (config.bot.errorLogging) {
+                                log.log_write_file(errorMessage);
+                                log.log_write_file(error);
+                            }
+                            log.log_write_console(errorMessage);
+                            log.log_write_console(error);
+                            resolve(false);
+                        } else {
+                            resolve(true);
+                        }
+                    });
+                }
+            });
+        });
+    },
+
+    /* ------------------------------------------------------------------------------ */
     // Get user info by id
     /* ------------------------------------------------------------------------------ */
 
@@ -595,48 +677,6 @@ module.exports = {
                             resolve(false);
                         }else{
                             resolve(results);
-                        }
-                    });
-                }
-            });
-        });
-    },
-
-    /* ------------------------------------------------------------------------------ */
-    // Register new user
-    /* ------------------------------------------------------------------------------ */
-
-    user_register: function(userName,userID){
-        return new Promise((resolve, reject)=>{
-            mysqlPool.getConnection(function(error, connection){
-                if(error){
-                    try
-                        {
-                        mysqlPool.releaseConnection(connection);
-                        }
-                    catch (e){}
-                    var errorMessage = "user_get_info: MySQL connection problem.";
-                    if(config.bot.errorLogging){
-                        log.log_write_file(errorMessage);
-                        log.log_write_file(error);
-                    }
-                    log.log_write_console(errorMessage);
-                    log.log_write_console(error);
-                    resolve(false);
-                }else{
-                    connection.execute("INSERT INTO user (username,discord_id) VALUES (?,?) ON DUPLICATE KEY UPDATE username = ?",[userName,userID,userName],function (error, results, fields){
-                        mysqlPool.releaseConnection(connection);
-                        if(error){
-                            var errorMessage = "user_register: MySQL query problem. (INSERT INTO user (username,discord_id) VALUES (?,?) ON DUPLICATE KEY UPDATE username = ?)";
-                            if(config.bot.errorLogging){
-                                log.log_write_file(errorMessage);
-                                log.log_write_file(error);
-                            }
-                            log.log_write_console(errorMessage);
-                            log.log_write_console(error);
-                            resolve(false);
-                        }else{
-                            resolve(true)
                         }
                     });
                 }

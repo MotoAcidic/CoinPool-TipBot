@@ -94,6 +94,40 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
+    // !dumpkey -> Dump private key
+    /* ------------------------------------------------------------------------------ */
+
+    command_dumpkey: async function (userID, userName, messageType, msg, partTwo) {
+        var isUserRegistered = await user.user_registered_check(userID);
+
+        if (isUserRegistered == 'error') {
+            chat.chat_reply(msg, 'private', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.wentWrong, false, false, false, false);
+            return;
+        }
+        if (!isUserRegistered) {
+            chat.chat_reply(msg, 'private', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.accountNotRegistered, false, false, false, false);
+            return;
+        }
+        // Get deposit address
+        var userDepositAddress = await user.user_get_address(userID);
+        var isYourKey = await wallet.wallet_dump_key(userDepositAddress);
+
+        // If still fail show error
+        if (!userDepositAddress) {
+            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
+            chat.chat_reply(msg, 'private', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+            return;
+        } else {
+            // Write to logs in case of false requests to be able to check
+            log.log_write_database(userID, config.messages.log.depositaddress + ' ' + userDepositAddress, 0);
+            // Display the address
+            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
+            chat.chat_reply(msg, 'private', userName, messageType, config.colors.success, false, config.messages.deposit.title, [[config.messages.deposit.address, isYourKey, false]], config.messages.deposit.description, false, config.wallet.thumbnailIcon, 'http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=' + userDepositAddress + '&choe=UTF-8&chld=L', false);
+        }
+
+    },
+
+    /* ------------------------------------------------------------------------------ */
     // !c / !clear -> Clear all message from chat
     /* ------------------------------------------------------------------------------ */
 
@@ -364,26 +398,78 @@ module.exports = {
         }
         // Get deposit address
         var userDepositAddress = await user.user_get_address(userID);
+        var userStakeAddress = await user.user_get_stake_address(userID);
         // If no address create a new one
         if(userDepositAddress === null){
             userDepositAddress = await wallet.wallet_create_deposit_address(userID);
         }
+        if (userStakeAddress === null) {
+            userStakeAddress = await wallet.wallet_create_stake_address(userID);
+        }
         // If new created address save to user/database
         if(userDepositAddress){
             await user.user_add_deposit_address(userDepositAddress,userID);
+        }
+        // If new created address save to user/database
+        if (userStakeAddress) {
+            await user.user_add_stake_address(userStakeAddress, userID);
         }
         // If still fail show error
         if(!userDepositAddress){
             //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
             chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
             return;
-        }else{
+        } else if (!userStakeAddress) {
+            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+            return;
+        }else {
             // Write to logs in case of false requests to be able to check
             log.log_write_database(userID,config.messages.log.depositaddress+' '+userDepositAddress,0);
             // Display the address
             //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
             chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,config.messages.deposit.title,[[config.messages.deposit.address,userDepositAddress,false]],config.messages.deposit.description,false,config.wallet.thumbnailIcon,'http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl='+userDepositAddress+'&choe=UTF-8&chld=L',false);
-        }   
+               }   
+    },
+
+    /* ------------------------------------------------------------------------------ */
+    // !d / !stakedeposit -> get current deposit address or create new one
+    /* ------------------------------------------------------------------------------ */
+
+    command_display_user_stake_address: async function (userID, userName, messageType, msg) {
+        // Check if user is registered
+        var isUserRegistered = await user.user_registered_check(userID);
+        if (isUserRegistered == 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.wentWrong, false, false, false, false);
+            return;
+        }
+        if (!isUserRegistered) {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.accountNotRegistered, false, false, false, false);
+            return;
+        }
+        // Get stake address
+        var userStakeAddress = await user.user_get_stake_address(userID);
+        // If no address create a new one
+
+        if (userStakeAddress === null) {
+            userStakeAddress = await wallet.wallet_create_stake_address(userID);
+        }
+        // If new created address save to user/database
+        if (userStakeAddress) {
+            await user.user_add_stake_address(userStakeAddress, userID);
+        }
+        // If still fail show error
+        if (!userStakeAddress) {
+            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+            return;
+        } else {
+            // Write to logs in case of false requests to be able to check
+            log.log_write_database(userID, config.messages.log.depositaddress + ' ' + userDepositAddress, 0);
+            // Display the address
+            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.success, false, config.messages.deposit.title, [[config.messages.deposit.address, userDepositAddress, false]], config.messages.deposit.description, false, config.wallet.thumbnailIcon, 'http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=' + userDepositAddress + '&choe=UTF-8&chld=L', false);
+        }
     },
 
     /* ------------------------------------------------------------------------------ */
@@ -1634,12 +1720,15 @@ module.exports = {
     command_stake: async function(userID,userName,messageType,msg,partTwo){
         var currentDatetime = moment().tz(config.staking.timezone).format('YYYY-MM-DD HH:mm:ss');
         var stakeAmount = partTwo;
+        var stakingAddress = await wallet.wallet_create_stake_address();
         // First check before do long queries -> is partTwo not empty and numeric
         if(!stakeAmount || !check.check_isNumeric(stakeAmount) || check.check_out_of_int_range(stakeAmount)){
             //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
             chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.notValidCommand,false,false,false,false);
                 return;
         }
+        // Check to see if staking address has been created or not
+        
         // Check min stake amount
         if(Big(stakeAmount).lt(Big(config.staking.minStake))){
             chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.stake.min+' `'+Big(config.staking.minStake).toFixed(8)+' '+config.wallet.coinSymbolShort+'` ',false,false,false,false);
@@ -1718,6 +1807,44 @@ module.exports = {
         // Return success message
         //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
         chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,config.messages.stake.title,[[config.messages.stake.amount,Big(stakeAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true]],config.messages.stake.description,false,false,false,false);
+
+        //Save to move staking address to a seperate one
+        /* 
+         
+                 // Write to logs in case of false requests to be able to check
+        log.log_write_database(userID,config.messages.log.withdrawrequest+' '+withdrawAddress,Big(withdrawAmount).toString());
+        // Do withdraw
+        var txID = await wallet.wallet_send_to_address(withdrawAddress,parseFloat(withdrawAmount));
+        if(!txID){
+            // Remove user from command block list
+            remove_blocklist(userID);
+
+            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
+            return;
+        }
+        // Substract balance from user
+        var balanceSubstract = await user.user_substract_balance(Big(withdrawAmountPlusWithdrawFee).toString(),userID);
+        if(!balanceSubstract){
+            // Remove user from command block list
+            remove_blocklist(userID);
+
+            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+            return;
+        }
+        // Set withdraw to database
+        var saveTransaction = await transaction.transaction_save_withdrawal_to_db(userID,withdrawAddress,Big(withdrawAmount).toString(),txID);
+        if(!saveTransaction){
+            // Remove user from command block list
+            remove_blocklist(userID);
+
+            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.withdraw.failDBsave,false,false,false,false);
+            return;
+        }
+        // Remove user from command block list
+        remove_blocklist(userID);
+         
+         */
+
     },
 
     /* ------------------------------------------------------------------------------ */
@@ -2098,40 +2225,6 @@ module.exports = {
          return;
     },
 
-/* ------------------------------------------------------------------------------ */
-// !dumpkey -> Dump private key
-/* ------------------------------------------------------------------------------ */
-
-    command_dumpkey: async function (userID, userName, messageType, msg, partTwo) {
-        var isUserRegistered = await user.user_registered_check(userID);
-        var isMyAddress = partTwo;
-        if (isUserRegistered == 'error') {
-            chat.chat_reply(msg, 'private', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.wentWrong, false, false, false, false);
-            return;
-        }
-        if (!isUserRegistered) {
-            chat.chat_reply(msg, 'private', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.accountNotRegistered, false, false, false, false);
-            return;
-        }
-        // Get deposit address
-        var userDepositAddress = await user.user_get_address(userID);
-        var isYourKey = await wallet.wallet_dump_key(userDepositAddress);
-
-        // If still fail show error
-        if (!userDepositAddress) {
-            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-            chat.chat_reply(msg, 'private', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
-            return;
-        } else {
-            // Write to logs in case of false requests to be able to check
-            log.log_write_database(userID, config.messages.log.depositaddress + ' ' + userDepositAddress, 0);
-            // Display the address
-            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-            chat.chat_reply(msg, 'private', userName, messageType, config.colors.success, false, config.messages.deposit.title, [[config.messages.deposit.address, isYourKey, false]], config.messages.deposit.description, false, config.wallet.thumbnailIcon, 'http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=' + userDepositAddress + '&choe=UTF-8&chld=L', false);
-        } 
-
-    },
-
     /* ------------------------------------------------------------------------------ */
     // !withdraw address amount -> withdraw balance to external wallet
     /* ------------------------------------------------------------------------------ */
@@ -2276,6 +2369,12 @@ module.exports = {
             case 'deposit':
                 if(config.commands.deposit){
                     this.command_display_user_deposit_address(userID,userName,messageType,msg);
+                }
+                return;
+            case 'sa':
+            case 'stakeaddy':
+                if (config.commands.stake) {
+                    this.command_display_user_stake_address(userID, userName, messageType, msg);
                 }
                 return;
             case 'donate':
