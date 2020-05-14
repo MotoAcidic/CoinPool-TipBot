@@ -257,6 +257,29 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
+    // Get Rules info (Bot)
+    /* ------------------------------------------------------------------------------ */
+
+    wallet_rule_info: function () {
+        return new Promise((resolve, reject) => {
+            coinClient.listrules(function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_rule_info: Wallet query problem. (listrules)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+
+    /* ------------------------------------------------------------------------------ */
     // Get block chain info (Bot)
     /* ------------------------------------------------------------------------------ */
 

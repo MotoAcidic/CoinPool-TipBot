@@ -920,12 +920,14 @@ module.exports = {
             enabledUserCommands.push([config.messages.help.donateTitle,config.messages.help.donateValue,false]);
         if(config.commands.notify)
             enabledUserCommands.push([config.messages.help.notifyTitle,config.messages.help.notifyValue,false]);
-        if(config.commands.version)
+        if (config.commands.version)
             enabledUserCommands.push([config.messages.help.versionTitle, config.messages.help.versionValue, false]);
         if (config.commands.chain)
             enabledUserCommands.push([config.messages.help.chainTitle, config.messages.help.chainValue, false]);
         if (config.commands.support)
             enabledUserCommands.push([config.messages.help.supportTitle, config.messages.help.supportValue, false]);
+        if (config.commands.listrules)
+            enabledUserCommands.push([config.messages.help.listRulesTitle, config.messages.help.listRulesValue, false]);
         
         // Admin commands
         var enabledAdminCommands = []; 
@@ -2097,6 +2099,84 @@ module.exports = {
         return;
     },
 
+
+    /* ------------------------------------------------------------------------------ */
+    // !listrules -> Get the current list of rules
+    /* ------------------------------------------------------------------------------ */
+
+    command_listnrules: async function (userID, userName, messageType, msg) {
+        var chainInfo = await wallet.wallet_chain_info();
+        var ruleInfo = await wallet.wallet_rule_info();
+        // If wallet not reachable
+        if (chainInfo === 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+            return;
+        }
+        if (ruleInfo === 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false);
+            return;
+        }
+
+        var chainBlock = chainInfo.blocks;
+        var chainActiveRules = chainInfo.rules;
+        var alertID = ruleInfo.alertID;
+        var rulePacket = ruleInfo.nVersion;
+        var ruleID = ruleInfo.nID;
+        var lowVersion = ruleInfo.nMinVer;
+        var highVersion = ruleInfo.nMaxVer;
+        var startHeight = ruleInfo.fromHeight;
+        var endHeight = ruleInfo.toHeight;
+        var ruleNumber = ruleInfo.ruleType;
+        var ruleValue = ruleInfo.ruleValue;
+
+
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.listrules.title,
+            [
+                [config.messages.listrules.alertID, alertID, true],
+                [config.messages.listrules.packetversion, rulePacket, true],
+                [config.messages.listrules.ruleID, ruleID, false],
+                [config.messages.listrules.lowestversion, lowVersion, false],
+                [config.messages.listrules.highestversion, highVersion, false],
+                [config.messages.listrules.startblock, startHeight, false],
+                [config.messages.listrules.endblock, endHeight, false],
+                [config.messages.listrules.ruletype1, ruleNumber, false],
+                [config.messages.listrules.rulevalue1, ruleValue, true]
+            ], false, false, false, false);
+        //chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, true], [config.messages.chain.chainblockbot, chainBlock, false], [config.messages.chain.poolblockbot, poolBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
+        return;
+
+        // variables
+        /*  "title": "Active List of Rules",
+            "alertID": "Active Alert ID",
+            "packetversion": "Active Packet Version",
+            "ruleID": "Active Rule ID",
+            "lowestversion": "Rule Lowest Version",
+            "highestversion": "Rule Highest Version",
+            "startblock": "Rule Start Block",
+            "endblock": "Rule Ending Block",
+            "ruletype1": "POW",
+            "ruletype2": "CLOCK DRIFT",
+            "ruletype3": "POS PERCENT",
+            "ruletype4": "POW REWARD",
+            "ruletype5": "BLOCK TARGET",
+            "ruletype6": "DISABLE OLD CLIENTS",
+            "ruletype7": "SUSPEND SENDING",
+            "ruletype8": "POS",
+            "rulevalue1": "ON",
+            "rulevalue2": "OFF"
+         * 
+         * 
+         * int alertId;                        // link to alert ID
+        int nVersion;                        // version of rule packet
+        int nID;                            // rule ID
+        int nMinVer;                        // lowest version inclusive
+        int nMaxVer;                        // highest version inclusive
+        int fromHeight;                        // starting from block height
+        int toHeight;                        // ending at block height
+        int ruleType;                        // just an enum of rule types
+        int ruleValue;                        // the value for this rule*/
+    },
+
     /* ------------------------------------------------------------------------------ */
     // !support -> Start new support case
     /* ------------------------------------------------------------------------------ */
@@ -2359,6 +2439,12 @@ module.exports = {
             case 'support':
                 if (config.commands.support) {
                     this.command_support(userID, userName, messageType, msg);
+                }
+                return;
+            case 'lr':
+            case 'listrules':
+                if (config.commands.listrules) {
+                    this.command_listrules(userID, userName, messageType, msg);
                 }
                 return;
             case 'w':

@@ -130,7 +130,9 @@ module.exports = {
         "notify": true,
         "version": true,
         "chain": true,
-        "support": true
+        "support": true,
+        "getinfo": true, //Does project have getinfo?
+        "listrules": false //Does project have listrules. LitecoinPlus?
     },
     "colors": {
         "normal": "0xecf0f1", // grey
@@ -152,7 +154,9 @@ module.exports = {
         "wentWrong": "Somethig went wrong with your request. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "comingSoon":"Coming soon!",
         "accountNotRegistered": "You are not registered. \nPlease type **+register** to create an account.",
-        "currentlyBlocked":"Please wait until your other task is done before starting another one.",
+        "currentlyBlocked": "Please wait until your other task is done before starting another one.",
+        "getinfoRemoved": "Getinfo has been removed or is being removed in this rpc version. Turn getinfo to false in commands.",
+        "noListRules": "This source doesnt have the listrule from LitecoinPlus source. Turn listrule to false in commands.",
         "payment": {
             "tip": {
                 "send":"tip (sent)",
@@ -291,6 +295,8 @@ module.exports = {
             "chainValue": "Blockchain information.",
             "supportTitle": "+support || +sp",
             "supportValue": "Support Channel Info.",
+            "listRulesTitle": "+listrules || +lr",
+            "listRulesValue": "List all Running Rules.",
             "admin": {
                 "title":"Admin commands",
                 "startStopTitle":"+start / +stop",
@@ -472,6 +478,27 @@ module.exports = {
             "chainbestblockhash": "Block hash (Bot)",
             "poolblockbot": "Current Block (Pool)",
             "poolbestblockhash": "Block hash (Pool)"
+
+        },
+        "listrules": {
+            "title": "Active List of Rules",
+            "alertID": "Active Alert ID",
+            "packetversion": "Active Packet Version",
+            "ruleID": "Active Rule ID",
+            "lowestversion": "Rule Lowest Version",
+            "highestversion": "Rule Highest Version",
+            "startblock": "Rule Start Block",
+            "endblock": "Rule Ending Block",
+            "ruletype1": "POW",
+            "ruletype2": "CLOCK DRIFT",
+            "ruletype3": "POS PERCENT",
+            "ruletype4": "POW REWARD",
+            "ruletype5": "BLOCK TARGET",
+            "ruletype6": "DISABLE OLD CLIENTS",
+            "ruletype7": "SUSPEND SENDING",
+            "ruletype8": "POS",
+            "rulevalue1": "ON",
+            "rulevalue2": "OFF"
 
         },
         "support": {
