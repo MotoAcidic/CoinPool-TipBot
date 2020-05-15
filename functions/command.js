@@ -2098,6 +2098,26 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
+    // !gov -> Get current bot and wallet infos
+    /* ------------------------------------------------------------------------------ */
+
+    command_governance: async function (userID, userName, messageType, msg) {
+        var governanceInfo = await wallet.wallet_governance_info();
+        // If wallet not reachable
+        if (governanceInfo === 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+            return;
+        }
+
+        var superBlockCycle = governanceInfo.superblockcycle;
+        var lastSuperBlock = governanceInfo.lastsuperblock;
+        var nextSuperBlock = governanceInfo.nextsuperblock;
+        var proposalFee = governanceInfo.proposalfee;
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, true], [config.messages.chain.chainblockbot, chainBlock, false], [config.messages.chain.poolblockbot, poolBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
+        return;
+    },
+
+    /* ------------------------------------------------------------------------------ */
     // !support -> Start new support case
     /* ------------------------------------------------------------------------------ */
 
