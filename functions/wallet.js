@@ -262,9 +262,9 @@ module.exports = {
 
     wallet_rule_info: function () {
         return new Promise((resolve, reject) => {
-            coinClient.listrules(function (error, result) {
+            coinClient.listRules(function (error, result) {
                 if (error) {
-                    var errorMessage = "wallet_rule_info: Wallet query problem. (listrules)";
+                    var errorMessage = "wallet_rule_info: Wallet query problem. (listRules)";
                     if (config.bot.errorLogging) {
                         log.log_write_file(errorMessage);
                         log.log_write_file(error);
