@@ -928,7 +928,9 @@ module.exports = {
             enabledUserCommands.push([config.messages.help.supportTitle, config.messages.help.supportValue, false]);
         if (config.commands.listrules)
             enabledUserCommands.push([config.messages.help.listRulesTitle, config.messages.help.listRulesValue, false]);
-        
+        if (config.commands.testrule)
+            enabledUserCommands.push([config.messages.help.testRuleTitle, config.messages.help.testRuleValue, false]);
+
         // Admin commands
         var enabledAdminCommands = []; 
         if(config.commands.startstop){
@@ -2104,22 +2106,16 @@ module.exports = {
     // !listrules -> Get the current list of rules
     /* ------------------------------------------------------------------------------ */
 
-    command_listnrules: async function (userID, userName, messageType, msg) {
-        var chainInfo = await wallet.wallet_chain_info();
+    command_listrules: async function (userID, userName, messageType, msg) {
         var ruleInfo = await wallet.wallet_rule_info();
         // If wallet not reachable
-        if (chainInfo === 'error') {
-            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
-            return;
-        }
+
         if (ruleInfo === 'error') {
             chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false);
             return;
         }
 
-        var chainBlock = chainInfo.blocks;
-        var chainActiveRules = chainInfo.rules;
-        var alertID = ruleInfo.alertID;
+        var alertID = ruleInfo.alertId;
         var rulePacket = ruleInfo.nVersion;
         var ruleID = ruleInfo.nID;
         var lowVersion = ruleInfo.nMinVer;
@@ -2132,8 +2128,8 @@ module.exports = {
 
         chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.listrules.title,
             [
-                [config.messages.listrules.alertID, alertID, true],
-                [config.messages.listrules.packetversion, rulePacket, true],
+                [config.messages.listrules.alertID, alertID, false],
+                [config.messages.listrules.packetversion, rulePacket, false],
                 [config.messages.listrules.ruleID, ruleID, false],
                 [config.messages.listrules.lowestversion, lowVersion, false],
                 [config.messages.listrules.highestversion, highVersion, false],
@@ -2175,6 +2171,55 @@ module.exports = {
         int toHeight;                        // ending at block height
         int ruleType;                        // just an enum of rule types
         int ruleValue;                        // the value for this rule*/
+    },
+
+    /* ------------------------------------------------------------------------------ */
+    // !listrules -> Get the current list of rules
+    /* ------------------------------------------------------------------------------ */
+
+    command_testrule: async function (userID, userName, messageType, msg) {
+        var chainInfo = await wallet.wallet_chain_info();        
+        var testruleInfo = await wallet.wallet_testrule_info(chainBlock, rule1);
+        // If wallet not reachable
+        if (chainInfo === 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+            return;
+        }
+        if (ruleInfo === 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false);
+            return;
+        }
+
+        var rule1 = 1;
+        var chainBlock = chainInfo.blocks;
+        var chainActiveRules = chainInfo.rules;
+        var alertID = testruleInfo.alertId;
+        var rulePacket = testruleInfo.nVersion;
+        var ruleID = testruleInfo.nID;
+        var lowVersion = testruleInfo.nMinVer;
+        var highVersion = testruleInfo.nMaxVer;
+        var startHeight = testruleInfo.fromHeight;
+        var endHeight = testruleInfo.toHeight;
+        var ruleNumber = testruleInfo.ruleType;
+        var ruleValue = testruleInfo.ruleValue;
+
+
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.title,
+            [
+                [config.messages.listrules.blocks, chainBlock, false],
+                [config.messages.listrules.activeRules, chainActiveRules, false],
+                [config.messages.listrules.alertID, alertID, false],
+                [config.messages.listrules.packetversion, rulePacket, false],
+                [config.messages.listrules.ruleID, ruleID, false],
+                [config.messages.listrules.lowestversion, lowVersion, false],
+                [config.messages.listrules.highestversion, highVersion, false],
+                [config.messages.listrules.startblock, startHeight, false],
+                [config.messages.listrules.endblock, endHeight, false],
+                [config.messages.listrules.ruletype, ruleNumber, false],
+                [config.messages.listrules.rulevalue, ruleValue, true]
+            ], false, false, false, false);
+        return;
+
     },
 
     /* ------------------------------------------------------------------------------ */
@@ -2445,6 +2490,12 @@ module.exports = {
             case 'listrules':
                 if (config.commands.listrules) {
                     this.command_listrules(userID, userName, messageType, msg);
+                }
+                return;
+            case 'tr':
+            case 'testrule':
+                if (config.commands.testrule) {
+                    this.command_testrule(userID, userName, messageType, msg);
                 }
                 return;
             case 'w':

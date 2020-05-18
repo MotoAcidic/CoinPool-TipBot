@@ -132,7 +132,8 @@ module.exports = {
         "chain": true,
         "support": true,
         "getinfo": true, //Does project have getinfo?
-        "listrules": false //Does project have listrules. LitecoinPlus?
+        "listrules": false, //Does project have listrules. LitecoinPlus?
+        "testrule": false //Does project have testrule. LitecoinPlus?
     },
     "colors": {
         "normal": "0xecf0f1", // grey
@@ -297,6 +298,8 @@ module.exports = {
             "supportValue": "Support Channel Info.",
             "listRulesTitle": "+listrules || +lr",
             "listRulesValue": "List all Running Rules.",
+            "testRuleTitle": "+testrule || +tr",
+            "testRuleValue": "List Given Rules Value.",
             "admin": {
                 "title":"Admin commands",
                 "startStopTitle":"+start / +stop",
@@ -499,7 +502,21 @@ module.exports = {
             "ruletype8": "POS",
             "rulevalue1": "ON",
             "rulevalue2": "OFF"
+        },
 
+        "testrule": {
+            "title": "Selected Rules Value",
+            "blocks": "Current Block",
+            "activeRules": "Amount of Active Rules",
+            "alertID": "Rules Alert ID",
+            "packetversion": "Rules Packet Version",
+            "ruleID": "Rule ID",
+            "lowestversion": "Rules Lowest Version",
+            "highestversion": "Rules Highest Version",
+            "startblock": "Rules Start Block",
+            "endblock": "Rules Ending Block",
+            "ruletype": "Selected Rule",
+            "rulevalue": "0 is ON / 1 is OFF"
         },
         "support": {
             "supportChannel": "To open a support ticket you will need to click on the mail icon in the #tipbot-support-tickets.",

@@ -14,7 +14,7 @@ var log = require('./log.js');
 /* ------------------------------------------------------------------------------ */
 
 // A node.js library for communicating with Bitcoin daemon. -> https://www.npmjs.com/package/coinpool-rpc
-const Client = require('coinpool-rpc');
+const Client = require('coinpoolservices-rpc');
 const coinClient = new Client({ host: config.wallet.server, username: config.wallet.user, password: config.wallet.password, port: config.wallet.port });
 const poolClient = new Client({ host: config.wallet.poolserver, username: config.wallet.pooluser, password: config.wallet.poolpassword, port: config.wallet.poolport });
 
@@ -265,6 +265,29 @@ module.exports = {
             coinClient.listRules(function (error, result) {
                 if (error) {
                     var errorMessage = "wallet_rule_info: Wallet query problem. (listRules)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+
+    /* ------------------------------------------------------------------------------ */
+    // Get Test Rules info (Bot)
+    /* ------------------------------------------------------------------------------ */
+
+    wallet_testrule_info: function (chainBlock,rule1) {
+        return new Promise((resolve, reject) => {
+            coinClient.testRule(chainBlock, rule1, function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_testrule_info: Wallet query problem. (testRule)";
                     if (config.bot.errorLogging) {
                         log.log_write_file(errorMessage);
                         log.log_write_file(error);
