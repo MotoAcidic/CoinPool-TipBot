@@ -2128,14 +2128,14 @@ module.exports = {
 
         chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.listrules.title,
             [
-                [config.messages.listrules.alertID, alertID, false],
-                [config.messages.listrules.packetversion, rulePacket, false],
-                [config.messages.listrules.ruleID, ruleID, false],
-                [config.messages.listrules.lowestversion, lowVersion, false],
-                [config.messages.listrules.highestversion, highVersion, false],
-                [config.messages.listrules.startblock, startHeight, false],
-                [config.messages.listrules.endblock, endHeight, false],
-                [config.messages.listrules.ruletype1, ruleNumber, false],
+                [config.messages.listrules.alertID, alertID, true],
+                [config.messages.listrules.packetversion, rulePacket, true],
+                [config.messages.listrules.ruleID, ruleID, true],
+                [config.messages.listrules.lowestversion, lowVersion, true],
+                [config.messages.listrules.highestversion, highVersion, true],
+                [config.messages.listrules.startblock, startHeight, true],
+                [config.messages.listrules.endblock, endHeight, true],
+                [config.messages.listrules.ruletype1, ruleNumber, true],
                 [config.messages.listrules.rulevalue1, ruleValue, true]
             ], false, false, false, false);
         //chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, true], [config.messages.chain.chainblockbot, chainBlock, false], [config.messages.chain.poolblockbot, poolBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
@@ -2174,53 +2174,46 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
-    // !listrules -> Get the current list of rules
+    // !testrule -> Get the PoW status
     /* ------------------------------------------------------------------------------ */
 
     command_testrule: async function (userID, userName, messageType, msg) {
-        var chainInfo = await wallet.wallet_chain_info();        
-        var testruleInfo = await wallet.wallet_testrule_info(chainBlock, rule1);
+        var walletInfo = await wallet.wallet_get_info();
+        var currentBlock = walletInfo.blocks;
+        var rule1 = 1;
+        var testruleInfo = await wallet.wallet_testrule_info(currentBlock, rule1);
+        var rule2 = 2;
+        var testrule2Info = await wallet.wallet_testrule2_info(currentBlock, rule2);
+
         // If wallet not reachable
-        if (chainInfo === 'error') {
+        if (walletInfo === 'error') {
             chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
             return;
-        }
-        if (ruleInfo === 'error') {
+        } if (testruleInfo === 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false);
+            return;
+        } if (testrule2Info === 'error') {
             chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false);
             return;
         }
 
-        var rule1 = 1;
-        var chainBlock = chainInfo.blocks;
-        var chainActiveRules = chainInfo.rules;
-        var alertID = testruleInfo.alertId;
-        var rulePacket = testruleInfo.nVersion;
-        var ruleID = testruleInfo.nID;
-        var lowVersion = testruleInfo.nMinVer;
-        var highVersion = testruleInfo.nMaxVer;
-        var startHeight = testruleInfo.fromHeight;
-        var endHeight = testruleInfo.toHeight;
         var ruleNumber = testruleInfo.ruleType;
-        var ruleValue = testruleInfo.ruleValue;
 
+        if (ruleNumber == undefined) {
+            chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false,
+                config.messages.testrule.rule1ON, false,
+                [config.messages.testrule.currentBlock, currentBlock],
+                false, false, false, false);
 
-        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.title,
-            [
-                [config.messages.listrules.blocks, chainBlock, false],
-                [config.messages.listrules.activeRules, chainActiveRules, false],
-                [config.messages.listrules.alertID, alertID, false],
-                [config.messages.listrules.packetversion, rulePacket, false],
-                [config.messages.listrules.ruleID, ruleID, false],
-                [config.messages.listrules.lowestversion, lowVersion, false],
-                [config.messages.listrules.highestversion, highVersion, false],
-                [config.messages.listrules.startblock, startHeight, false],
-                [config.messages.listrules.endblock, endHeight, false],
-                [config.messages.listrules.ruletype, ruleNumber, false],
-                [config.messages.listrules.rulevalue, ruleValue, true]
-            ], false, false, false, false);
-        return;
+        } else {
+            chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false,
+                config.messages.testrule.title, false,
+                [config.messages.testrule.currentBlock, currentBlock],
+                false, false, false, false);
+        }
 
     },
+
 
     /* ------------------------------------------------------------------------------ */
     // !support -> Start new support case

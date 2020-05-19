@@ -503,20 +503,10 @@ module.exports = {
             "rulevalue1": "ON",
             "rulevalue2": "OFF"
         },
-
         "testrule": {
-            "title": "Selected Rules Value",
-            "blocks": "Current Block",
-            "activeRules": "Amount of Active Rules",
-            "alertID": "Rules Alert ID",
-            "packetversion": "Rules Packet Version",
-            "ruleID": "Rule ID",
-            "lowestversion": "Rules Lowest Version",
-            "highestversion": "Rules Highest Version",
-            "startblock": "Rules Start Block",
-            "endblock": "Rules Ending Block",
-            "ruletype": "Selected Rule",
-            "rulevalue": "0 is ON / 1 is OFF"
+            "currentBlock": "Current Block",
+            "rule1ON": "POW is currenty turned ON!",
+            "rule1OFF": "POW is currenty turned OFF!"
         },
         "support": {
             "supportChannel": "To open a support ticket you will need to click on the mail icon in the #tipbot-support-tickets.",
