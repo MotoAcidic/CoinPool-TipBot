@@ -257,10 +257,10 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
-    // Get Rules info (Bot)
+    // Get Rules List
     /* ------------------------------------------------------------------------------ */
 
-    wallet_rule_info: function () {
+    wallet_listrules: function () {
         return new Promise((resolve, reject) => {
             coinClient.listRules(function (error, result) {
                 if (error) {
@@ -280,7 +280,7 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
-    // Get Test Rules info (Bot)
+    // Bellow are LightcoinPlus Rule testing calls
     /* ------------------------------------------------------------------------------ */
 
     wallet_testrule_info: function (currentBlock, rule1) {
@@ -305,6 +305,120 @@ module.exports = {
     wallet_testrule2_info: function (currentBlock, rule2) {
         return new Promise((resolve, reject) => {
             coinClient.testRule(currentBlock, rule2, function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_testrule_info: Wallet query problem. (testRule)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+
+    wallet_testrule3_info: function (currentBlock, rule3) {
+        return new Promise((resolve, reject) => {
+            coinClient.testRule(currentBlock, rule3, function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_testrule_info: Wallet query problem. (testRule)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+
+    wallet_testrule4_info: function (currentBlock, rule4) {
+        return new Promise((resolve, reject) => {
+            coinClient.testRule(currentBlock, rule4, function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_testrule_info: Wallet query problem. (testRule)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+
+    wallet_testrule5_info: function (currentBlock, rule5) {
+        return new Promise((resolve, reject) => {
+            coinClient.testRule(currentBlock, rule5, function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_testrule_info: Wallet query problem. (testRule)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+
+    wallet_testrule6_info: function (currentBlock, rule6) {
+        return new Promise((resolve, reject) => {
+            coinClient.testRule(currentBlock, rule6, function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_testrule_info: Wallet query problem. (testRule)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+
+    wallet_testrule7_info: function (currentBlock, rule7) {
+        return new Promise((resolve, reject) => {
+            coinClient.testRule(currentBlock, rule7, function (error, result) {
+                if (error) {
+                    var errorMessage = "wallet_testrule_info: Wallet query problem. (testRule)";
+                    if (config.bot.errorLogging) {
+                        log.log_write_file(errorMessage);
+                        log.log_write_file(error);
+                    }
+                    log.log_write_console(errorMessage);
+                    log.log_write_console(error);
+                    resolve('error');
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+
+    wallet_testrule8_info: function (currentBlock, rule8) {
+        return new Promise((resolve, reject) => {
+            coinClient.testRule(currentBlock, rule8, function (error, result) {
                 if (error) {
                     var errorMessage = "wallet_testrule_info: Wallet query problem. (testRule)";
                     if (config.bot.errorLogging) {

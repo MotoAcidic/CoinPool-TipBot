@@ -506,7 +506,22 @@ module.exports = {
         "testrule": {
             "currentBlock": "Current Block",
             "rule1ON": "POW is currenty turned ON!",
-            "rule1OFF": "POW is currenty turned OFF!"
+            "rule1OFF": "POW is currenty turned OFF!",
+            "rule2ON": "Clock Drift is currenty turned ON!",
+            "rule2OFF": "Clock Drift is currenty turned OFF!",
+            "rule3ON": "POS Percent is currenty turned ON!",
+            "rule3OFF": "POS Percent is currently turned OFF!",
+            "rule4ON": "POW Reward is currenty turned ON!",
+            "rule4OFF": "POW Reward is currenty turned OFF!",
+            "rule5ON": "Block Target is currenty turned ON!",
+            "rule5OFF": "Block Target is currenty turned OFF!",
+            "rule6ON": "Disable Old Clients is currenty turned ON!",
+            "rule6OFF": "Disable Old Clients is currenty turned OFF!",
+            "rule7ON": "Suspend Spending is currenty turned ON!",
+            "rule7OFF": "Suspend Spending is currently turned OFF!",
+            "rule8ON": "POS is currenty turned ON!",
+            "rule8OFF": "POS is currenty turned OFF!"
+
         },
         "support": {
             "supportChannel": "To open a support ticket you will need to click on the mail icon in the #tipbot-support-tickets.",
