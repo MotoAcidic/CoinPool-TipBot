@@ -9,6 +9,7 @@ try{
 
 const Big = require('big.js'); // https://github.com/MikeMcl/big.js -> http://mikemcl.github.io/big.js/
 
+var chat = require("./chat.js");
 var command = require("./command.js");
 var check = require("./check.js");
 var transaction = require("./transaction.js");
@@ -59,6 +60,12 @@ module.exports = {
             command.command_credit_stakes(0);
         }, config.staking.creditTime*1000);
     },
+
+    /* ------------------------------------------------------------------------------ */
+    // Send LCP status Message
+    /* ------------------------------------------------------------------------------ */
+
+
 
     /* ------------------------------------------------------------------------------ */
     // Get coin price
