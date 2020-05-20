@@ -2186,8 +2186,8 @@ module.exports = {
         var rule4 = 4; var testrule4Info = await wallet.wallet_testrule4_info(currentBlock, rule4); var ruleNumber4 = testrule4Info.ruleType;
         var rule5 = 5; var testrule5Info = await wallet.wallet_testrule5_info(currentBlock, rule5); var ruleNumber5 = testrule5Info.ruleType;
         var rule6 = 6; var testrule6Info = await wallet.wallet_testrule6_info(currentBlock, rule6); var ruleNumber6 = testrule6Info.ruleType;
-        var rule7 = 7; var testrule7Info = await wallet.wallet_testrule7_info(currentBlock, rule7); var ruleNumber7 = testrule7Info.ruleType;
-        */var rule8 = 8; var testrule8Info = await wallet.wallet_testrule8_info(currentBlock, rule8); var ruleNumber8 = testrule8Info.ruleType;
+        */var rule7 = 7; var testrule7Info = await wallet.wallet_testrule7_info(currentBlock, rule7); var ruleNumber7 = testrule7Info.ruleType;
+        var rule8 = 8; var testrule8Info = await wallet.wallet_testrule8_info(currentBlock, rule8); var ruleNumber8 = testrule8Info.ruleType;
         
         // If wallet not reachable
         if (walletInfo === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false); return;}
@@ -2223,11 +2223,9 @@ module.exports = {
         }else{ chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false,config.messages.testrule.rule7ON, false,[config.messages.testrule.currentBlock, currentBlock], false, false, false, false);}
         *///Rule 8 (POS)
         if (ruleNumber8 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
-        } else {
-            chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
-        }
-        
-        
+        } else { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);}
+  
+        chat.chat_delete(msg);
     },
 
 
