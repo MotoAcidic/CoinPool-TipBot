@@ -215,6 +215,6 @@ if(config.wallet.credit) // Credit new deposits
 if(config.staking.check) // Check for new stakes
   cron.cron_get_stakes();
 if(config.staking.credit) // Credit new stakes
-  cron.cron_credit_stakes();
+    cron.cron_credit_stakes();
 if(config.coinPrice.enabled) // Get coin price 
   cron.cron_price();

@@ -26,6 +26,7 @@ module.exports = {
     cron_get_deposits: function() {
         setInterval(function (){ 
             command.command_get_deposits(0);
+            //command.command_testrule();
         }, config.wallet.depositsConfirmationTime*1000);
     },
 
@@ -35,7 +36,7 @@ module.exports = {
 
     cron_credit_deposits: function() {
         setInterval(function (){ 
-            command.command_credit_deposits(0);
+            command.command_credit_deposits(0);            
         }, config.wallet.depositsCreditTime*1000);
     },
 

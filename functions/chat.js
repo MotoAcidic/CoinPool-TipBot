@@ -122,6 +122,13 @@ module.exports = {
         }else{
             return msg.channel.send(this.chat_build_reply(replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp));
         }
+    },
+
+    chat_delete: function (message) {
+        try {
+            message.delete(3000);
+        } catch (error) {
+        }
     }
     
 };
