@@ -65,7 +65,11 @@ module.exports = {
     // Send LCP status Message
     /* ------------------------------------------------------------------------------ */
 
-
+    /*cron_lcp_chain_status: function () {
+        setInterval(function () {
+            command.command_testrule(0);
+        }, 10000);
+    },*/
 
     /* ------------------------------------------------------------------------------ */
     // Get coin price

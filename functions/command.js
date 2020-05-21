@@ -2157,22 +2157,28 @@ module.exports = {
         var rule6 = 6; var testrule6Info = await wallet.wallet_testrule6_info(currentBlock, rule6); var ruleNumber6 = testrule6Info.ruleType;
         var rule7 = 7; var testrule7Info = await wallet.wallet_testrule7_info(currentBlock, rule7); var ruleNumber7 = testrule7Info.ruleType;
         */var rule8 = 8; var testrule8Info = await wallet.wallet_testrule8_info(currentBlock, rule8); var ruleNumber8 = testrule8Info.ruleType;
-        
+
+        if (userRole < 3) {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.notAllowedCommand, false, false, false, false);
+            return
+        }
+
         // If wallet not reachable
         if (walletInfo === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false); return;}
         if (testruleInfo === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return;}
-        /*if (testrule2Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return;}
+
+    /*  if (testrule2Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return;}
         if (testrule3Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
         if (testrule4Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
         if (testrule5Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
         if (testrule6Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
         if (testrule7Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
-        */if (testrule8Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
+        if (testrule8Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
         //Rule 1 (POW)
         if (ruleNumber1 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule1ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
         } else { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule1OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false); return }
         //Rule 2 (Clock Drift)
-        /*if (ruleNumber2 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule2OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
+        if (ruleNumber2 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule2OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
         }else{ chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false,config.messages.testrule.rule2ON, false,[config.messages.testrule.currentBlock, currentBlock], false, false, false, false);}
         //Rule 3 (POS Percent)
         if (ruleNumber3 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule3ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
@@ -2189,10 +2195,10 @@ module.exports = {
         //Rule 7 (Suspend Spending)
         if (ruleNumber7 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule7OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
         }else{ chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false,config.messages.testrule.rule7ON, false,[config.messages.testrule.currentBlock, currentBlock], false, false, false, false);}
-        *///Rule 8 (POS)
+        //Rule 8 (POS)
         if (ruleNumber8 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
         } else { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false); return }
-  
+    */
         chat.chat_delete(msg);
     },
 
