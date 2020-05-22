@@ -2150,55 +2150,36 @@ module.exports = {
         var walletInfo = await wallet.wallet_get_info();
         var currentBlock = walletInfo.blocks;
         var rule1 = 1; var testruleInfo = await wallet.wallet_testrule_info(currentBlock, rule1); var ruleNumber1 = testruleInfo.ruleType;
-       /* var rule2 = 2; var testrule2Info = await wallet.wallet_testrule2_info(currentBlock, rule2); var ruleNumber2 = testrule2Info.ruleType;
-        var rule3 = 3; var testrule3Info = await wallet.wallet_testrule3_info(currentBlock, rule3); var ruleNumber3 = testrule3Info.ruleType;
-        var rule4 = 4; var testrule4Info = await wallet.wallet_testrule4_info(currentBlock, rule4); var ruleNumber4 = testrule4Info.ruleType;
-        var rule5 = 5; var testrule5Info = await wallet.wallet_testrule5_info(currentBlock, rule5); var ruleNumber5 = testrule5Info.ruleType;
-        var rule6 = 6; var testrule6Info = await wallet.wallet_testrule6_info(currentBlock, rule6); var ruleNumber6 = testrule6Info.ruleType;
-        var rule7 = 7; var testrule7Info = await wallet.wallet_testrule7_info(currentBlock, rule7); var ruleNumber7 = testrule7Info.ruleType;
-        */var rule8 = 8; var testrule8Info = await wallet.wallet_testrule8_info(currentBlock, rule8); var ruleNumber8 = testrule8Info.ruleType;
+        var rule8 = 8; var testrule8Info = await wallet.wallet_testrule8_info(currentBlock, rule8); var ruleNumber8 = testrule8Info.ruleType;
 
-        if (userRole < 3) {
+        // Private message not allowed
+        if (messageType === 'dm') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.private, false, false, false, false);
+            return;
+        }
+        // Check if user is allowed to fire the command
+        if (userRole < 2 && manuallyFired) { // mods are allowed to start command
+            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
             chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.notAllowedCommand, false, false, false, false);
-            return
+            return;
         }
 
         // If wallet not reachable
         if (walletInfo === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false); return;}
         if (testruleInfo === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return;}
-
-    /*  if (testrule2Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return;}
-        if (testrule3Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
-        if (testrule4Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
-        if (testrule5Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
-        if (testrule6Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
-        if (testrule7Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
         if (testrule8Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
+
         //Rule 1 (POW)
-        if (ruleNumber1 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule1ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
-        } else { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule1OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false); return }
-        //Rule 2 (Clock Drift)
-        if (ruleNumber2 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule2OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
-        }else{ chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false,config.messages.testrule.rule2ON, false,[config.messages.testrule.currentBlock, currentBlock], false, false, false, false);}
-        //Rule 3 (POS Percent)
-        if (ruleNumber3 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule3ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
-        }else{ chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false,config.messages.testrule.rule3OFF, false,[config.messages.testrule.currentBlock, currentBlock], false, false, false, false);}
-        //Rule 4 (POW Reward)
-        if (ruleNumber4 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule4ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
-        }else{ chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false,config.messages.testrule.rule4OFF, false,[config.messages.testrule.currentBlock, currentBlock], false, false, false, false);}
-        //Rule 5 (Block Target)
-        if (ruleNumber5 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule5ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
-        }else{ chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false,config.messages.testrule.rule5OFF, false,[config.messages.testrule.currentBlock, currentBlock], false, false, false, false);}
-        //Rule 6 (Disable Old Clients)
-        if (ruleNumber6 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule6ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
-        }else{ chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false,config.messages.testrule.rule6OFF, false,[config.messages.testrule.currentBlock, currentBlock], false, false, false, false);}
-        //Rule 7 (Suspend Spending)
-        if (ruleNumber7 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule7OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
-        }else{ chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false,config.messages.testrule.rule7ON, false,[config.messages.testrule.currentBlock, currentBlock], false, false, false, false);}
+       // if (ruleNumber1 === undefined)
+       // {
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.special, false, config.messages.testrule.rule1ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
+       // } else {
+        //    chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule1OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false); return
+        //}
         //Rule 8 (POS)
-        if (ruleNumber8 == undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
-        } else { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false); return }
-    */
+        //if (ruleNumber8 === undefined) { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
+       //} else { chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false); return }
+
         chat.chat_delete(msg);
     },
 
