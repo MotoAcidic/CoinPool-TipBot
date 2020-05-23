@@ -62,20 +62,13 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
-    // Send LCP status Message
+    // Send LCP chain status Message
     /* ------------------------------------------------------------------------------ */
-
-    /*cron_lcp_chain_status: function () {
-        setInterval(function () {
-            command.command_testrule(0);
-        }, 10000);
-    },*/
-
 
     cron_lcp_chain_status: function () {
         setInterval(function () {
-            command.command_testrule(1, config.bot.adminIDs[0], '', 'embed', '3', 'lcpcron');
-        }, 10000);
+            command.command_testrule(1, config.bot.adminIDs[0], '', 'text', '3', 'lcpstatus');
+        }, config.cronTimes.lcpChainStatusCronTime * 1000); //30 seconds
     },
 
     /* ------------------------------------------------------------------------------ */

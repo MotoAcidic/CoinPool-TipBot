@@ -15,7 +15,7 @@ try{
 const moment = require('moment-timezone');
 
 const { RichEmbed } = require('discord.js');
-
+var check = require("./check.js");
 const Big = require('big.js'); // https://github.com/MikeMcl/big.js -> http://mikemcl.github.io/big.js/
 
 /* ------------------------------------------------------------------------------ */
@@ -112,27 +112,35 @@ module.exports = {
     /* ------------------------------------------------------------------------------ */
     // Build chat reply
     /* ------------------------------------------------------------------------------ */
-
     chat_reply: function(msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp){
-        if(replyType == 'private'){
-            return msg.author.send(this.chat_build_reply(replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp));
-        }
         if (replyType == 'pool') {
             var poolChannel = globalClient.channels.get(config.bot.stakePoolChannelID);
             return poolChannel.send(this.chat_build_reply(replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp));
         }
-        if (msg == 'lcpcron') {
-            return globalClient.channels.get(config.bot.respondChannelIDs, 1).send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
-        }else {
-            return msg.channel.send(this.chat_build_reply(replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp));
+        if (msg == 'lcpstatus') {
+            //var lcpstatusChannel = globalClient.channels.get(config.bot.respondChannelIDs);
+            //return lcpstatusChannel.send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
+            return globalClient.channels.get(check.check_getRandomFromArray(config.bot.respondChannelIDs, 1)[0]).send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
         }
 
+        if (replyType == 'private') {
+            return msg.author.send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
+        } else {
+            return msg.channel.send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
+        }
 
     },
 
     chat_delete: function (message) {
         try {
             message.delete(3000);
+        } catch (error) {
+        }
+    },
+
+    chat_edit_message: function (messageID, message) {
+        try {
+            messageID.edit(message);
         } catch (error) {
         }
     }

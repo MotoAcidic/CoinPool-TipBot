@@ -100,7 +100,10 @@ module.exports = {
         "ownerPercentage": 95, // Bot owner percentage // Define how many percente users get from 100%
         "lockTime": 86400, // 24hours = 86400 - Lock time in seconds -> Check if the minimum time between payments and payouts as defined has been respected // Prevent stake pool hopping ;)
         "timezone": "Europe/Berlin" // Used for detect if unstake command can be used or is blocked <- only change if you know what you do! Best value would be same as mysql database time
-    },  
+    },
+    "cronTimes": {
+        "lcpChainStatusCronTime": 30
+    },
     "commands": {
         // Enable or disable commands -> true/false
         // Admin commands

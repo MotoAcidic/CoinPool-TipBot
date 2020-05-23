@@ -13,6 +13,7 @@ try{
 
 const Big = require('big.js'); // https://github.com/MikeMcl/big.js -> http://mikemcl.github.io/big.js/
 const rp = require('request-promise');
+var crypto = require('crypto');
 
 /* ------------------------------------------------------------------------------ */
 // // // // // // // // // // // // // // // // // // // // // // // // // // // //
@@ -209,6 +210,14 @@ module.exports = {
             }
 
         });
+    },
+
+        /* ------------------------------------------------------------------------------ */
+    // Get random string from current timestamp to md5 truncate to x
+    /* ------------------------------------------------------------------------------ */
+
+    check_get_random_string: function (lenght) {
+        return crypto.createHash('md5').update(Math.random().toString(lenght)).digest("hex").substring(0, lenght);
     }
     
 };
