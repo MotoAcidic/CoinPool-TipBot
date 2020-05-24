@@ -117,10 +117,8 @@ module.exports = {
             var poolChannel = globalClient.channels.get(config.bot.stakePoolChannelID);
             return poolChannel.send(this.chat_build_reply(replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp));
         }
-        if (msg == 'lcpstatus') {
-            //var lcpstatusChannel = globalClient.channels.get(config.bot.respondChannelIDs);
-            //return lcpstatusChannel.send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
-            return globalClient.channels.get(check.check_getRandomFromArray(config.bot.respondChannelIDs, 1)[0]).send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
+        if (msg == 'status') {
+            return globalClient.channels.get(check.check_getRandomFromArray(config.bot.statusChannelIDs, 1)[0]).send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
         }
 
         if (replyType == 'private') {

@@ -13,7 +13,8 @@ module.exports = {
         "adminIDs": [ "XXX", "XXX", "XXX" ], // This discrod user IDs are able to use admin commands and bypass cooldowns
         "moderatorIDs": [ "XXX" ], // This discrod user IDs are able to use moderator commands and bypass cooldowns
         "vipGroupName": "Dev Team", // Users of this group are able to use vip commands and bypass cooldowns
-        "respondChannelIDs": [ "XXX" ], // Discord server channel IDs the bot does listen to
+        "respondChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
+        "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
         "commandIgnor": [""], // commands to ignor because of other bots
         "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
         "allowDM": true, // Allow or disable direct messages for commands to the bot with true or false
