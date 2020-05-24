@@ -920,13 +920,17 @@ module.exports = {
             enabledUserCommands.push([config.messages.help.donateTitle,config.messages.help.donateValue,false]);
         if(config.commands.notify)
             enabledUserCommands.push([config.messages.help.notifyTitle,config.messages.help.notifyValue,false]);
-        if(config.commands.version)
+        if (config.commands.version)
             enabledUserCommands.push([config.messages.help.versionTitle, config.messages.help.versionValue, false]);
         if (config.commands.chain)
             enabledUserCommands.push([config.messages.help.chainTitle, config.messages.help.chainValue, false]);
         if (config.commands.support)
             enabledUserCommands.push([config.messages.help.supportTitle, config.messages.help.supportValue, false]);
-        
+        if (config.commands.listrules)
+            enabledUserCommands.push([config.messages.help.listRulesTitle, config.messages.help.listRulesValue, false]);
+        if (config.commands.testrule)
+            enabledUserCommands.push([config.messages.help.testRuleTitle, config.messages.help.testRuleValue, false]);
+
         // Admin commands
         var enabledAdminCommands = []; 
         if(config.commands.startstop){
@@ -2007,25 +2011,68 @@ module.exports = {
     // !v / !version -> Get current bot and wallet infos
     /* ------------------------------------------------------------------------------ */
 
-    command_version: async function(userID,userName,messageType,msg){
-        var walletInfo = await wallet.wallet_get_info();
-        // If wallet not reachable
-        if(walletInfo === 'error'){
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
+    command_version: async function (userID, userName, messageType, msg) {
+
+        if (config.commands.getinfo) {
+            var walletInfo = await wallet.wallet_get_info();
+            // If wallet not reachable
+            if (walletInfo === 'error') {
+                chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.getinfoRemoved, false, false, false, false);
+                return;
+            }
+
+            var botVersion = config.bot.version;
+            var walletVersion = walletInfo.version;
+            var walletProtocolversion = walletInfo.protocolversion;
+            var walletConnections = walletInfo.connections;
+            var walletBlocks = walletInfo.blocks;
+            var walletDifficulty = walletInfo.difficulty;
+            //log.log_write_console(walletVersion);
+            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
+            chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.version.title, [[config.messages.version.botversion, botVersion, false], [config.messages.version.walletversion, walletVersion, true], [config.messages.version.walletprotocolversion, walletProtocolversion, true], [config.messages.version.walletconnections, walletConnections, true], [config.messages.version.walletblocks, walletBlocks, true], [config.messages.version.walletdifficulty, walletDifficulty, true]], false, false, false, false, false);
+            return;
+        } else {
+            var walletInfo = await wallet.wallet_wallet_info();
+            var networkInfo = await wallet.wallet_network_info();
+            var chainInfo = await wallet.wallet_chain_info();
+            var difficultyInfo = await wallet.wallet_difficulty_info();
+
+            // If wallet not reachable
+            if (walletInfo === 'error') {
+                chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+                return;
+            }
+            if (networkInfo === 'error') {
+                chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+                return;
+            }
+            if (chainInfo === 'error') {
+                chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+                return;
+            }
+            if (difficultyInfo === 'error') {
+                chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+                return;
+            }
+
+            var githubLink = config.wallet.githubLink;
+            var githubCurrentRelease = config.wallet.githubCurrentRelease;
+            var botVersion = config.bot.version;
+            var walletVersion = networkInfo.version;
+            var walletSubVersion = networkInfo.subversion;
+            var walletProtocolversion = networkInfo.protocolversion;
+            var walletConnections = networkInfo.connections;
+            var walletBlocks = chainInfo.blocks;
+            //var walletPoWDifficulty = difficultyInfo.proof-of-work;
+            //var walletPoSDifficulty = difficultyInfo.proof-of-stake;
+            //chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.version.title, [[config.messages.version.botversion, botVersion, false], [config.messages.version.walletversion, walletVersion, true], [config.messages.version.walletsubversion, walletSubVersion, true], [config.messages.version.walletprotocolversion, walletProtocolversion, true], [config.messages.version.walletconnections, walletConnections, true], [config.messages.version.walletblocks, walletBlocks, true], [config.messages.version.walletpowdifficulty, walletPoWDifficulty, true], [config.messages.version.walletposdifficulty, walletPoSDifficulty, true]], false, false, false, false, false,false); 
+            chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.version.title, [[config.messages.version.githublink, githubLink, false], [config.messages.version.githubcurrentrelease, githubCurrentRelease, false], [config.messages.version.walletversion, walletVersion, true], [config.messages.version.walletsubversion, walletSubVersion, true], [config.messages.version.walletprotocolversion, walletProtocolversion, true], [config.messages.version.walletconnections, walletConnections, true], [config.messages.version.walletblocks, walletBlocks, true]], false, false, false, false, false);
+
             return;
         }
 
-        var botVersion = config.bot.version;
-        var walletVersion = walletInfo.version;
-        var walletProtocolversion = walletInfo.protocolversion;
-        var walletConnections = walletInfo.connections;
-        var walletBlocks = walletInfo.blocks;
-        var walletDifficulty = walletInfo.difficulty;
-        //log.log_write_console(walletVersion);
-        //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.version.title, [[config.messages.version.botversion, botVersion, false], [config.messages.version.walletversion, walletVersion, true], [config.messages.version.walletprotocolversion, walletProtocolversion, true], [config.messages.version.walletconnections, walletConnections, true], [config.messages.version.walletblocks, walletBlocks, true], [config.messages.version.walletdifficulty, walletDifficulty, true]], false, false, false, false, false); 
-        return;
     },
+
     /* ------------------------------------------------------------------------------ */
     // !chain -> Get current bot and wallet infos
     /* ------------------------------------------------------------------------------ */
@@ -2047,13 +2094,117 @@ module.exports = {
         var poolBlockhash = poolInfo.bestblockhash;
 
         var chainExplorer = config.wallet.explorerLink;
+        var chainBackupExplorer = config.wallet.explorerBackupLink;
         var chainBlock = chainInfo.blocks;
         var chainBlockhash = chainInfo.bestblockhash;
-        //log.log_write_console(chainBlockhash);
-        //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp config.wallet.explorerLinkAddress+userDepositAddress
-        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockbot, chainBlock, true], [config.messages.chain.poolblockbot, poolBlock, true], [config.messages.chain.chainblockexplorer, chainExplorer, false], [config.messages.chain.chainbestblockhash, chainBlockhash, true], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, true], [config.messages.chain.chainblockbot, chainBlock, false], [config.messages.chain.poolblockbot, poolBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
         return;
     },
+
+
+    /* ------------------------------------------------------------------------------ */
+    // !listrules -> Get the current list of rules
+    /* ------------------------------------------------------------------------------ */
+
+    command_listrules: async function (userID, userName, messageType, msg) {
+        var ruleInfo = await wallet.wallet_listrules();
+        // If wallet not reachable
+
+        if (ruleInfo === 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false);
+            return;
+        }
+
+        var alertID = ruleInfo.alertId;
+        var rulePacket = ruleInfo.nVersion;
+        var ruleID = ruleInfo.nID;
+        var lowVersion = ruleInfo.nMinVer;
+        var highVersion = ruleInfo.nMaxVer;
+        var startHeight = ruleInfo.fromHeight;
+        var endHeight = ruleInfo.toHeight;
+        var ruleNumber = ruleInfo.ruleType;
+        var ruleValue = ruleInfo.ruleValue;
+
+
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.listrules.title,
+            [
+                [config.messages.listrules.alertID, alertID, true],
+                [config.messages.listrules.packetversion, rulePacket, true],
+                [config.messages.listrules.ruleID, ruleID, true],
+                [config.messages.listrules.lowestversion, lowVersion, true],
+                [config.messages.listrules.highestversion, highVersion, true],
+                [config.messages.listrules.startblock, startHeight, true],
+                [config.messages.listrules.endblock, endHeight, true],
+                [config.messages.listrules.ruletype1, ruleNumber, true],
+                [config.messages.listrules.rulevalue1, ruleValue, true]
+            ], false, false, false, false);
+        //chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, true], [config.messages.chain.chainblockbot, chainBlock, false], [config.messages.chain.poolblockbot, poolBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
+        return;
+    },
+
+    /* ------------------------------------------------------------------------------ */
+    // !testrule -> Get Rules On or Off
+    /* ------------------------------------------------------------------------------ */
+
+    command_testrule: async function (manuallyFired, userName, messageType, userRole, msg) {
+        var walletInfo = await wallet.wallet_get_info();
+        var currentBlock = walletInfo.blocks;
+        var rule1 = 1; var testruleInfo = await wallet.wallet_testrule_info(currentBlock, rule1); var ruleNumber1 = testruleInfo.ruleType;
+        var rule8 = 8; var testrule8Info = await wallet.wallet_testrule8_info(currentBlock, rule8); var ruleNumber8 = testrule8Info.ruleType;
+
+        // Private message not allowed
+        if (messageType === 'dm') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.private, false, false, false, false);
+            return;
+        }
+        // Check if user is allowed to fire the command
+        if (userRole < 2 && manuallyFired) { // mods are allowed to start command
+            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.notAllowedCommand, false, false, false, false);
+            return;
+        }
+
+        // If wallet not reachable
+        if (walletInfo === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false); return;}
+        if (testruleInfo === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return;}
+        if (testrule8Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
+
+        //Rule 1 (POW)
+        if (ruleNumber1 === undefined) {
+            chat.chat_reply('status', 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule1ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false).then(function (reactCollectorMessage) {
+                // Save message to global eventCollectorMessage
+                eventCollectorMessage = reactCollectorMessage;
+                chat.chat_delete_message(eventCollectorMessage);
+            });
+            
+        } else {
+            chat.chat_reply('status', 'embed', false, messageType, config.colors.special, false, config.messages.testrule.rule1OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false).then(function (reactCollectorMessage) {
+                // Save message to global eventCollectorMessage
+                eventCollectorMessage = reactCollectorMessage;
+                chat.chat_delete_message(eventCollectorMessage);
+            });
+            return;
+        }
+
+        //Rule 8 (POS)
+        if (ruleNumber8 === undefined) {
+            chat.chat_reply('status', 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false).then(function (reactCollectorMessage) {
+                // Save message to global eventCollectorMessage
+                eventCollectorMessage = reactCollectorMessage;
+                chat.chat_delete_message(eventCollectorMessage);
+            });
+        } else {
+            chat.chat_reply('status', 'embed', false, messageType, config.colors.special, false, config.messages.testrule.rule8OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false).then(function (reactCollectorMessage) {
+                // Save message to global eventCollectorMessage
+                eventCollectorMessage = reactCollectorMessage;
+                chat.chat_delete_message(eventCollectorMessage);
+            });
+            return;
+        }
+
+        //chat.chat_delete_message(eventCollectorMessage);
+    },
+
 
     /* ------------------------------------------------------------------------------ */
     // !support -> Start new support case
@@ -2317,6 +2468,18 @@ module.exports = {
             case 'support':
                 if (config.commands.support) {
                     this.command_support(userID, userName, messageType, msg);
+                }
+                return;
+            case 'lr':
+            case 'listrules':
+                if (config.commands.listrules) {
+                    this.command_listrules(userID, userName, messageType, msg);
+                }
+                return;
+            case 'tr':
+            case 'testrule':
+                if (config.commands.testrule) {
+                    this.command_testrule(1, userName, messageType, userRole, msg);
                 }
                 return;
             case 'w':

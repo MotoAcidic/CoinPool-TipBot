@@ -34,6 +34,13 @@ var botEnabled = 1;
 global.coinPrice = 0; 
 global.coinCentPrice = 0;
 
+/* Event globals */
+global.eventDestroyManually = false;
+global.eventActive = false;
+global.eventCollectorMessage = false;
+global.eventCollector = false;
+
+
 /* ------------------------------------------------------------------------------ */
 // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 /* ------------------------------------------------------------------------------ */
@@ -215,6 +222,9 @@ if(config.wallet.credit) // Credit new deposits
 if(config.staking.check) // Check for new stakes
   cron.cron_get_stakes();
 if(config.staking.credit) // Credit new stakes
-  cron.cron_credit_stakes();
+    cron.cron_credit_stakes();
+if (config.wallet.check) // Credit new stakes
+    cron.cron_lcp_chain_status();
 if(config.coinPrice.enabled) // Get coin price 
-  cron.cron_price();
+    cron.cron_price();
+

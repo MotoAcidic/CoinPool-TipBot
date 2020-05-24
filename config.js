@@ -13,7 +13,8 @@ module.exports = {
         "adminIDs": [ "XXX", "XXX", "XXX" ], // This discrod user IDs are able to use admin commands and bypass cooldowns
         "moderatorIDs": [ "XXX" ], // This discrod user IDs are able to use moderator commands and bypass cooldowns
         "vipGroupName": "Dev Team", // Users of this group are able to use vip commands and bypass cooldowns
-        "respondChannelIDs": [ "XXX" ], // Discord server channel IDs the bot does listen to
+        "respondChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
+        "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
         "commandIgnor": [""], // commands to ignor because of other bots
         "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
         "allowDM": true, // Allow or disable direct messages for commands to the bot with true or false
@@ -63,6 +64,9 @@ module.exports = {
         "explorerLinkAddress": "https://explorer.link/#/address/", // Explorer link address for addresses
         "explorerLinkTransaction": "https://explorer.link/#/tx/", // Explorer link transaction
         "explorerLink": "https://explorer.link/", // Main Explorer Link
+        "explorerBackupLink": "https://explorer.link/", // Main Explorer Link
+        "githubLink": "https://github.link/", // Main Explorer Link
+        "githubCurrentReleaseLink": "https://github.link/releases/latest", // Main Explorer Link
         "transactionFee": 0.01, // Fee taken for a transaction a user makes - Change value also on help command
         "minWithdrawalValue": 0.00000001, // Minimum value for withdrawal
         "minTipValue": 0.00000001, // Minimum value for tip 
@@ -97,7 +101,10 @@ module.exports = {
         "ownerPercentage": 95, // Bot owner percentage // Define how many percente users get from 100%
         "lockTime": 86400, // 24hours = 86400 - Lock time in seconds -> Check if the minimum time between payments and payouts as defined has been respected // Prevent stake pool hopping ;)
         "timezone": "Europe/Berlin" // Used for detect if unstake command can be used or is blocked <- only change if you know what you do! Best value would be same as mysql database time
-    },  
+    },
+    "cronTimes": {
+        "statusCronTime": 30
+    },
     "commands": {
         // Enable or disable commands -> true/false
         // Admin commands
@@ -127,7 +134,10 @@ module.exports = {
         "notify": true,
         "version": true,
         "chain": true,
-        "support": true
+        "support": true,
+        "getinfo": true, //Does project have getinfo?
+        "listrules": false, //Does project have listrules. LitecoinPlus?
+        "testrule": false //Does project have testrule. LitecoinPlus?
     },
     "colors": {
         "normal": "0xecf0f1", // grey
@@ -149,7 +159,9 @@ module.exports = {
         "wentWrong": "Somethig went wrong with your request. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "comingSoon":"Coming soon!",
         "accountNotRegistered": "You are not registered. \nPlease type **+register** to create an account.",
-        "currentlyBlocked":"Please wait until your other task is done before starting another one.",
+        "currentlyBlocked": "Please wait until your other task is done before starting another one.",
+        "getinfoRemoved": "Getinfo has been removed or is being removed in this rpc version. Turn getinfo to false in commands.",
+        "noListRules": "This source doesnt have the listrule from LitecoinPlus source. Turn listrule to false in commands.",
         "payment": {
             "tip": {
                 "send":"tip (sent)",
@@ -288,6 +300,10 @@ module.exports = {
             "chainValue": "Blockchain information.",
             "supportTitle": "+support || +sp",
             "supportValue": "Support Channel Info.",
+            "listRulesTitle": "+listrules || +lr",
+            "listRulesValue": "List all Running Rules.",
+            "testRuleTitle": "+testrule || +tr",
+            "testRuleValue": "List Given Rules Value.",
             "admin": {
                 "title":"Admin commands",
                 "startStopTitle":"+start / +stop",
@@ -452,18 +468,63 @@ module.exports = {
             "title": "Bot and wallet information",
             "botversion": "Version (Bot)",
             "walletversion": "Version (Wallet)",
+            "walletsubversion": "SubVersion (Wallet)",
             "walletprotocolversion": "Protocolversion",
             "walletconnections": "Connections",
             "walletblocks": "Blocks",
-            "walletdifficulty": "Difficulty"
+            "walletpowdifficulty": "PoW Difficulty",
+            "walletposdifficulty": "PoS Difficulty",
+            "githublink": "Github Link",
+            "githubcurrentrelease": "Current Release"
         },
         "chain": {
             "title": "Blockchain information",
             "chainblockbot": "Current Block (Bot)",
-            "chainblockexplorer": "Block (Explorer)",
+            "chainblockexplorer": "Main (Explorer)",
+            "chainblockbackupexplorer": "Backup (Explorer)",
             "chainbestblockhash": "Block hash (Bot)",
             "poolblockbot": "Current Block (Pool)",
             "poolbestblockhash": "Block hash (Pool)"
+
+        },
+        "listrules": {
+            "title": "Active List of Rules",
+            "alertID": "Active Alert ID",
+            "packetversion": "Active Packet Version",
+            "ruleID": "Active Rule ID",
+            "lowestversion": "Rule Lowest Version",
+            "highestversion": "Rule Highest Version",
+            "startblock": "Rule Start Block",
+            "endblock": "Rule Ending Block",
+            "ruletype1": "POW",
+            "ruletype2": "CLOCK DRIFT",
+            "ruletype3": "POS PERCENT",
+            "ruletype4": "POW REWARD",
+            "ruletype5": "BLOCK TARGET",
+            "ruletype6": "DISABLE OLD CLIENTS",
+            "ruletype7": "SUSPEND SENDING",
+            "ruletype8": "POS",
+            "rulevalue1": "ON",
+            "rulevalue2": "OFF"
+        },
+        "testrule": {
+            "currentBlock": "Current Block",
+            "rule1ON": "POW is currenty turned ON!",
+            "rule1OFF": "POW is currenty turned OFF!",
+            "rule2ON": "Clock Drift is currenty turned ON!",
+            "rule2OFF": "Clock Drift is currenty turned OFF!",
+            "rule3ON": "POS Percent is currenty turned ON!",
+            "rule3OFF": "POS Percent is currently turned OFF!",
+            "rule4ON": "POW Reward is currenty turned ON!",
+            "rule4OFF": "POW Reward is currenty turned OFF!",
+            "rule5ON": "Block Target is currenty turned ON!",
+            "rule5OFF": "Block Target is currenty turned OFF!",
+            "rule6ON": "Disable Old Clients is currenty turned ON!",
+            "rule6OFF": "Disable Old Clients is currenty turned OFF!",
+            "rule7ON": "Suspend Spending is currenty turned ON!",
+            "rule7OFF": "Suspend Spending is currently turned OFF!",
+            "rule8ON": "POS is currenty turned ON!",
+            "rule8OFF": "POS is currenty turned OFF!"
 
         },
         "support": {
