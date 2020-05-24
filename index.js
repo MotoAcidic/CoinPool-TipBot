@@ -34,6 +34,13 @@ var botEnabled = 1;
 global.coinPrice = 0; 
 global.coinCentPrice = 0;
 
+/* Event globals */
+global.eventDestroyManually = false;
+global.eventActive = false;
+global.eventCollectorMessage = false;
+global.eventCollector = false;
+
+
 /* ------------------------------------------------------------------------------ */
 // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 /* ------------------------------------------------------------------------------ */

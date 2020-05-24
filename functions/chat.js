@@ -131,9 +131,9 @@ module.exports = {
 
     },
 
-    chat_delete: function (message) {
+    chat_delete_message: function (message) {
         try {
-            message.delete(3000);
+            message.delete(29000);
         } catch (error) {
         }
     },

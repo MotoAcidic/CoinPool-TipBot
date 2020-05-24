@@ -2170,14 +2170,39 @@ module.exports = {
         if (testrule8Info === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.noListRules, false, false, false, false); return; }
 
         //Rule 1 (POW)
-        if (ruleNumber1 === undefined) { chat.chat_reply('lcpstatus', 'embed', false, messageType, config.colors.special, false, config.messages.testrule.rule1ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
-        } else { chat.chat_reply('lcpstatus', 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule1OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false); return
+        if (ruleNumber1 === undefined) {
+            chat.chat_reply('lcpstatus', 'embed', false, messageType, config.colors.special, false, config.messages.testrule.rule1ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false).then(function (reactCollectorMessage) {
+                // Save message to global eventCollectorMessage
+                eventCollectorMessage = reactCollectorMessage;
+                chat.chat_delete_message(eventCollectorMessage);
+            });
+            
+        } else {
+            chat.chat_reply('lcpstatus', 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule1OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false).then(function (reactCollectorMessage) {
+                // Save message to global eventCollectorMessage
+                eventCollectorMessage = reactCollectorMessage;
+                chat.chat_delete_message(eventCollectorMessage);
+            });
+            return;
         }
-        //Rule 8 (POS)
-        if (ruleNumber8 === undefined) { chat.chat_reply('lcpstatus', 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false);
-        } else { chat.chat_reply('lcpstatus', 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false); return }
 
-        chat.chat_delete(msg);
+        //Rule 8 (POS)
+        if (ruleNumber8 === undefined) {
+            chat.chat_reply('lcpstatus', 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false).then(function (reactCollectorMessage) {
+                // Save message to global eventCollectorMessage
+                eventCollectorMessage = reactCollectorMessage;
+                chat.chat_delete_message(eventCollectorMessage);
+            });
+        } else {
+            chat.chat_reply('lcpstatus', 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule8OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false).then(function (reactCollectorMessage) {
+                // Save message to global eventCollectorMessage
+                eventCollectorMessage = reactCollectorMessage;
+                chat.chat_delete_message(eventCollectorMessage);
+            });
+            return;
+        }
+
+        //chat.chat_delete_message(eventCollectorMessage);
     },
 
 
