@@ -103,7 +103,7 @@ module.exports = {
         "timezone": "Europe/Berlin" // Used for detect if unstake command can be used or is blocked <- only change if you know what you do! Best value would be same as mysql database time
     },
     "cronTimes": {
-        "lcpChainStatusCronTime": 30
+        "statusCronTime": 30
     },
     "commands": {
         // Enable or disable commands -> true/false

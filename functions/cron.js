@@ -68,7 +68,7 @@ module.exports = {
     cron_lcp_chain_status: function () {
         setInterval(function () {
             command.command_testrule(1, config.bot.adminIDs[0], '', 'text', '3', 'lcpstatus');
-        }, config.cronTimes.lcpChainStatusCronTime * 1000); //30 seconds
+        }, config.cronTimes.statusCronTime * 1000); //30 seconds
     },
 
     /* ------------------------------------------------------------------------------ */
