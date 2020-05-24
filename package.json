@@ -16,7 +16,7 @@
   "author": "Christian Grieger",
   "license": "MIT",
   "dependencies": {
-    "coinpool-rpc": "^1.0.0",
+    "coinpoolservices-rpc": "^1.0.5",
     "array-unique": "^0.3.2",
     "big.js": "^5.2.2",
     "bufferutil": "^4.0.0",
