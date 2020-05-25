@@ -73,14 +73,6 @@ module.exports = {
         "maxRainRandomUsers": 15, // Please take care as the bot can crash if the value is to big as for each user a database query is fired!
         "donateAddress":"XXX" // Address for donations
     },
-    "coinPrice":{ // If enabled the current coin price will be saved next to each transaction made from the bot and into the price history database table
-        "enabled": false,
-        "cronTime": 1800, // Cron time in seconds
-        "apiService": "coinmarketcap", // define the api to use -> The coin must be listed on the api! Current possible values are "coinmarketcap" and "cryptocompare" -> you need to register to get a api key
-        "apiKey": "XXX",
-        "coinSymbol": "Symbol", // e.g. BTC
-        "currency": "EUR" // Cent prices in this currency
-    },
     "staking":{
         // Please hold this option disabled and configure it before!
         // 1. The database connection needs to work
@@ -102,8 +94,20 @@ module.exports = {
         "lockTime": 86400, // 24hours = 86400 - Lock time in seconds -> Check if the minimum time between payments and payouts as defined has been respected // Prevent stake pool hopping ;)
         "timezone": "Europe/Berlin" // Used for detect if unstake command can be used or is blocked <- only change if you know what you do! Best value would be same as mysql database time
     },
+    "coinPrice": { // If enabled the current coin price will be saved next to each transaction made from the bot and into the price history database table
+        "enabled": false,
+        "cronTime": 1800, // Cron time in seconds
+        "apiService": "coinmarketcap", // define the api to use -> The coin must be listed on the api! Current possible values are "coinmarketcap" and "cryptocompare" -> you need to register to get a api key
+        "apiKey": "XXX",
+        "coinSymbol": "Symbol", // e.g. BTC
+        "currency": "EUR" // Cent prices in this currency
+    },
     "cronTimes": {
         "statusCronTime": 30
+    },
+    "apiLinks": {       
+        "hasExplorerAPI": "true", //Enable explorer api (true is yes, false is no)
+        "explorerAPI": "https://explorer.link/api/"
     },
     "commands": {
         // Enable or disable commands -> true/false

@@ -14,6 +14,7 @@ var storage = require("./storage.js");
 var transaction = require("./transaction.js");
 var user = require("./user.js");
 var wallet = require("./wallet.js");
+var api = require("./api.js");
 
 /* ------------------------------------------------------------------------------ */
 // // // // // // // // // // // // // // // // // // // // // // // // // // // //
@@ -2079,25 +2080,29 @@ module.exports = {
 
     command_chain: async function (userID, userName, messageType, msg) {
         var chainInfo = await wallet.wallet_chain_info();
-        var poolInfo = await wallet.wallet_pool_info();
+        //var poolInfo = await wallet.wallet_pool_info();
+        var explorerHash = await api.explorer_api_blockhash();
         // If wallet not reachable
         if (chainInfo === 'error') {
             chat.chat_reply(msg, 'embed', userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
             return;
         }
-        if (poolInfo === 'error') {
-            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.poolWalletOffline, false, false, false, false);
-            return;
-        }
+       // if (poolInfo === 'error') {
+         //   chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.poolWalletOffline, false, false, false, false);
+        //    return;
+        //}
 
-        var poolBlock = poolInfo.blocks;
-        var poolBlockhash = poolInfo.bestblockhash;
+        //var poolBlock = poolInfo.blocks;
+        //var poolBlockhash = poolInfo.bestblockhash;
 
+        var explorerHash = explorerHash.hash;
         var chainExplorer = config.wallet.explorerLink;
         var chainBackupExplorer = config.wallet.explorerBackupLink;
         var chainBlock = chainInfo.blocks;
         var chainBlockhash = chainInfo.bestblockhash;
-        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, true], [config.messages.chain.chainblockbot, chainBlock, false], [config.messages.chain.poolblockbot, poolBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
+       // chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, true], [config.messages.chain.chainblockbot, chainBlock, false], [config.messages.chain.poolblockbot, poolBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, true], [config.messages.chain.chainblockbot, chainBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.explorerHash, explorerHash, true]], false, false, false, false);
+
         return;
     },
 
