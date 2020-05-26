@@ -487,6 +487,8 @@ module.exports = {
             "chainblockexplorer": "Main (Explorer)",
             "chainblockbackupexplorer": "Backup (Explorer)",
             "chainbestblockhash": "Block hash (Bot)",
+            "explorerblock": "Current Block (Explorer",
+            "explorerblockhash": "Block Hash (Explorer)",
             "poolblockbot": "Current Block (Pool)",
             "poolbestblockhash": "Block hash (Pool)"
 
