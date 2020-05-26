@@ -41,8 +41,8 @@ module.exports = {
     /* ------------------------------------------------------------------------------ */
     explorer_api_blockhash: function () {
         getJSON('http://80.240.25.212:3001/api/getblock?hash=00001c40589092854b7c60700f287428eacf6cd5406fb70ef4b7375b8e2c16dd')
-            .then(function (response) {
-                console.log(response);
+            .then(function (hash) {
+                console.log(hash);
             }).catch(function (error) {
                 console.log(error);
             });
