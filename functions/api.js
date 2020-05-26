@@ -23,13 +23,13 @@ var getJSON = require('get-json')
 
 module.exports = {
 
-    explorer_api_blockhash1: async function() {
+    explorer_api_blockhash1: async function () {
         var chainInfo = await wallet.wallet_chain_info();
         var bestBlockHash = chainInfo.bestblockhash;
         var explorerLink = config.apiLinks.explorerAPI;
         var explorerGetBlock = "getblock?hash=";
-    // fetch data from a url endpoint
-       //const response = await axios.get(explorerLink+explorerGetBlock+bestBlockHash);
+        // fetch data from a url endpoint
+        //const response = await axios.get(explorerLink+explorerGetBlock+bestBlockHash);
         const response = await axios.get("http://80.240.25.212:3001/api/getblock?hash=00001c40589092854b7c60700f287428eacf6cd5406fb70ef4b7375b8e2c16dd");
         const data = await response.json();
         var hash = data.hash;
@@ -41,8 +41,8 @@ module.exports = {
     /* ------------------------------------------------------------------------------ */
     explorer_api_blockhash: function () {
         getJSON('http://80.240.25.212:3001/api/getblock?hash=00001c40589092854b7c60700f287428eacf6cd5406fb70ef4b7375b8e2c16dd')
-            .then(function (hash) {
-                console.log(hash);
+            .then(function (response) {
+                console.log(response.hash, response.merkleroot);
             }).catch(function (error) {
                 console.log(error);
             });
