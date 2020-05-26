@@ -2095,7 +2095,7 @@ module.exports = {
         //var poolBlock = poolInfo.blocks;
         //var poolBlockhash = poolInfo.bestblockhash;
 
-        var explorerHash = explorerAPI.hash;
+        var explorerHash = explorerAPI;
         var chainExplorer = config.wallet.explorerLink;
         var chainBackupExplorer = config.wallet.explorerBackupLink;
         var chainBlock = chainInfo.blocks;

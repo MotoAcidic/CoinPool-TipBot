@@ -16,6 +16,7 @@ const rp = require('request-promise');
 const axios = require('axios');
 var command = require("./command.js");
 var wallet = require("./wallet.js");
+var getJSON = require('get-json')
 /* ------------------------------------------------------------------------------ */
 // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 /* ------------------------------------------------------------------------------ */
@@ -39,59 +40,11 @@ module.exports = {
     // Get current currency price for coin id
     /* ------------------------------------------------------------------------------ */
     explorer_api_blockhash: function () {
-        return new Promise((resolve, reject) => {
-
-            var explorerAPI = config.apiLinks.hasExplorerAPI;
-            var requestOptions = {};
-
-            switch (explorerAPI) {
-                case 'true':
-                    requestOptions = {
-                        method: 'GET',
-                        uri: 'http://80.240.25.212:3001/api/getblock',
-                        qs: {
-                            hash: command.command_chain.chainBlockhash                             
-                        },
-
-                        json: true,
-                        gzip: true
-                    };
-                    rp(requestOptions).then(response => {
-                        if (response.status.error_code > 0) {
-                            resolve(false);
-                        } else {
-                            resolve(response.hash);
-                        }
-                    }).catch((err) => {
-                        resolve(false);
-                    });
-                    break;
-                case 'false':
-                        resolve(false);
-                    break;
-                default:
-                    resolve(false);
-            }
-
-        });
-
-        var options = {
-            uri: 'https://api.github.com/user/repos',
-            qs: {
-                access_token: 'xxxxx xxxxx' // -> uri + '?access_token=xxxxx%20xxxxx'
-            },
-            headers: {
-                'User-Agent': 'Request-Promise'
-            },
-            json: true // Automatically parses the JSON string in the response
-        };
-
-        rp(options)
-            .then(function (repos) {
-                console.log('User has %d repos', repos.length);
-            })
-            .catch(function (err) {
-                // API call failed...
+        getJSON('http://80.240.25.212:3001/api/getblock?hash=00001c40589092854b7c60700f287428eacf6cd5406fb70ef4b7375b8e2c16dd')
+            .then(function (response) {
+                console.log(response);
+            }).catch(function (error) {
+                console.log(error);
             });
-       
+    }
 };
