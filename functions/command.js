@@ -2081,7 +2081,7 @@ module.exports = {
     command_chain: async function (userID, userName, messageType, msg) {
         var chainInfo = await wallet.wallet_chain_info();
         //var poolInfo = await wallet.wallet_pool_info();
-        var explorerAPI = await api.explorer_api_blockhash();
+        var explorerAPI = await api.explorer_api_getblock();
         // If wallet not reachable
         if (chainInfo === 'error') {
             chat.chat_reply(msg, 'embed', userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
@@ -2095,13 +2095,14 @@ module.exports = {
         //var poolBlock = poolInfo.blocks;
         //var poolBlockhash = poolInfo.bestblockhash;
 
-        var explorerHash = explorerAPI;
+        var explorerHash = explorerAPI.hash;
+        var explorerBlock = explorerAPI.height;
         var chainExplorer = config.wallet.explorerLink;
         var chainBackupExplorer = config.wallet.explorerBackupLink;
         var chainBlock = chainInfo.blocks;
         var chainBlockhash = chainInfo.bestblockhash;
        // chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, true], [config.messages.chain.chainblockbot, chainBlock, false], [config.messages.chain.poolblockbot, poolBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
-        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, true], [config.messages.chain.chainblockbot, chainBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.explorerblockhash, explorerHash, true]], false, false, false, false);
+        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, false], [config.messages.chain.chainblockbot, chainBlock, true], [config.messages.chain.explorerblock, explorerBlock, true], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.explorerblockhash, explorerHash, true]], false, false, false, false);
 
         return;
     },
