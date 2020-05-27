@@ -14,7 +14,7 @@ module.exports = {
         "moderatorIDs": [ "XXX" ], // This discrod user IDs are able to use moderator commands and bypass cooldowns
         "vipGroupName": "Dev Team", // Users of this group are able to use vip commands and bypass cooldowns
         "respondChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
-        "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
+        "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot will post chain status 
         "commandIgnor": [""], // commands to ignor because of other bots
         "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
         "allowDM": true, // Allow or disable direct messages for commands to the bot with true or false
@@ -53,6 +53,8 @@ module.exports = {
         "thumbnailIcon": "https://domain.link/image.png", // Thumbnail icon for all messages (need to get enabled first in code to work = not ready)
         "check": true, // If enabled it checks (cron) for new transactions
         "credit": true, // If enabled it credits (cron) new transactions
+        "cronLcpStatus": false, // If enabled will post lcp chain status (Only work for lcp because of different rpc calls.)
+        "cronChainStatus": true, // If enabled this will post in the status channel defined above.
         "depositsToCheck": 60, // How many latest deposits should be checked from the wallet
         "depositsCreditTime": 120, // How often deposits get checked for credit in seconds
         "depositsConfirmationTime": 40, // How often confirmations get checked
@@ -72,14 +74,6 @@ module.exports = {
         "minTipValue": 0.00000001, // Minimum value for tip 
         "maxRainRandomUsers": 15, // Please take care as the bot can crash if the value is to big as for each user a database query is fired!
         "donateAddress":"XXX" // Address for donations
-    },
-    "coinPrice":{ // If enabled the current coin price will be saved next to each transaction made from the bot and into the price history database table
-        "enabled": false,
-        "cronTime": 1800, // Cron time in seconds
-        "apiService": "coinmarketcap", // define the api to use -> The coin must be listed on the api! Current possible values are "coinmarketcap" and "cryptocompare" -> you need to register to get a api key
-        "apiKey": "XXX",
-        "coinSymbol": "Symbol", // e.g. BTC
-        "currency": "EUR" // Cent prices in this currency
     },
     "staking":{
         // Please hold this option disabled and configure it before!
@@ -102,8 +96,21 @@ module.exports = {
         "lockTime": 86400, // 24hours = 86400 - Lock time in seconds -> Check if the minimum time between payments and payouts as defined has been respected // Prevent stake pool hopping ;)
         "timezone": "Europe/Berlin" // Used for detect if unstake command can be used or is blocked <- only change if you know what you do! Best value would be same as mysql database time
     },
+    "coinPrice": { // If enabled the current coin price will be saved next to each transaction made from the bot and into the price history database table
+        "enabled": false,
+        "cronTime": 1800, // Cron time in seconds
+        "apiService": "coinmarketcap", // define the api to use -> The coin must be listed on the api! Current possible values are "coinmarketcap" and "cryptocompare" -> you need to register to get a api key
+        "apiKey": "XXX",
+        "coinSymbol": "Symbol", // e.g. BTC
+        "currency": "EUR" // Cent prices in this currency
+    },
     "cronTimes": {
-        "statusCronTime": 30
+        "statusLcpCronTime": 30,
+        "statusChainCronTime": 60
+    },
+    "apiLinks": {       
+        "hasExplorerAPI": "true", //Enable explorer api (true is yes, false is no)
+        "explorerAPI": "https://explorer.link/api/"
     },
     "commands": {
         // Enable or disable commands -> true/false
@@ -483,6 +490,8 @@ module.exports = {
             "chainblockexplorer": "Main (Explorer)",
             "chainblockbackupexplorer": "Backup (Explorer)",
             "chainbestblockhash": "Block hash (Bot)",
+            "explorerblock": "Current Block (Explorer)",
+            "explorerblockhash": "Block Hash (Explorer)",
             "poolblockbot": "Current Block (Pool)",
             "poolbestblockhash": "Block hash (Pool)"
 

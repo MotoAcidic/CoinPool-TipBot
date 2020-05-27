@@ -13,7 +13,7 @@
     "scripts": "./functions/**/*.js",
     "assets": "./storage/**/*"
   },
-  "author": "Christian Grieger",
+  "author": "Christian Grieger, Tfinch (MotoAcidic)",
   "license": "MIT",
   "dependencies": {
     "coinpoolservices-rpc": "^1.0.5",
