@@ -39,12 +39,17 @@ module.exports = {
     },
 */
 
-    explorer_api_blockhash: function () {
+    explorer_api_blockhash: async function () {
+        var chainInfo = await wallet.wallet_chain_info();
+        var currentBlock = chainInfo.bestblockhash;
         return new Promise((resolve, reject) => {
             var requestOptions = {};
             requestOptions = {
                 method: 'GET',
-                uri: 'http://80.240.25.212:3001/api/getblock?hash=00001c40589092854b7c60700f287428eacf6cd5406fb70ef4b7375b8e2c16dd',
+                uri: 'http://80.240.25.212:3001/api/getblock',
+            qs: {
+                hash: currentBlock
+            },
                 json: true
             };
             rp(requestOptions).then(response => {
