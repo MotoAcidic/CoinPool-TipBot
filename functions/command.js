@@ -2102,7 +2102,11 @@ module.exports = {
         var chainBlock = chainInfo.blocks;
         var chainBlockhash = chainInfo.bestblockhash;
        // chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, true], [config.messages.chain.chainblockbot, chainBlock, false], [config.messages.chain.poolblockbot, poolBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
-        chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, false], [config.messages.chain.chainblockbot, chainBlock, true], [config.messages.chain.explorerblock, explorerBlock, true], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.explorerblockhash, explorerHash, true]], false, false, false, false);
+        chat.chat_reply('status', 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, false], [config.messages.chain.chainblockbot, chainBlock, true], [config.messages.chain.explorerblock, explorerBlock, true], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.explorerblockhash, explorerHash, true]], false, false, false, false).then(function (reactCollectorMessage) {
+            // Save message to global eventCollectorMessage
+            eventCollectorMessage = reactCollectorMessage;
+            chat.chat_delete_message(eventCollectorMessage);
+        });
 
         return;
     },
@@ -2165,7 +2169,6 @@ module.exports = {
         }
         // Check if user is allowed to fire the command
         if (userRole < 2 && manuallyFired) { // mods are allowed to start command
-            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
             chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.notAllowedCommand, false, false, false, false);
             return;
         }

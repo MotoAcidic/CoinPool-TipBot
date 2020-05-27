@@ -17,8 +17,6 @@
   "license": "MIT",
   "dependencies": {
     "coinpoolservices-rpc": "^1.0.5",
-    "axios": "0.19.2",
-    "get-json": "1.0.1",
     "array-unique": "^0.3.2",
     "big.js": "^5.2.2",
     "bufferutil": "^4.0.0",

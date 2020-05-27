@@ -24,20 +24,8 @@ var getJSON = require('get-json')
 module.exports = {
 
 /* ------------------------------------------------------------------------------ 
-                                    Old method
+                      Explorer API Get Block Call
  ------------------------------------------------------------------------------ */
-
-/*
-    explorer_api_blockhash1: function () {
-
-        getJSON('http://80.240.25.212:3001/api/getblock?hash=00001c40589092854b7c60700f287428eacf6cd5406fb70ef4b7375b8e2c16dd')
-                .then(function (response) {
-                    console.log(response.hash, response.merkleroot);
-                }).catch(function (error) {
-                    console.log(error);
-                });        
-    },
-*/
 
     explorer_api_getblock: async function () {
         var chainInfo = await wallet.wallet_chain_info();
@@ -47,7 +35,6 @@ module.exports = {
             requestOptions = {
                 method: 'GET',
                 uri: config.apiLinks.explorerAPI + 'getblock',
-                //uri: 'http://80.240.25.212:3001/api/getblock',
             qs: {
                 hash: currentBlock
             },
@@ -59,4 +46,27 @@ module.exports = {
             })
         })
     }
+
+    /* Example GETBLOCK Output
+  { hash: '007fad00fb33d063a31b83624d780a31cdd7da51e9862f2786065633a13b2057',
+  confirmations: 1,
+  size: 429,
+  height: 21355,
+  version: 3,
+  merkleroot: '65a4c938a26e06bccc7d6d6a98766b377a815df490719c70c19fcca38f9918b5',
+  tx:
+   [ '225237c748ae81522df13d1a60e7f73541292010bcc8a83817f2172c9345223d',
+     '19f733d31c8148b84adc7d8185587a1658bad2a2663259dbc1fd458f6914f341' ],
+  time: 1590596773,
+  nonce: 0,
+  bits: '1b1e4281',
+  difficulty: 2165.7460195,
+  chainwork: '00000000000000000000000000000000000000000000000002065a93cd44dc62',
+  previousblockhash: '0a68a4b834c4fe02ff4cb16eaea3537d78d0b08f0b95537bbee7b2711abbbdeb',
+  flags: 'proof-of-stake stake-modifier',
+  proofhash: '0000000000000000000000000000000000000000000000000000000000000000',
+  entropybit: 1,
+  modifierchecksum: '5909df08' }
+
+     */
 };

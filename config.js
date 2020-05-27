@@ -14,7 +14,7 @@ module.exports = {
         "moderatorIDs": [ "XXX" ], // This discrod user IDs are able to use moderator commands and bypass cooldowns
         "vipGroupName": "Dev Team", // Users of this group are able to use vip commands and bypass cooldowns
         "respondChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
-        "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
+        "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot will post chain status 
         "commandIgnor": [""], // commands to ignor because of other bots
         "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
         "allowDM": true, // Allow or disable direct messages for commands to the bot with true or false
@@ -53,6 +53,8 @@ module.exports = {
         "thumbnailIcon": "https://domain.link/image.png", // Thumbnail icon for all messages (need to get enabled first in code to work = not ready)
         "check": true, // If enabled it checks (cron) for new transactions
         "credit": true, // If enabled it credits (cron) new transactions
+        "cronLcpStatus": false, // If enabled will post lcp chain status (Only work for lcp because of different rpc calls.)
+        "cronChainStatus": true, // If enabled this will post in the status channel defined above.
         "depositsToCheck": 60, // How many latest deposits should be checked from the wallet
         "depositsCreditTime": 120, // How often deposits get checked for credit in seconds
         "depositsConfirmationTime": 40, // How often confirmations get checked
@@ -103,7 +105,8 @@ module.exports = {
         "currency": "EUR" // Cent prices in this currency
     },
     "cronTimes": {
-        "statusCronTime": 30
+        "statusLcpCronTime": 30,
+        "statusChainCronTime": 60
     },
     "apiLinks": {       
         "hasExplorerAPI": "true", //Enable explorer api (true is yes, false is no)
