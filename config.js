@@ -17,6 +17,7 @@ module.exports = {
         "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot will post chain status 
         "commandIgnor": [""], // commands to ignor because of other bots
         "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
+        "newsChannelID": "XXX", // Channel for Crypto news articles to be posted in
         "allowDM": true, // Allow or disable direct messages for commands to the bot with true or false
         "botToken": "XXX", // Discord bot token
         "discordLink": "https://discord.gg/eWB5z2E", // Main channel discord link
@@ -82,19 +83,19 @@ module.exports = {
         // staking=1
         // walletnotify=/path/to/your/bot/folder/transaction.sh %s
         // 3. Check if transactionns are coming in to database
-        "debug": false, // Debug stake credit on console
-        "check": false, // If enabled it checks (cron) the saved transaction from walletnotify on database for stakes and calculated the amount
+        "debug": true, // Debug stake credit on console
+        "check": true, // If enabled it checks (cron) the saved transaction from walletnotify on database for stakes and calculated the amount
         "checkTime": 60, // Check for new transaction in seconds
         "checkCount": 50, // How many transactions max get checked at once from database
-        "credit": false, // If enabled it credits (cron) all users with new stakes from database
+        "credit": true, // If enabled it credits (cron) all users with new stakes from database
         "creditTime": 80, // Credit new transactions in seconds
         "creditCount": 50, // How many transactions get credited to the users with one run
-        "balanceDisplay": false, // Enable take balance display on balance command
-        "minStake": 20, // Minimum value to stake
-        "minUnstake": 20, // Minimum value to unstake
+        "balanceDisplay": true, // Enable stake balance display on balance command
+        "minStake": .01, // Minimum value to stake
+        "minUnstake": .1, // Minimum value to unstake
         "ownerPercentage": 95, // Bot owner percentage // Define how many percente users get from 100%
         "lockTime": 86400, // 24hours = 86400 - Lock time in seconds -> Check if the minimum time between payments and payouts as defined has been respected // Prevent stake pool hopping ;)
-        "timezone": "Europe/Berlin" // Used for detect if unstake command can be used or is blocked <- only change if you know what you do! Best value would be same as mysql database time
+        "timezone": "America/New_York" // Used for detect if unstake command can be used or is blocked <- only change if you know what you do! Best value would be same as mysql database time
     },
     "coinPrice": { // If enabled the current coin price will be saved next to each transaction made from the bot and into the price history database table
         "enabled": false,
@@ -110,7 +111,11 @@ module.exports = {
     },
     "apiLinks": {       
         "hasExplorerAPI": "true", //Enable explorer api (true is yes, false is no)
-        "explorerAPI": "https://explorer.link/api/"
+        "explorerAPI": "https://explorer.link/api/",
+        "nomicsAPI": "https://api.nomics.com/v1/",
+        "nomicsKey": "cd8335429190e6cba759f6a8253a30b9",
+        "cryptoPanicAPI": "https://cryptopanic.com/api/v1/posts/",
+        "cryptoPanicKey": "d84d1d92b8a88c279d01b624bf1079ca2421bbea"
     },
     "commands": {
         // Enable or disable commands -> true/false
@@ -144,7 +149,8 @@ module.exports = {
         "support": true,
         "getinfo": true, //Does project have getinfo?
         "listrules": false, //Does project have listrules. LitecoinPlus?
-        "testrule": false //Does project have testrule. LitecoinPlus?
+        "testrule": false, //Does project have testrule. LitecoinPlus?
+        "newsAPI": true // enable if you have a news api set
     },
     "colors": {
         "normal": "0xecf0f1", // grey
@@ -311,6 +317,8 @@ module.exports = {
             "listRulesValue": "List all Running Rules.",
             "testRuleTitle": "+testrule || +tr",
             "testRuleValue": "List Given Rules Value.",
+            "newsAPITitle": "+exchangenews || +exn",
+            "newsAPIValue": "Shows all current exchange news.",
             "admin": {
                 "title":"Admin commands",
                 "startStopTitle":"+start / +stop",
@@ -494,6 +502,12 @@ module.exports = {
             "explorerblockhash": "Block Hash (Explorer)",
             "poolblockbot": "Current Block (Pool)",
             "poolbestblockhash": "Block hash (Pool)"
+
+        },
+        "news": {
+            "title": "Crypto News",
+            "publicnews": "Current Public News",
+            "exchangenews": "CryptoExchange News"
 
         },
         "listrules": {

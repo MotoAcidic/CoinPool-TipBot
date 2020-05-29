@@ -13,10 +13,8 @@ try {
 
 //const Big = require('big.js'); // https://github.com/MikeMcl/big.js -> http://mikemcl.github.io/big.js/
 const rp = require('request-promise');
-const axios = require('axios');
 var command = require("./command.js");
 var wallet = require("./wallet.js");
-var getJSON = require('get-json')
 /* ------------------------------------------------------------------------------ */
 // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 /* ------------------------------------------------------------------------------ */
@@ -35,17 +33,18 @@ module.exports = {
             requestOptions = {
                 method: 'GET',
                 uri: config.apiLinks.explorerAPI + 'getblock',
-            qs: {
-                hash: currentBlock
-            },
+                qs: {
+                    hash: currentBlock
+                },
                 json: true
             };
             rp(requestOptions).then(response => {
-                    console.log(response);
-                    resolve(response);
+                //console.log(response);
+                resolve(response);
             })
         })
-    }
+    },
+
 
     /* Example GETBLOCK Output
   { hash: '007fad00fb33d063a31b83624d780a31cdd7da51e9862f2786065633a13b2057',
@@ -69,4 +68,24 @@ module.exports = {
   modifierchecksum: '5909df08' }
 
      */
+
+    // https://api-docs.cryptocontrol.io/?json-doc#introduction
+
+    cryptoPanic_hot_news: async function () {
+        return new Promise((resolve, reject) => {
+            var requestOptions = {};
+            requestOptions = {
+                method: 'GET',
+                uri: config.apiLinks.cryptoPanicAPI + 'public/news/category',
+                qs: {
+                    auth_token: config.apiLinks.cryptoPanicKey
+                },
+                json: true
+            };
+            rp(requestOptions).then(response => {
+                console.log(response);
+                resolve(response);
+            })
+        })
+    },
 };
