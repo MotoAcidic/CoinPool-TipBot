@@ -79,13 +79,26 @@ module.exports = {
                 json: true
             };
             rp(requestOptions).then(response => {
-                console.log(response);
+              //  console.log(response);
                 resolve(response);
             })
         })
     },
 
-
+    coingecko_coin_info: async function () {
+        return new Promise((resolve, reject) => {
+            var requestOptions = {};
+            requestOptions = {
+                method: 'GET',
+                uri: 'https://api.coingecko.com/api/v3/coins/' + config.apiLinks.coingeckoTicker + '?localization=false&tickers=true&market_data=true&community_data=true&developer_data=false&sparkline=false',
+                json: true
+            };
+            rp(requestOptions).then(response => {
+               // console.log(response);
+                resolve(response);
+            })
+        })
+    },
 
 
 
@@ -103,7 +116,7 @@ module.exports = {
                 json: true
             };
             rp(requestOptions).then(response => {
-                console.log(response);
+                //console.log(response);
                 resolve(response);
             })
         })

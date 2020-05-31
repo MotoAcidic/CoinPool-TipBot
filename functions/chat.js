@@ -137,6 +137,12 @@ module.exports = {
         } catch (error) {
         }
     },
+    chat_delete_price_message: function (message) {
+        try {
+            message.delete(59000);
+        } catch (error) {
+        }
+    },
     chat_delete_lcp_status_message: function (message) {
         try {
             message.delete(29000);

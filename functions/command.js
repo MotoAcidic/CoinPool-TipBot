@@ -2096,14 +2096,12 @@ module.exports = {
         var chainInfo = await wallet.wallet_chain_info();
         //var poolInfo = await wallet.wallet_pool_info();
         var explorerAPI = await api.explorer_api_getblock();
-        var coingeckoPrice = await api.coingecko_price();
         // If wallet not reachable
         if (chainInfo === 'error') { chat.chat_reply(msg, 'embed', userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
             return; }
         if (explorerAPI === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.apioffline, false, false, false, false);
             return; }
-        if (coingeckoPrice === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.apioffline, false, false, false, false);
-            return; }
+
        // if (poolInfo === 'error') {
          //   chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.poolWalletOffline, false, false, false, false);
         //    return;
@@ -2115,7 +2113,6 @@ module.exports = {
         var explorerHash = explorerAPI.hash;
         var explorerBlock = explorerAPI.height;
         var explorerTX = explorerAPI.tx;
-        var coinPrice = coingeckoPrice.news24.btc;
         var chainExplorer = config.wallet.explorerLink;
         var chainBackupExplorer = config.wallet.explorerBackupLink;
         var chainBlock = chainInfo.blocks;
@@ -2129,8 +2126,7 @@ module.exports = {
                 [config.messages.chain.chainbestblockhash, chainBlockhash, false],
                 [config.messages.chain.explorerblockhash, explorerHash, true],
                 [config.messages.chain.explorertx, explorerTX, false],
-                [config.messages.chain.explorerblocklink, chainExplorer + '/block/' + explorerHash, false],
-                [config.messages.chain.coinprice, coinPrice, false]
+                [config.messages.chain.explorerblocklink, chainExplorer + '/block/' + explorerHash, false]
             ], false, false, false, false).then(function (reactCollectorMessage) {
             // Save message to global eventCollectorMessage
             eventCollectorMessage = reactCollectorMessage;
@@ -2146,23 +2142,32 @@ module.exports = {
 
     command_price: async function (userID, userName, messageType, msg) {
         var coingeckoPrice = await api.coingecko_price();
-        // If wallet not reachable
+        var coingeckoInfo = await api.coingecko_coin_info();
+        // If api not reachable
 
-        if (coingeckoPrice === 'error') {
-            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+        if (coingeckoInfo === 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.apioffline, false, false, false, false);
             return;
         }
 
-        var coinPrice = coingeckoPrice.news24.btc;
-        var marketCap = coingeckoPrice.news24.btc_market_cap;
-        var 24hrVolume = coingeckoPrice.news24.btc_24h_vol;
-
+        var newsCoinPriceBTC = coingeckoPrice.news24.btc;
+        var newsCoinPriceLTC = coingeckoInfo.market_data.current_price.ltc;
+        var newsMarketCap = coingeckoPrice.news24.btc_market_cap;
+        var newsDailyVolume = coingeckoPrice.news24.btc_24h_vol;
+        var newsMarketCapRank = coingeckoInfo.market_cap_rank;
+        var newsCoinGeckoRank = coingeckoInfo.coingecko_rank;
 
         chat.chat_reply('status', 'embed', false, messageType, config.colors.success, false, config.messages.price.title,
             [
-                [config.messages.price.currentbtcprice, coinPrice, true],
-                [config.messages.price.btcmarketcap, marketCap, false],
-                [config.messages.price.24hrVolume, 24hrVolume
+                //BTC
+                [config.messages.price.currentnewsbtcprice, newsCoinPriceBTC + ' ' + config.emojis.btc, true],                
+                [config.messages.price.dailyVolumeNews, newsDailyVolume + ' ' + config.emojis.btc, true],
+                [config.messages.price.newsbtcmarketcap, newsMarketCap, true],
+                //LTC
+                [config.messages.price.currentnewsbtcprice, newsCoinPriceLTC + ' ' + config.emojis.ltc, true],
+
+                [config.messages.price.newsmarketcaprank, newsMarketCapRank, true],
+                [config.messages.price.newscoingecko_rank, newsCoinGeckoRank, true]
             ], false, false, false, false).then(function (reactCollectorMessage) {
                 // Save message to global eventCollectorMessage
                 eventCollectorMessage = reactCollectorMessage;
@@ -2554,6 +2559,11 @@ module.exports = {
             case 'chain':
                 if (config.commands.chain) {
                     this.command_chain(userID, userName, messageType, msg);
+                }
+                return;
+            case 'price':
+                if (config.commands.newsAPI) {
+                    this.command_price(userID, userName, messageType, msg);
                 }
                 return;
             case 'hn':

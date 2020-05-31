@@ -119,6 +119,12 @@ module.exports = {
         "coingeckoPriceAPI": "https://api.coingecko.com/api/v3/simple/price",
         'coingeckoTicker': "XXX" //This is the coins ticker that must be all lower case IE:(news24) and not (News24)
     },
+    "emojis": { 
+        //To get discord emoji ID's use \:emoji:
+        "btc": "<:btc:701228640683294721>",
+        "ltc": "<:ltc:716711436151160924>",
+        "eth": "<:eth:716711436268863559>"
+    },
     "commands": {
         // Enable or disable commands -> true/false
         // Admin commands
@@ -511,10 +517,12 @@ module.exports = {
         },
         "price": {
             "title": "Current Price Information",
-            "currentbtcprice": "Current BTC Price",
-            "btcmarketcap": "Current BTC Market Cap",
-            "btc24hvol": "Current 24hr Volume",
-            "btc24hchange": "Current 24hr Change"
+            "currentnewsbtcprice": "News24 BTC Price",
+            "newsbtcmarketcap": "News24 BTC Market Cap",
+            "dailyVolumeNews": "News24 24hr Volume",
+            "newsbtc24hchange": "News24 24hr Change",
+            "newsmarketcaprank": "News24 Market Cap Rank",
+            "newscoingecko_rank": "News24 Coingecko Rank"
         },
         "news": {
             "title": "Crypto News",
