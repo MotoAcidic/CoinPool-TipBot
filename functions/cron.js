@@ -89,7 +89,7 @@ module.exports = {
     cron_hot_news: function () {
         setInterval(function () {
             command.command_hotnews(config.bot.adminIDs[0], '', 'text', 'hotnews');
-        }, 9000); //60 seconds
+        }, 60000); //60 seconds
     },
 
     /* ------------------------------------------------------------------------------ */

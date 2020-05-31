@@ -115,7 +115,9 @@ module.exports = {
         "nomicsAPI": "https://api.nomics.com/v1/",
         "nomicsKey": "cd8335429190e6cba759f6a8253a30b9",
         "cryptoPanicAPI": "https://cryptopanic.com/api/v1/posts/",
-        "cryptoPanicKey": "d84d1d92b8a88c279d01b624bf1079ca2421bbea"
+        "cryptoPanicKey": "d84d1d92b8a88c279d01b624bf1079ca2421bbea",
+        "coingeckoPriceAPI": "https://api.coingecko.com/api/v3/simple/price",
+        'coingeckoTicker': "XXX" //This is the coins ticker that must be all lower case IE:(news24) and not (News24)
     },
     "commands": {
         // Enable or disable commands -> true/false
@@ -167,6 +169,7 @@ module.exports = {
         "DMDisabled": "Direct messages are disabled. Please use the official command channel.",
         "notValidCommand": "This is not a valid command. Type **+help** for a list and try again.",
         "notAllowedCommand": "You are not allowed to use this command!",
+        "apioffline": "The api is not reachable. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "walletOffline": "The wallet is not reachable. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "poolWalletOffline": "The Pool wallet is not reachable. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "wentWrong": "Somethig went wrong with your request. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
@@ -497,12 +500,21 @@ module.exports = {
             "chainblockbot": "Current Block (Bot)",
             "chainblockexplorer": "Main (Explorer)",
             "chainblockbackupexplorer": "Backup (Explorer)",
-            "chainbestblockhash": "Block hash (Bot)",
+            "chainbestblockhash": "Block Hash (Bot)",
             "explorerblock": "Current Block (Explorer)",
             "explorerblockhash": "Block Hash (Explorer)",
+            "explorertx": "Transactions in Block",
+            "explorerblocklink": "View on Explorer",
             "poolblockbot": "Current Block (Pool)",
-            "poolbestblockhash": "Block hash (Pool)"
-
+            "poolbestblockhash": "Block hash (Pool)",
+            "coinprice": "Current BTC Price"
+        },
+        "price": {
+            "title": "Current Price Information",
+            "currentbtcprice": "Current BTC Price",
+            "btcmarketcap": "Current BTC Market Cap",
+            "btc24hvol": "Current 24hr Volume",
+            "btc24hchange": "Current 24hr Change"
         },
         "news": {
             "title": "Crypto News",

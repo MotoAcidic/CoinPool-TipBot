@@ -15,6 +15,7 @@ try {
 const rp = require('request-promise');
 var command = require("./command.js");
 var wallet = require("./wallet.js");
+const NEWS_HOST = 'https://cryptopanic.com'
 /* ------------------------------------------------------------------------------ */
 // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 /* ------------------------------------------------------------------------------ */
@@ -69,17 +70,36 @@ module.exports = {
 
      */
 
-    // https://api-docs.cryptocontrol.io/?json-doc#introduction
+    coingecko_price: async function () {
+        return new Promise((resolve, reject) => {
+            var requestOptions = {};
+            requestOptions = {
+                method: 'GET',
+                uri: 'https://api.coingecko.com/api/v3/simple/price?ids=' + config.apiLinks.coingeckoTicker + '&vs_currencies=btc&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=false',
+                json: true
+            };
+            rp(requestOptions).then(response => {
+                console.log(response);
+                resolve(response);
+            })
+        })
+    },
 
+
+
+
+
+    // https://api-docs.cryptocontrol.io/?json-doc#introduction
     cryptoPanic_hot_news: async function () {
         return new Promise((resolve, reject) => {
             var requestOptions = {};
             requestOptions = {
                 method: 'GET',
-                uri: config.apiLinks.cryptoPanicAPI + 'public/news/category',
-                qs: {
-                    auth_token: config.apiLinks.cryptoPanicKey
-                },
+                uri: config.apiLinks.cryptoPanicAPI + '?auth_token=' + config.apiLinks.cryptoPanicKey + '&filter=important',
+                //qs: {
+                    //auth_token: config.apiLinks.cryptoPanicKey,
+                    //'&filter': important                   
+                //},
                 json: true
             };
             rp(requestOptions).then(response => {
