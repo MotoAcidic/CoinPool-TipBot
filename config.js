@@ -54,8 +54,6 @@ module.exports = {
         "thumbnailIcon": "https://domain.link/image.png", // Thumbnail icon for all messages (need to get enabled first in code to work = not ready)
         "check": true, // If enabled it checks (cron) for new transactions
         "credit": true, // If enabled it credits (cron) new transactions
-        "cronLcpStatus": false, // If enabled will post lcp chain status (Only work for lcp because of different rpc calls.)
-        "cronChainStatus": true, // If enabled this will post in the status channel defined above.
         "depositsToCheck": 60, // How many latest deposits should be checked from the wallet
         "depositsCreditTime": 120, // How often deposits get checked for credit in seconds
         "depositsConfirmationTime": 40, // How often confirmations get checked
@@ -107,8 +105,10 @@ module.exports = {
     },
     "cronTimes": {
         "statusLcpCronTime": 30,
-        "statusChainCronTime": 60
+        "statusChainCronTime": 60,
+        "priceCronTime": 180
     },
+
     "apiLinks": {       
         "hasExplorerAPI": "true", //Enable explorer api (true is yes, false is no)
         "explorerAPI": "https://explorer.link/api/",

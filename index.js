@@ -223,10 +223,14 @@ if(config.staking.check) // Check for new stakes
   cron.cron_get_stakes();
 if(config.staking.credit) // Credit new stakes
     cron.cron_credit_stakes();
+
 if (config.wallet.cronLcpStatus) // Post LCP Chain Status
     cron.cron_lcp_chain_status();
 if (config.wallet.cronChainStatus) // Post chain status
     cron.cron_chain_status();
+if (config.wallet.cronCoingeckoPrice) // Post coingecko price
+    cron.cron_price_status();
+
 if(config.coinPrice.enabled) // Get coin price 
     cron.cron_price();
 

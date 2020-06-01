@@ -81,6 +81,16 @@ module.exports = {
         }, config.cronTimes.statusChainCronTime * 1000); //60 seconds
     },
 
+    /* ------------------------------------------------------------------------------ */
+    // Send Price Message
+    /* ------------------------------------------------------------------------------ */
+
+    cron_price_status: function () {
+        setInterval(function () {
+            command.command_price(config.bot.adminIDs[0], '', 'text', 'price');
+        }, config.cronTimes.priceCronTime * 1000); //3mins 
+    },
+
 
     /* ------------------------------------------------------------------------------ */
     // Send News Headlines
