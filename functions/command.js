@@ -2141,8 +2141,9 @@ module.exports = {
     /* ------------------------------------------------------------------------------ */
 
     command_price: async function (userID, userName, messageType, msg) {
-        var coingeckoPrice = await api.coingecko_price();
+        var coingeckoBtcPrice = await api.coingecko_btc_price();
         var coingeckoInfo = await api.coingecko_coin_info();
+        var coingeckoLtcPrice = await api.coingecko_ltc_price();
         // If api not reachable
 
         if (coingeckoInfo === 'error') {
@@ -2150,24 +2151,31 @@ module.exports = {
             return;
         }
 
-        var newsCoinPriceBTC = coingeckoPrice.news24.btc;
-        var newsCoinPriceLTC = coingeckoInfo.market_data.current_price.ltc;
-        var newsMarketCap = coingeckoPrice.news24.btc_market_cap;
-        var newsDailyVolume = coingeckoPrice.news24.btc_24h_vol;
+        var newsCoinPriceBTC = coingeckoBtcPrice.news24.btc;
+        var newsCoinPriceLTC = coingeckoLtcPrice.news24.ltc;
+
+        var newsMarketCapBTC = coingeckoBtcPrice.news24.btc_market_cap;
+        var newsMarketCapLTC = coingeckoLtcPrice.news24.ltc_market_cap;
+
+        var newsDailyVolumeBTC = coingeckoBtcPrice.news24.btc_24h_vol;
+        var newsDailyVolumeLTC = coingeckoLtcPrice.news24.ltc_24h_vol;
+
         var newsMarketCapRank = coingeckoInfo.market_cap_rank;
         var newsCoinGeckoRank = coingeckoInfo.coingecko_rank;
 
         chat.chat_reply('status', 'embed', false, messageType, config.colors.success, false, config.messages.price.title,
             [
                 //BTC
-                [config.messages.price.currentnewsbtcprice, newsCoinPriceBTC + ' ' + config.emojis.btc, true],                
-                [config.messages.price.dailyVolumeNews, newsDailyVolume + ' ' + config.emojis.btc, true],
-                [config.messages.price.newsbtcmarketcap, newsMarketCap, true],
+                [config.messages.price.currentNewsPriceBTC, newsCoinPriceBTC + ' ' + config.emojis.btc, true],                
+                [config.messages.price.dailyVolumeNewsBTC, newsDailyVolumeBTC + ' ' + config.emojis.btc, true],
+                [config.messages.price.newsMarketCapBTC, newsMarketCapBTC, true],
                 //LTC
-                [config.messages.price.currentnewsbtcprice, newsCoinPriceLTC + ' ' + config.emojis.ltc, true],
+                [config.messages.price.currentNewsPriceLTC, newsCoinPriceLTC + ' ' + config.emojis.ltc, true],
+                [config.messages.price.dailyVolumeNewsLTC, newsDailyVolumeLTC + ' ' + config.emojis.ltc, true],
+                [config.messages.price.newsMarketCapLTC, newsMarketCapLTC, true],
 
-                [config.messages.price.newsmarketcaprank, newsMarketCapRank, true],
-                [config.messages.price.newscoingecko_rank, newsCoinGeckoRank, true]
+                [config.messages.price.newsMarketcapRank, newsMarketCapRank, true],
+                [config.messages.price.newsCoingeckoRank, newsCoinGeckoRank, true]
             ], false, false, false, false).then(function (reactCollectorMessage) {
                 // Save message to global eventCollectorMessage
                 eventCollectorMessage = reactCollectorMessage;

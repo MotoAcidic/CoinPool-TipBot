@@ -516,13 +516,22 @@ module.exports = {
             "coinprice": "Current BTC Price"
         },
         "price": {
+            //BTC Section
             "title": "Current Price Information",
-            "currentnewsbtcprice": "News24 BTC Price",
-            "newsbtcmarketcap": "News24 BTC Market Cap",
-            "dailyVolumeNews": "News24 24hr Volume",
-            "newsbtc24hchange": "News24 24hr Change",
-            "newsmarketcaprank": "News24 Market Cap Rank",
-            "newscoingecko_rank": "News24 Coingecko Rank"
+            "currentNewsPriceBTC": "News24 BTC Price",
+            "newsMarketCapBTC": "News24 BTC Market Cap",
+            "dailyVolumeNewsBTC": "News24 BTC 24hr Volume",
+            "news24hChangeBTC": "News24 BTC 24hr Change",
+
+            //Ranks
+            "newsMarketcapRank": "News24 Market Cap Rank",
+            "newsCoingeckoRank": "News24 Coingecko Rank",
+
+            //LTC
+            "currentNewsPriceLTC": "News24 LTC Price",
+            "newsMarketCapLTC": "News24 LTC Market Cap",
+            "dailyVolumeNewsLTC": "News24 LTC 24hr Volume",
+            "news24hChangeLTC": "News24 LTC 24hr Change"
         },
         "news": {
             "title": "Crypto News",

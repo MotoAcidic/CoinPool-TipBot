@@ -70,7 +70,7 @@ module.exports = {
 
      */
 
-    coingecko_price: async function () {
+    coingecko_btc_price: async function () {
         return new Promise((resolve, reject) => {
             var requestOptions = {};
             requestOptions = {
@@ -80,6 +80,21 @@ module.exports = {
             };
             rp(requestOptions).then(response => {
               //  console.log(response);
+                resolve(response);
+            })
+        })
+    },
+
+    coingecko_ltc_price: async function () {
+        return new Promise((resolve, reject) => {
+            var requestOptions = {};
+            requestOptions = {
+                method: 'GET',
+                uri: 'https://api.coingecko.com/api/v3/simple/price?ids=' + config.apiLinks.coingeckoTicker + '&vs_currencies=ltc&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=false',
+                json: true
+            };
+            rp(requestOptions).then(response => {
+                //  console.log(response);
                 resolve(response);
             })
         })
@@ -99,8 +114,6 @@ module.exports = {
             })
         })
     },
-
-
 
     // https://api-docs.cryptocontrol.io/?json-doc#introduction
     cryptoPanic_hot_news: async function () {
