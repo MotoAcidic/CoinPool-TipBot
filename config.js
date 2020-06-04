@@ -17,6 +17,7 @@ module.exports = {
         "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot will post chain status 
         "commandIgnor": [""], // commands to ignor because of other bots
         "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
+        "newsChannelID": "XXX", // Channel for Crypto news articles to be posted in
         "allowDM": true, // Allow or disable direct messages for commands to the bot with true or false
         "botToken": "XXX", // Discord bot token
         "discordLink": "https://discord.gg/eWB5z2E", // Main channel discord link
@@ -82,19 +83,27 @@ module.exports = {
         // staking=1
         // walletnotify=/path/to/your/bot/folder/transaction.sh %s
         // 3. Check if transactionns are coming in to database
-        "debug": false, // Debug stake credit on console
-        "check": false, // If enabled it checks (cron) the saved transaction from walletnotify on database for stakes and calculated the amount
+        "debug": true, // Debug stake credit on console
+        "check": true, // If enabled it checks (cron) the saved transaction from walletnotify on database for stakes and calculated the amount
         "checkTime": 60, // Check for new transaction in seconds
         "checkCount": 50, // How many transactions max get checked at once from database
-        "credit": false, // If enabled it credits (cron) all users with new stakes from database
+        "credit": true, // If enabled it credits (cron) all users with new stakes from database
         "creditTime": 80, // Credit new transactions in seconds
         "creditCount": 50, // How many transactions get credited to the users with one run
-        "balanceDisplay": false, // Enable take balance display on balance command
-        "minStake": 20, // Minimum value to stake
-        "minUnstake": 20, // Minimum value to unstake
+        "balanceDisplay": true, // Enable stake balance display on balance command
+        "minStake": .01, // Minimum value to stake
+        "minUnstake": .1, // Minimum value to unstake
         "ownerPercentage": 95, // Bot owner percentage // Define how many percente users get from 100%
         "lockTime": 86400, // 24hours = 86400 - Lock time in seconds -> Check if the minimum time between payments and payouts as defined has been respected // Prevent stake pool hopping ;)
-        "timezone": "Europe/Berlin" // Used for detect if unstake command can be used or is blocked <- only change if you know what you do! Best value would be same as mysql database time
+        "timezone": "America/New_York" // Used for detect if unstake command can be used or is blocked <- only change if you know what you do! Best value would be same as mysql database time
+    },
+    "coinPrice": { // If enabled the current coin price will be saved next to each transaction made from the bot and into the price history database table
+        "enabled": false,
+        "cronTime": 1800, // Cron time in seconds
+        "apiService": "coinmarketcap", // define the api to use -> The coin must be listed on the api! Current possible values are "coinmarketcap" and "cryptocompare" -> you need to register to get a api key
+        "apiKey": "XXX",
+        "coinSymbol": "Symbol", // e.g. BTC
+        "currency": "EUR" // Cent prices in this currency
     },
     "coinPrice": { // If enabled the current coin price will be saved next to each transaction made from the bot and into the price history database table
         "enabled": false,
@@ -106,11 +115,26 @@ module.exports = {
     },
     "cronTimes": {
         "statusLcpCronTime": 30,
-        "statusChainCronTime": 60
+        "statusChainCronTime": 60,
+        "priceCronTime": 180
     },
+
     "apiLinks": {       
         "hasExplorerAPI": "true", //Enable explorer api (true is yes, false is no)
-        "explorerAPI": "https://explorer.link/api/"
+        "explorerAPI": "https://explorer.link/api/",
+        "nomicsAPI": "https://api.nomics.com/v1/",
+        "nomicsKey": "cd8335429190e6cba759f6a8253a30b9",
+        "cryptoPanicAPI": "https://cryptopanic.com/api/v1/posts/",
+        "cryptoPanicKey": "d84d1d92b8a88c279d01b624bf1079ca2421bbea",
+        "coingeckoPriceAPI": "https://api.coingecko.com/api/v3/simple/price",
+        'coingeckoTicker': "XXX" //This is the coins ticker that must be all lower case IE:(news24) and not (News24)
+    },
+    "emojis": { 
+        //To get discord emoji ID's use \:emoji:
+        "btc": "<:btc:701228640683294721>",
+        "ltc": "<:ltc:716711436151160924>",
+        "eth": "<:eth:716711436268863559>",
+        "moneyBag": "<:moneybag:717885311430033478>"
     },
     "commands": {
         // Enable or disable commands -> true/false
@@ -144,7 +168,8 @@ module.exports = {
         "support": true,
         "getinfo": true, //Does project have getinfo?
         "listrules": false, //Does project have listrules. LitecoinPlus?
-        "testrule": false //Does project have testrule. LitecoinPlus?
+        "testrule": false, //Does project have testrule. LitecoinPlus?
+        "newsAPI": true // enable if you have a news api set
     },
     "colors": {
         "normal": "0xecf0f1", // grey
@@ -161,6 +186,7 @@ module.exports = {
         "DMDisabled": "Direct messages are disabled. Please use the official command channel.",
         "notValidCommand": "This is not a valid command. Type **+help** for a list and try again.",
         "notAllowedCommand": "You are not allowed to use this command!",
+        "apioffline": "The api is not reachable. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "walletOffline": "The wallet is not reachable. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "poolWalletOffline": "The Pool wallet is not reachable. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
         "wentWrong": "Somethig went wrong with your request. Please try again. \nIf the problem persists after another attempt, please contact the admin.",
@@ -311,6 +337,8 @@ module.exports = {
             "listRulesValue": "List all Running Rules.",
             "testRuleTitle": "+testrule || +tr",
             "testRuleValue": "List Given Rules Value.",
+            "newsAPITitle": "+exchangenews || +exn",
+            "newsAPIValue": "Shows all current exchange news.",
             "admin": {
                 "title":"Admin commands",
                 "startStopTitle":"+start / +stop",
@@ -489,11 +517,44 @@ module.exports = {
             "chainblockbot": "Current Block (Bot)",
             "chainblockexplorer": "Main (Explorer)",
             "chainblockbackupexplorer": "Backup (Explorer)",
-            "chainbestblockhash": "Block hash (Bot)",
+            "chainbestblockhash": "Block Hash (Bot)",
             "explorerblock": "Current Block (Explorer)",
             "explorerblockhash": "Block Hash (Explorer)",
+            "explorertx": "Transactions in Block",
+            "explorerblocklink": "View on Explorer",
             "poolblockbot": "Current Block (Pool)",
-            "poolbestblockhash": "Block hash (Pool)"
+            "poolbestblockhash": "Block hash (Pool)",
+            "coinprice": "Current BTC Price"
+        },
+        "price": {
+            //BTC Section
+            "title": "Current Price Information",
+            "currentPriceBTC": "Current BTC Price",
+            "marketCapBTC": "Current BTC Market Cap",
+            "dailyVolumeBTC": "Current BTC 24hr Volume",
+            "24hChangeBTC": "Current BTC 24hr Change",
+            "allTimeHighBTC": "All Time High BTC Price",
+
+            //Ranks
+            "marketcapRank": "Current Market Cap Rank",
+            "coingeckoRank": "Current Coingecko Rank",
+
+            //USD Price
+            "priceUSD": "Current Price in USD",
+            "allTimeHighUSD": "All Time High USD Price",
+            "allTimeLowUSD": "All Time Low USD Price",
+
+            //LTC
+            "currentPriceLTC": "Current LTC Price",
+            "marketCapLTC": "Current LTC Market Cap",
+            "dailyVolumeLTC": "Current LTC 24hr Volume",
+            "24hChangeLTC": "Current LTC 24hr Change",
+            "allTimeHighLTC": "All Time High LTC Price"
+        },
+        "news": {
+            "title": "Crypto News",
+            "publicnews": "Current Public News",
+            "exchangenews": "CryptoExchange News"
 
         },
         "listrules": {

@@ -13,10 +13,10 @@ try {
 
 //const Big = require('big.js'); // https://github.com/MikeMcl/big.js -> http://mikemcl.github.io/big.js/
 const rp = require('request-promise');
-const axios = require('axios');
 var command = require("./command.js");
 var wallet = require("./wallet.js");
-var getJSON = require('get-json')
+const NEWS_HOST = 'https://cryptopanic.com'
+
 /* ------------------------------------------------------------------------------ */
 // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 /* ------------------------------------------------------------------------------ */
@@ -35,17 +35,17 @@ module.exports = {
             requestOptions = {
                 method: 'GET',
                 uri: config.apiLinks.explorerAPI + 'getblock',
-            qs: {
-                hash: currentBlock
-            },
+                qs: {
+                    hash: currentBlock
+                },
                 json: true
             };
             rp(requestOptions).then(response => {
-                    console.log(response);
-                    resolve(response);
+                //console.log(response);
+                resolve(response);
             })
         })
-    }
+    },
 
     /* Example GETBLOCK Output
   { hash: '007fad00fb33d063a31b83624d780a31cdd7da51e9862f2786065633a13b2057',
@@ -69,4 +69,69 @@ module.exports = {
   modifierchecksum: '5909df08' }
 
      */
+
+    coingecko_btc_price: async function () {
+        return new Promise((resolve, reject) => {
+            var requestOptions = {};
+            requestOptions = {
+                method: 'GET',
+                uri: 'https://api.coingecko.com/api/v3/simple/price?ids=' + config.apiLinks.coingeckoTicker + '&vs_currencies=btc&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=false',
+                json: true
+            };
+            rp(requestOptions).then(response => {
+              //  console.log(response);
+                resolve(response);
+            })
+        })
+    },
+
+    coingecko_ltc_price: async function () {
+        return new Promise((resolve, reject) => {
+            var requestOptions = {};
+            requestOptions = {
+                method: 'GET',
+                uri: 'https://api.coingecko.com/api/v3/simple/price?ids=' + config.apiLinks.coingeckoTicker + '&vs_currencies=ltc&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=false',
+                json: true
+            };
+            rp(requestOptions).then(response => {
+                //  console.log(response);
+                resolve(response);
+            })
+        })
+    },
+
+    coingecko_coin_info: async function () {
+        return new Promise((resolve, reject) => {
+            var requestOptions = {};
+            requestOptions = {
+                method: 'GET',
+                uri: 'https://api.coingecko.com/api/v3/coins/' + config.apiLinks.coingeckoTicker + '?localization=false&tickers=true&market_data=true&community_data=true&developer_data=false&sparkline=false',
+                json: true
+            };
+            rp(requestOptions).then(response => {
+               // console.log(response);
+                resolve(response);
+            })
+        })
+    },
+
+
+    cryptoPanic_hot_news: async function () {
+        return new Promise((resolve, reject) => {
+            var requestOptions = {};
+            requestOptions = {
+                method: 'GET',
+                uri: config.apiLinks.cryptoPanicAPI + '?auth_token=' + config.apiLinks.cryptoPanicKey + '&filter=important',
+                //qs: {
+                    //auth_token: config.apiLinks.cryptoPanicKey,
+                    //'&filter': important                   
+                //},
+                json: true
+            };
+            rp(requestOptions).then(response => {
+                //console.log(response);
+                resolve(response);
+            })
+        })
+    },
 };

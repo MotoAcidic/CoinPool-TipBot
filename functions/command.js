@@ -80,16 +80,28 @@ module.exports = {
         if(config.staking.balanceDisplay)
             var userStakeBalance = await user.user_get_stake_balance(userID);
         if(config.staking.balanceDisplay && !userStakeBalance){
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.wentWrong, false, false, false, false).then(function (reactCollectorMessage) {
+                // Save message to global eventCollectorMessage
+                eventCollectorMessage = reactCollectorMessage;
+                chat.chat_delete_balance_message(eventCollectorMessage);
+            });
             return;
         }
         if(!config.staking.balanceDisplay){
             //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-            chat.chat_reply(msg,'embed',false,messageType,config.colors.success,false,config.messages.balance.balance,[[config.messages.balance.username,userName,true],[config.wallet.coinSymbol,Big(userBalance).toFixed(8)+' '+config.wallet.coinSymbolShort,true]],false,false,config.wallet.thumbnailIcon,false,false);   
+            chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.balance.balance, [[config.messages.balance.username, userName, true], [config.wallet.coinSymbol, Big(userBalance).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true]], false, false, config.wallet.thumbnailIcon, false, false).then(function (reactCollectorMessage) {
+                // Save message to global eventCollectorMessage
+                eventCollectorMessage = reactCollectorMessage;
+                chat.chat_delete_balance_message(eventCollectorMessage);
+            });   
             return;  
         }else{
             //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-            chat.chat_reply(msg,'embed',false,messageType,config.colors.success,false,config.messages.balance.balance,[[config.messages.balance.username,userName,true],[config.wallet.coinSymbol,Big(userBalance).toFixed(8)+' '+config.wallet.coinSymbolShort,false],[config.messages.balance.stakeTitle,Big(userStakeBalance).toFixed(8)+' '+config.wallet.coinSymbolShort,false]],false,false,config.wallet.thumbnailIcon,false,false); 
+            chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.balance.balance, [[config.messages.balance.username, userName, true], [config.wallet.coinSymbol, Big(userBalance).toFixed(8) + ' ' + config.wallet.coinSymbolShort, false], [config.messages.balance.stakeTitle, Big(userStakeBalance).toFixed(8) + ' ' + config.wallet.coinSymbolShort, false]], false, false, config.wallet.thumbnailIcon, false, false).then(function (reactCollectorMessage) {
+                // Save message to global eventCollectorMessage
+                eventCollectorMessage = reactCollectorMessage;
+                chat.chat_delete_balance_message(eventCollectorMessage);
+            });
             return;
         }
     },
@@ -931,6 +943,8 @@ module.exports = {
             enabledUserCommands.push([config.messages.help.listRulesTitle, config.messages.help.listRulesValue, false]);
         if (config.commands.testrule)
             enabledUserCommands.push([config.messages.help.testRuleTitle, config.messages.help.testRuleValue, false]);
+        if (config.commands.newsAPI)
+            enabledUserCommands.push([config.messages.help.newsAPITitle, config.messages.help.newsAPIValue, false]);
 
         // Admin commands
         var enabledAdminCommands = []; 
@@ -2083,10 +2097,11 @@ module.exports = {
         //var poolInfo = await wallet.wallet_pool_info();
         var explorerAPI = await api.explorer_api_getblock();
         // If wallet not reachable
-        if (chainInfo === 'error') {
-            chat.chat_reply(msg, 'embed', userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
-            return;
-        }
+        if (chainInfo === 'error') { chat.chat_reply(msg, 'embed', userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
+            return; }
+        if (explorerAPI === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.apioffline, false, false, false, false);
+            return; }
+
        // if (poolInfo === 'error') {
          //   chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.poolWalletOffline, false, false, false, false);
         //    return;
@@ -2097,20 +2112,115 @@ module.exports = {
 
         var explorerHash = explorerAPI.hash;
         var explorerBlock = explorerAPI.height;
+        var explorerTX = explorerAPI.tx;
         var chainExplorer = config.wallet.explorerLink;
         var chainBackupExplorer = config.wallet.explorerBackupLink;
         var chainBlock = chainInfo.blocks;
         var chainBlockhash = chainInfo.bestblockhash;
-       // chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, true], [config.messages.chain.chainblockbot, chainBlock, false], [config.messages.chain.poolblockbot, poolBlock, false], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.poolbestblockhash, poolBlockhash, true]], false, false, false, false);
-        chat.chat_reply('status', 'embed', false, messageType, config.colors.success, false, config.messages.chain.title, [[config.messages.chain.chainblockexplorer, chainExplorer, true], [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, false], [config.messages.chain.chainblockbot, chainBlock, true], [config.messages.chain.explorerblock, explorerBlock, true], [config.messages.chain.chainbestblockhash, chainBlockhash, false], [config.messages.chain.explorerblockhash, explorerHash, true]], false, false, false, false).then(function (reactCollectorMessage) {
+        chat.chat_reply('status', 'embed', false, messageType, config.colors.success, false, config.messages.chain.title,
+            [
+                [config.messages.chain.chainblockexplorer, chainExplorer, true],
+                [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, false],
+                [config.messages.chain.chainblockbot, chainBlock, true],
+                [config.messages.chain.explorerblock, explorerBlock, true],
+                [config.messages.chain.chainbestblockhash, chainBlockhash, false],
+                [config.messages.chain.explorerblockhash, explorerHash, true],
+                [config.messages.chain.explorertx, explorerTX, false],
+                [config.messages.chain.explorerblocklink, chainExplorer + '/block/' + explorerHash, false]
+            ], false, false, false, false).then(function (reactCollectorMessage) {
             // Save message to global eventCollectorMessage
             eventCollectorMessage = reactCollectorMessage;
-            chat.chat_delete_message(eventCollectorMessage);
+            chat.chat_delete_chain_status_message(eventCollectorMessage);
         });
 
         return;
     },
 
+    /* ------------------------------------------------------------------------------ */
+    // !price -> Get current price info
+    /* ------------------------------------------------------------------------------ */
+
+    command_price: async function (userID, userName, messageType, msg) {
+        var coingeckoBtcPrice = await api.coingecko_btc_price();
+        var coingeckoInfo = await api.coingecko_coin_info();
+        var coingeckoLtcPrice = await api.coingecko_ltc_price();
+        // If api not reachable
+
+        if (coingeckoInfo === 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.apioffline, false, false, false, false);
+            return;
+        }
+
+        //BTC
+        var coinPriceBTC = coingeckoBtcPrice.news24.btc;
+        var BTCAlthPrice = coingeckoInfo.market_data.ath.btc;
+        var dailyVolumeBTC = coingeckoBtcPrice.news24.btc_24h_vol;
+        var marketCapBTC = coingeckoBtcPrice.news24.btc_market_cap;
+
+        //LTC
+        var coinPriceLTC = coingeckoLtcPrice.news24.ltc;
+        var LTCAlthPrice = coingeckoInfo.market_data.ath.ltc;
+        var dailyVolumeLTC = coingeckoLtcPrice.news24.ltc_24h_vol;
+        var marketCapLTC = coingeckoLtcPrice.news24.ltc_market_cap;
+
+        //USD
+        var USDPrice = coingeckoInfo.market_data.current_price.usd;
+        var USDAltlPrice = coingeckoInfo.market_data.atl.usd;
+        var USDAlthPrice = coingeckoInfo.market_data.ath.usd;
+
+        //Ranks
+        var marketCapRank = coingeckoInfo.market_cap_rank;
+        var coinGeckoRank = coingeckoInfo.coingecko_rank;
+
+        chat.chat_reply('status', 'embed', false, messageType, config.colors.success, false, config.messages.price.title,
+            [
+                //BTC
+                [config.messages.price.currentPriceBTC, coinPriceBTC + ' ' + config.emojis.btc, true],                
+                [config.messages.price.dailyVolumeBTC, dailyVolumeBTC + ' ' + config.emojis.btc, true],
+                [config.messages.price.allTimeHighBTC, BTCAlthPrice + ' ' + config.emojis.btc, true],
+
+                //LTC
+                [config.messages.price.currentPriceLTC, coinPriceLTC + ' ' + config.emojis.ltc, true],
+                [config.messages.price.dailyVolumeLTC, dailyVolumeLTC + ' ' + config.emojis.ltc, true],
+                [config.messages.price.allTimeHighLTC, LTCAlthPrice + ' ' + config.emojis.ltc, true],
+
+                //USD Price
+                [config.messages.price.priceUSD, USDPrice + ' ' + config.emojis.moneyBag, true],
+                [config.messages.price.allTimeLowUSD, USDAltlPrice + ' ' + config.emojis.moneyBag, true],
+                [config.messages.price.allTimeHighUSD, USDAlthPrice + ' ' + config.emojis.moneyBag, true],
+
+                [config.messages.price.marketcapRank, marketCapRank, true],
+                [config.messages.price.coingeckoRank, coinGeckoRank, true]
+            ], false, false, false, false).then(function (reactCollectorMessage) {
+                // Save message to global eventCollectorMessage
+                eventCollectorMessage = reactCollectorMessage;
+                chat.chat_delete_chain_status_message(eventCollectorMessage);
+            });
+
+        return;
+    },
+
+    /* ------------------------------------------------------------------------------ */
+    // !news -> Get current crypto news
+    /* ------------------------------------------------------------------------------ */
+
+    command_hotnews: async function (userID, userName, messageType, msg) {
+        var newsAPI = await api.cryptoPanic_hot_news();
+        // If api not reachable
+        if (newsAPI === 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+            return;
+        }
+
+        var hotNews = newsAPI.url;
+
+        chat.chat_reply('news', 'embed', false, messageType, config.colors.success, false, config.messages.news.title, [[config.messages.news.exchangenews, hotNews, false]], false, false, false, false).then(function (reactCollectorMessage) {
+            // Save message to global eventCollectorMessage
+            eventCollectorMessage = reactCollectorMessage;
+            chat.chat_delete_chain_status_message(eventCollectorMessage);
+        });
+        return;
+    },
 
     /* ------------------------------------------------------------------------------ */
     // !listrules -> Get the current list of rules
@@ -2183,14 +2293,14 @@ module.exports = {
             chat.chat_reply('status', 'embed', false, messageType, config.colors.success, false, config.messages.testrule.rule1ON, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false).then(function (reactCollectorMessage) {
                 // Save message to global eventCollectorMessage
                 eventCollectorMessage = reactCollectorMessage;
-                chat.chat_delete_message(eventCollectorMessage);
+                chat.chat_delete_lcp_status_message(eventCollectorMessage);
             });
             
         } else {
             chat.chat_reply('status', 'embed', false, messageType, config.colors.special, false, config.messages.testrule.rule1OFF, false, [config.messages.testrule.currentBlock, currentBlock], false, false, false, false).then(function (reactCollectorMessage) {
                 // Save message to global eventCollectorMessage
                 eventCollectorMessage = reactCollectorMessage;
-                chat.chat_delete_message(eventCollectorMessage);
+                chat.chat_delete_lcp_status_message(eventCollectorMessage);
             });
             return;
         }
@@ -2471,6 +2581,17 @@ module.exports = {
             case 'chain':
                 if (config.commands.chain) {
                     this.command_chain(userID, userName, messageType, msg);
+                }
+                return;
+            case 'price':
+                if (config.commands.newsAPI) {
+                    this.command_price(userID, userName, messageType, msg);
+                }
+                return;
+            case 'hn':
+            case 'hotnews':
+                if (config.commands.chain) {
+                    this.command_hotnews(userID, userName, messageType, msg);
                 }
                 return;
             case 'sp':

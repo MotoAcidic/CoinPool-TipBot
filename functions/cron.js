@@ -82,6 +82,27 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
+    // Send Price Message
+    /* ------------------------------------------------------------------------------ */
+
+    cron_price_status: function () {
+        setInterval(function () {
+            command.command_price(config.bot.adminIDs[0], '', 'text', 'price');
+        }, config.cronTimes.priceCronTime * 1000); //3mins 
+    },
+
+
+    /* ------------------------------------------------------------------------------ */
+    // Send News Headlines
+    /* ------------------------------------------------------------------------------ */
+
+    cron_hot_news: function () {
+        setInterval(function () {
+            command.command_hotnews(config.bot.adminIDs[0], '', 'text', 'hotnews');
+        }, 60000); //60 seconds
+    },
+
+    /* ------------------------------------------------------------------------------ */
     // Get coin price
     /* ------------------------------------------------------------------------------ */
 

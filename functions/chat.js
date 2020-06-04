@@ -120,7 +120,9 @@ module.exports = {
         if (msg == 'status') {
             return globalClient.channels.get(check.check_getRandomFromArray(config.bot.statusChannelIDs, 1)[0]).send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
         }
-
+        if (msg == 'news') {
+            return globalClient.channels.get(check.check_getRandomFromArray(config.bot.newsChannelID, 1)[0]).send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
+        }
         if (replyType == 'private') {
             return msg.author.send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
         } else {
@@ -129,9 +131,27 @@ module.exports = {
 
     },
 
-    chat_delete_message: function (message) {
+    chat_delete_chain_status_message: function (message) {
+        try {
+            message.delete(59000);
+        } catch (error) {
+        }
+    },
+    chat_delete_price_message: function (message) {
+        try {
+            message.delete(59000);
+        } catch (error) {
+        }
+    },
+    chat_delete_lcp_status_message: function (message) {
         try {
             message.delete(29000);
+        } catch (error) {
+        }
+    },
+    chat_delete_balance_message: function (message) {
+        try {
+            message.delete(5000);
         } catch (error) {
         }
     },
@@ -142,5 +162,6 @@ module.exports = {
         } catch (error) {
         }
     }
+
     
 };
