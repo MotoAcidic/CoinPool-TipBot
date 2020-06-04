@@ -117,7 +117,8 @@ module.exports = {
     "cronTimes": {
         "statusLcpCronTime": 30,
         "statusChainCronTime": 60,
-        "priceCronTime": 180
+        "priceCronTime": 180,
+        "priceCronTimeDelete": 179
     },
 
     "apiLinks": {       
