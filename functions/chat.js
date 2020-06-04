@@ -143,7 +143,7 @@ module.exports = {
     },
     chat_delete_price_message: function (message) {
         try {
-            message.delete(config.cronTimes.priceCronTime * 1000); // 2 mins 59 sec
+            message.delete(config.cronTimes.priceCronTimeDelete * 1000); // 2 mins 59 sec
         } catch (error) {
         }
     },
