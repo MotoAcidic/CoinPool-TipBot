@@ -15,6 +15,7 @@ module.exports = {
         "vipGroupName": "Dev Team", // Users of this group are able to use vip commands and bypass cooldowns
         "respondChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
         "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot will post chain status 
+        "priceChannelID": "XXX", // Channel for Crypto prices to be posted in
         "commandIgnor": [""], // commands to ignor because of other bots
         "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
         "newsChannelID": "XXX", // Channel for Crypto news articles to be posted in
@@ -116,7 +117,8 @@ module.exports = {
     "cronTimes": {
         "statusLcpCronTime": 30,
         "statusChainCronTime": 60,
-        "priceCronTime": 180
+        "priceCronTime": 180,
+        "priceCronTimeDelete": 179
     },
 
     "apiLinks": {       
@@ -169,7 +171,7 @@ module.exports = {
         "getinfo": true, //Does project have getinfo?
         "listrules": false, //Does project have listrules. LitecoinPlus?
         "testrule": false, //Does project have testrule. LitecoinPlus?
-        "newsAPI": true // enable if you have a news api set
+        "coingeckoAPI": true // enable if you have a coingecko api set
     },
     "colors": {
         "normal": "0xecf0f1", // grey
