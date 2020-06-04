@@ -115,7 +115,7 @@ module.exports = {
         })
     },
 
-    // https://api-docs.cryptocontrol.io/?json-doc#introduction
+
     cryptoPanic_hot_news: async function () {
         return new Promise((resolve, reject) => {
             var requestOptions = {};

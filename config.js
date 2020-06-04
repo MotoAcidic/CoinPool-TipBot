@@ -123,7 +123,8 @@ module.exports = {
         //To get discord emoji ID's use \:emoji:
         "btc": "<:btc:701228640683294721>",
         "ltc": "<:ltc:716711436151160924>",
-        "eth": "<:eth:716711436268863559>"
+        "eth": "<:eth:716711436268863559>",
+        "moneyBag": "<:moneybag:717885311430033478>"
     },
     "commands": {
         // Enable or disable commands -> true/false
@@ -518,20 +519,27 @@ module.exports = {
         "price": {
             //BTC Section
             "title": "Current Price Information",
-            "currentNewsPriceBTC": "News24 BTC Price",
-            "newsMarketCapBTC": "News24 BTC Market Cap",
-            "dailyVolumeNewsBTC": "News24 BTC 24hr Volume",
-            "news24hChangeBTC": "News24 BTC 24hr Change",
+            "currentPriceBTC": "Current BTC Price",
+            "marketCapBTC": "Current BTC Market Cap",
+            "dailyVolumeBTC": "Current BTC 24hr Volume",
+            "24hChangeBTC": "Current BTC 24hr Change",
+            "allTimeHighBTC": "All Time High BTC Price",
 
             //Ranks
-            "newsMarketcapRank": "News24 Market Cap Rank",
-            "newsCoingeckoRank": "News24 Coingecko Rank",
+            "marketcapRank": "Current Market Cap Rank",
+            "coingeckoRank": "Current Coingecko Rank",
+
+            //USD Price
+            "priceUSD": "Current Price in USD",
+            "allTimeHighUSD": "All Time High USD Price",
+            "allTimeLowUSD": "All Time Low USD Price",
 
             //LTC
-            "currentNewsPriceLTC": "News24 LTC Price",
-            "newsMarketCapLTC": "News24 LTC Market Cap",
-            "dailyVolumeNewsLTC": "News24 LTC 24hr Volume",
-            "news24hChangeLTC": "News24 LTC 24hr Change"
+            "currentPriceLTC": "Current LTC Price",
+            "marketCapLTC": "Current LTC Market Cap",
+            "dailyVolumeLTC": "Current LTC 24hr Volume",
+            "24hChangeLTC": "Current LTC 24hr Change",
+            "allTimeHighLTC": "All Time High LTC Price"
         },
         "news": {
             "title": "Crypto News",
