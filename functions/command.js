@@ -2173,6 +2173,7 @@ module.exports = {
         var coinGeckoRank = coingeckoInfo.coingecko_rank;
 
         chat.chat_reply('price', 'embed', false, messageType, config.colors.success, false, config.messages.price.title,
+
             [
                 //BTC
                 [config.messages.price.currentPriceBTC, coinPriceBTC + ' ' + config.emojis.btc, true],                
@@ -2585,6 +2586,7 @@ module.exports = {
                 return;
             case 'price':
                 if (config.commands.coingeckoAPI) {
+
                     this.command_price(userID, userName, messageType, msg);
                 }
                 return;
