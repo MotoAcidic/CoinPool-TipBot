@@ -55,6 +55,8 @@ module.exports = {
         "thumbnailIcon": "https://domain.link/image.png", // Thumbnail icon for all messages (need to get enabled first in code to work = not ready)
         "check": true, // If enabled it checks (cron) for new transactions
         "credit": true, // If enabled it credits (cron) new transactions
+        "cronLcpStatus": false, // If enabled will post lcp chain status (Only work for lcp because of different rpc calls.)
+        "cronChainStatus": true, // If enabled this will post in the status channel defined above.
         "depositsToCheck": 60, // How many latest deposits should be checked from the wallet
         "depositsCreditTime": 120, // How often deposits get checked for credit in seconds
         "depositsConfirmationTime": 40, // How often confirmations get checked
@@ -95,6 +97,14 @@ module.exports = {
         "ownerPercentage": 95, // Bot owner percentage // Define how many percente users get from 100%
         "lockTime": 86400, // 24hours = 86400 - Lock time in seconds -> Check if the minimum time between payments and payouts as defined has been respected // Prevent stake pool hopping ;)
         "timezone": "America/New_York" // Used for detect if unstake command can be used or is blocked <- only change if you know what you do! Best value would be same as mysql database time
+    },
+    "coinPrice": { // If enabled the current coin price will be saved next to each transaction made from the bot and into the price history database table
+        "enabled": false,
+        "cronTime": 1800, // Cron time in seconds
+        "apiService": "coinmarketcap", // define the api to use -> The coin must be listed on the api! Current possible values are "coinmarketcap" and "cryptocompare" -> you need to register to get a api key
+        "apiKey": "XXX",
+        "coinSymbol": "Symbol", // e.g. BTC
+        "currency": "EUR" // Cent prices in this currency
     },
     "coinPrice": { // If enabled the current coin price will be saved next to each transaction made from the bot and into the price history database table
         "enabled": false,

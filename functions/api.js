@@ -16,6 +16,7 @@ const rp = require('request-promise');
 var command = require("./command.js");
 var wallet = require("./wallet.js");
 const NEWS_HOST = 'https://cryptopanic.com'
+
 /* ------------------------------------------------------------------------------ */
 // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 /* ------------------------------------------------------------------------------ */
@@ -45,7 +46,6 @@ module.exports = {
             })
         })
     },
-
 
     /* Example GETBLOCK Output
   { hash: '007fad00fb33d063a31b83624d780a31cdd7da51e9862f2786065633a13b2057',
