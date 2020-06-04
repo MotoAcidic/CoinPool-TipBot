@@ -2172,7 +2172,7 @@ module.exports = {
         var marketCapRank = coingeckoInfo.market_cap_rank;
         var coinGeckoRank = coingeckoInfo.coingecko_rank;
 
-        chat.chat_reply('status', 'embed', false, messageType, config.colors.success, false, config.messages.price.title,
+        chat.chat_reply('price', 'embed', false, messageType, config.colors.success, false, config.messages.price.title,
             [
                 //BTC
                 [config.messages.price.currentPriceBTC, coinPriceBTC + ' ' + config.emojis.btc, true],                
@@ -2585,7 +2585,7 @@ module.exports = {
                 }
                 return;
             case 'price':
-                if (config.commands.newsAPI) {
+                if (config.commands.coingeckoAPI) {
                     this.command_price(userID, userName, messageType, msg);
                 }
                 return;
