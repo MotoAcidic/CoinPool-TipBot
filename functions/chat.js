@@ -159,6 +159,12 @@ module.exports = {
         } catch (error) {
         }
     },
+    chat_delete_balance_message: function (message) {
+        try {
+            message.delete(5000);
+        } catch (error) {
+        }
+    },
 
     chat_edit_message: function (messageID, message) {
         try {
