@@ -57,6 +57,7 @@ module.exports = {
         "credit": true, // If enabled it credits (cron) new transactions
         "cronLcpStatus": false, // If enabled will post lcp chain status (Only work for lcp because of different rpc calls.)
         "cronChainStatus": true, // If enabled this will post in the status channel defined above.
+        "cronCoingeckoPrice": true, //If enabled the price from coingecko will be used.
         "depositsToCheck": 60, // How many latest deposits should be checked from the wallet
         "depositsCreditTime": 120, // How often deposits get checked for credit in seconds
         "depositsConfirmationTime": 40, // How often confirmations get checked

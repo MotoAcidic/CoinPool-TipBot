@@ -2130,8 +2130,8 @@ module.exports = {
             ], false, false, false, false).then(function (reactCollectorMessage) {
             // Save message to global eventCollectorMessage
             eventCollectorMessage = reactCollectorMessage;
-            chat.chat_delete_chain_status_message(eventCollectorMessage);
-        });
+            chat.chat_delete_price_message(eventCollectorMessage);
+            });
 
         return;
     },
