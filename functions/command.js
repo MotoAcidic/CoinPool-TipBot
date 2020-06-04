@@ -2219,7 +2219,6 @@ module.exports = {
             eventCollectorMessage = reactCollectorMessage;
             chat.chat_delete_chain_status_message(eventCollectorMessage);
         });
-
         return;
     },
 
