@@ -23,9 +23,9 @@ const NEWS_HOST = 'https://cryptopanic.com'
 
 module.exports = {
 
-/* ------------------------------------------------------------------------------ 
-                      Explorer API Get Block Call
- ------------------------------------------------------------------------------ */
+    /* ------------------------------------------------------------------------------ 
+                          Explorer API Get Block Call
+     ------------------------------------------------------------------------------ */
 
     explorer_api_getblock: async function () {
         var chainInfo = await wallet.wallet_chain_info();
@@ -79,7 +79,7 @@ module.exports = {
                 json: true
             };
             rp(requestOptions).then(response => {
-              //  console.log(response);
+                //  console.log(response);
                 resolve(response);
             })
         })
@@ -109,7 +109,7 @@ module.exports = {
                 json: true
             };
             rp(requestOptions).then(response => {
-               // console.log(response);
+                // console.log(response);
                 resolve(response);
             })
         })
@@ -123,8 +123,8 @@ module.exports = {
                 method: 'GET',
                 uri: config.apiLinks.cryptoPanicAPI + '?auth_token=' + config.apiLinks.cryptoPanicKey + '&filter=important',
                 //qs: {
-                    //auth_token: config.apiLinks.cryptoPanicKey,
-                    //'&filter': important                   
+                //auth_token: config.apiLinks.cryptoPanicKey,
+                //'&filter': important                   
                 //},
                 json: true
             };

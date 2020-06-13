@@ -116,13 +116,15 @@ module.exports = {
 
     "apiLinks": {       
         "hasExplorerAPI": "true", //Enable explorer api (true is yes, false is no)
+        "coinGeckoListed": "true", //Is the coin listed on coingecko?
+        "coinTickerLowerCase": "xxx", //All lower case coin ticker for being used with price apis.
+
         "explorerAPI": "https://explorer.link/api/",
         "nomicsAPI": "https://api.nomics.com/v1/",
         "nomicsKey": "cd8335429190e6cba759f6a8253a30b9",
         "cryptoPanicAPI": "https://cryptopanic.com/api/v1/posts/",
         "cryptoPanicKey": "d84d1d92b8a88c279d01b624bf1079ca2421bbea",
-        "coingeckoPriceAPI": "https://api.coingecko.com/api/v3/simple/price",
-        'coingeckoTicker': "XXX" //This is the coins ticker that must be all lower case IE:(news24) and not (News24)
+        "coingeckoPriceAPI": "https://api.coingecko.com/api/v3/simple/price"
     },
     "emojis": { 
         //To get discord emoji ID's use \:emoji:
@@ -529,6 +531,8 @@ module.exports = {
             "dailyVolumeBTC": "Current BTC 24hr Volume",
             "24hChangeBTC": "Current BTC 24hr Change",
             "allTimeHighBTC": "All Time High BTC Price",
+            "currentValueBTC": "Current NonStaked Value",
+            "currentStakeValueBTC": "Current Staked Value",
 
             //Ranks
             "marketcapRank": "Current Market Cap Rank",

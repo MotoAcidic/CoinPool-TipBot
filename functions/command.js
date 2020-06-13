@@ -72,6 +72,9 @@ module.exports = {
             return;
         }
         var userBalance = await user.user_get_balance(userID);
+        var coingeckoBtcPrice = await api.coingecko_btc_price();
+        var amountInBTCAPI = coingeckoBtcPrice.news24.btc;
+        var amountInBTC = amountInBTCAPI * userBalance;
         if(!userBalance){
             chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
             return;
@@ -79,6 +82,7 @@ module.exports = {
         // If show staking balance is enabled
         if(config.staking.balanceDisplay)
             var userStakeBalance = await user.user_get_stake_balance(userID);
+            var amountInBTCStake = userStakeBalance * amountInBTC;
         if(config.staking.balanceDisplay && !userStakeBalance){
             chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.wentWrong, false, false, false, false).then(function (reactCollectorMessage) {
                 // Save message to global eventCollectorMessage
@@ -87,17 +91,31 @@ module.exports = {
             });
             return;
         }
+
+       // if(config.api)
+
         if(!config.staking.balanceDisplay){
-            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-            chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.balance.balance, [[config.messages.balance.username, userName, true], [config.wallet.coinSymbol, Big(userBalance).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true]], false, false, config.wallet.thumbnailIcon, false, false).then(function (reactCollectorMessage) {
+            chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.balance.balance,
+                [
+                    [config.messages.balance.username, userName, true],
+                    [config.wallet.coinSymbol, Big(userBalance).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true],
+                    [config.messages.price.currentPriceBTC, amountInBTC + ' ' + config.emojis.btc, false]
+                ], false, false, config.wallet.thumbnailIcon, false, false).then(function (reactCollectorMessage) {
                 // Save message to global eventCollectorMessage
                 eventCollectorMessage = reactCollectorMessage;
                 chat.chat_delete_balance_message(eventCollectorMessage);
             });   
             return;  
         }else{
-            //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-            chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.balance.balance, [[config.messages.balance.username, userName, true], [config.wallet.coinSymbol, Big(userBalance).toFixed(8) + ' ' + config.wallet.coinSymbolShort, false], [config.messages.balance.stakeTitle, Big(userStakeBalance).toFixed(8) + ' ' + config.wallet.coinSymbolShort, false]], false, false, config.wallet.thumbnailIcon, false, false).then(function (reactCollectorMessage) {
+            chat.chat_reply(msg, 'embed', false, messageType, config.colors.success, false, config.messages.balance.balance,
+                [
+                    [config.messages.balance.username, userName, false],
+                    [config.wallet.coinSymbol, Big(userBalance).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true],
+                    [config.messages.price.currentPriceBTC, Big(amountInBTC).toFixed(5) + ' ' + config.emojis.btc, false],
+                    [config.messages.balance.stakeTitle, Big(userStakeBalance).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true],
+                    [config.messages.price.currentStakeValueBTC, Big(amountInBTCStake).toFixed(5) + ' ' + config.emojis.btc, false]
+                ], false, false, config.wallet.thumbnailIcon, false, false).then(function (reactCollectorMessage) {
+
                 // Save message to global eventCollectorMessage
                 eventCollectorMessage = reactCollectorMessage;
                 chat.chat_delete_balance_message(eventCollectorMessage);
