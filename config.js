@@ -64,7 +64,7 @@ module.exports = {
         "paymentHistoryCoun": 7, // How many payments get shown on withdrawals payments command !! Max value 7 !!
         "explorerLinkAddress": "https://explorer.link/#/address/", // Explorer link address for addresses
         "explorerLinkTransaction": "https://explorer.link/#/tx/", // Explorer link transaction
-        "explorerLink": "https://explorer.link/", // Main Explorer Link
+        "explorerLink": "https://explorer.link", // Main Explorer Link
         "explorerBackupLink": "https://explorer.link/", // Main Explorer Link
         "githubLink": "https://github.link/", // Main Explorer Link
         "githubCurrentReleaseLink": "https://github.link/releases/latest", // Main Explorer Link
@@ -112,6 +112,7 @@ module.exports = {
     "apiLinks": {       
         "hasExplorerAPI": "true", //Enable explorer api (true is yes, false is no)
         "explorerAPI": "https://explorer.link/api/",
+        "blockBookAPI": "https://blockbook.scryptachain.org/api/v2/",
         "nomicsAPI": "https://api.nomics.com/v1/",
         "nomicsKey": "cd8335429190e6cba759f6a8253a30b9",
         "cryptoPanicAPI": "https://cryptopanic.com/api/v1/posts/",

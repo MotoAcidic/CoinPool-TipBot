@@ -46,6 +46,22 @@ module.exports = {
         })
     },
 
+    blockbook_api_block: async function () {
+        var chainInfo = await wallet.wallet_chain_info();
+        var currentBlock = chainInfo.bestblockhash;
+        return new Promise((resolve, reject) => {
+            var requestOptions = {};
+            requestOptions = {
+                method: 'GET',
+                uri: config.apiLinks.blockBookAPI + 'block/' + currentBlock,
+                json: true
+            };
+            rp(requestOptions).then(response => {
+                //console.log(response);
+                resolve(response);
+            })
+        })
+    },
 
     /* Example GETBLOCK Output
   { hash: '007fad00fb33d063a31b83624d780a31cdd7da51e9862f2786065633a13b2057',
