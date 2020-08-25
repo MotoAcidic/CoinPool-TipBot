@@ -203,7 +203,7 @@ module.exports = {
     // !cs / !creditstakes -> Credit stakes to users
     /* ------------------------------------------------------------------------------ */
 
-    command_credit_stakes: async function(manuallyFired,userName,messageType,userRole,msg){
+    command_credit_stakes: async function (manuallyFired, userName, messageType, userRole, msg, partTwo) {
         // Check if user is admin
         if(userRole < 3){
             chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.notAllowedCommand,false,false,false,false);
@@ -271,6 +271,26 @@ module.exports = {
         }
         // Check for each user how much he owns from totalStakeSumMinusOwnerPercentage balance and calculate percentage of the value he owns
         var getStakeUsers = await user.user_get_stake_users();
+
+    /*********************************Start to new dev fee ****************************************/
+
+        var tipOwner = partTwo;
+        // Get tipOwners discord_id
+        var tipOwner = tipOwner.slice(2, -1);
+        // Check if discord admin and remove ! from of discord id!
+        if (tipOwner.substring(0, 1) == '!') {
+            tipOwner = tipOwner.substr(1);
+        }
+
+        var creditOwner = await user.user_add_balance(Big(tipAmount).toString(), tipUser);
+
+        // Write to payment table send and received
+        var saveTipOwnerSend = await transaction.transaction_save_payment_to_db(Big(tipAmount).toString(), userID, tipUser, config.messages.payment.tip.send);
+
+        var saveTipOwnerReceived = await transaction.transaction_save_payment_to_db(Big(tipAmount).toString(), tipUser, userID, config.messages.payment.tip.received);
+
+        /*********************************End to new dev fee ****************************************/
+
         if(!getStakeUsers){
             if(manuallyFired == 1){
                 chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false); 
@@ -1737,6 +1757,90 @@ module.exports = {
         // Return success message
         //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
         chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,config.messages.stake.title,[[config.messages.stake.amount,Big(stakeAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true]],config.messages.stake.description,false,false,false,false);
+    },
+
+    /* ------------------------------------------------------------------------------ */
+    // !stakeAll -> Convert All of the users balance to stake balance
+    /* ------------------------------------------------------------------------------ */
+
+    command_stakeAll: async function (userID, userName, messageType, msg, partTwo) {
+        var currentDatetime = moment().tz(config.staking.timezone).format('YYYY-MM-DD HH:mm:ss');
+
+        // Check if user is registered
+        var isUserRegistered = await user.user_registered_check(userID);
+        if (isUserRegistered == 'error') {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.wentWrong, false, false, false, false);
+            return;
+        }
+        if (!isUserRegistered) {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.accountNotRegistered, false, false, false, false);
+            return;
+        }
+        // Get user balance
+        var userBalance = await user.user_get_balance(userID);
+        var stakeAmount = userBlance;
+        if (!userBalance) {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.wentWrong, false, false, false, false);
+            return;
+        }
+
+        // Set value BigInt and from minus to plus
+        stakeAmount = Big(stakeAmount).toString();
+        if (Big(stakeAmount).lt(Big(0))) {
+            stakeAmount = stakeAmount.times(-1);
+        }
+        //  Check if stake amount is smaller balance
+        var stakeAmount = Big(stakeAmount).toString();
+        var userBalance = Big(userBalance).toString();
+        if (Big(stakeAmount).gt(Big(userBalance))) {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.stake.big + ' `' + Big(stakeAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort + '` ' + config.messages.stake.big1 + ' `' + Big(userBalance).toFixed(8) + ' ' + config.wallet.coinSymbolShort + '`' + config.messages.stake.big2, false, false, false, false);
+            return;
+        }
+        // Check if user is currently blocked to use this command
+        if (commandBlockedUsers.includes(userID)) {
+            chat.chat_reply(msg, 'embed', false, messageType, config.colors.warning, false, config.messages.title.warning, false, config.messages.currentlyBlocked, false, false, false, false);
+            return;
+        } else {
+            // Add user when this command fired to blocked list until he can get removed when function is over
+            add_blocklist(userID);
+        }
+        // Write to logs in case of false requests to be able to check
+        log.log_write_database(userID, config.messages.log.stake, Big(stakeAmount).toString());
+        // Substract balance from user
+        var balanceSubstract = await user.user_substract_balance(Big(stakeAmount).toString(), userID);
+        if (!balanceSubstract) {
+            // Remove user from command block list
+            remove_blocklist(userID);
+
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.wentWrong, false, false, false, false);
+            return;
+        }
+        // Credit balance to user stake balance
+        // Write to logs in case of false requests to be able to check
+        log.log_write_database(userID, config.messages.log.stakeadd, Big(stakeAmount).toString());
+        var creditStakeBalance = await user.user_add_stake_balance(Big(stakeAmount).toString(), userID, currentDatetime);
+        if (!creditStakeBalance) {
+            // Remove user from command block list
+            remove_blocklist(userID);
+
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.wentWrong, false, false, false, false);
+            return;
+        }
+        // Write to payment table stake balance
+        var saveStake = await transaction.transaction_save_payment_to_db(Big(stakeAmount).toString(), userID, userID, config.messages.payment.stake.stake);
+        if (!saveStake) {
+            // Remove user from command block list
+            remove_blocklist(userID);
+
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.wentWrong, false, false, false, false);
+            return;
+        }
+        // Remove user from command block list
+        remove_blocklist(userID);
+
+        // Return success message
+        //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
+        chat.chat_reply(msg, 'embed', userName, messageType, config.colors.success, false, config.messages.stake.title, [[config.messages.stake.amount, Big(stakeAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true]], config.messages.stake.description, false, false, false, false);
     },
 
     /* ------------------------------------------------------------------------------ */
