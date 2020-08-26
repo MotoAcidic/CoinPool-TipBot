@@ -62,16 +62,6 @@ module.exports = {
     },
 
     /* ------------------------------------------------------------------------------ */
-    // Send LCP chain status Message
-    /* ------------------------------------------------------------------------------ */
-
-    cron_lcp_chain_status: function () {
-        setInterval(function () {
-            command.command_testrule(1, config.bot.adminIDs[0], '', 'text', '3', 'lcpstatus');
-        }, config.cronTimes.statusLcpCronTime * 1000); //30 seconds
-    },
-
-    /* ------------------------------------------------------------------------------ */
     // Send Chain status Message
     /* ------------------------------------------------------------------------------ */
 
@@ -89,17 +79,6 @@ module.exports = {
         setInterval(function () {
             command.command_price(config.bot.adminIDs[0], '', 'text', 'price');
         }, config.cronTimes.priceCronTime * 1000); //3mins 
-    },
-
-
-    /* ------------------------------------------------------------------------------ */
-    // Send News Headlines
-    /* ------------------------------------------------------------------------------ */
-
-    cron_hot_news: function () {
-        setInterval(function () {
-            command.command_hotnews(config.bot.adminIDs[0], '', 'text', 'hotnews');
-        }, 60000); //60 seconds
     },
 
     /* ------------------------------------------------------------------------------ */

@@ -155,7 +155,7 @@ module.exports = {
     },
     chat_delete_balance_message: function (message) {
         try {
-            message.delete(5000); //5 sec
+            message.delete(10000); //10 sec
         } catch (error) {
         }
     },

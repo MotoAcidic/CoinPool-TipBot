@@ -1,15 +1,15 @@
 module.exports = {
   apps: [
     {
-      name: 'DiscordBot',
-      script: 'discord_bot.js',
-      cwd: 'Location-of-Bot-Dir',
+      name: 'scryptaTip',
+      script: 'index.js',
+      cwd: '/home/bot/scryptaTip',
       instance_id_env: '0',
       watch: true,
       ignore_watch : ['node_modules', 'Logs', 'Downloads', '.git'],
       error_file:
-        'Location-of-Bot-Dir/Logs/discord-err.log',
-      out_file: 'Location-of-Bot-Dir/Logs/discord-out.log',
+        '/home/bot/scryptaTip/Logs/discord-err.log',
+      out_file: '/home/bot/scryptaTip/Logs/discord-out.log',
       env: {
         NODE_ENV: 'development'
       },

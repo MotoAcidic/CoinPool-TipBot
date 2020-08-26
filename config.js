@@ -9,18 +9,18 @@ module.exports = {
         "commandPrefix": "+", // Bot prefix to trigger the bot <- if symbol changed it needs to get allowed on check.js
         "cooldownTime": 10, // Cooldown a user need to wait between commands in seconds
         "activeUserTime": 600, // Seconds a user counts as active for rain online users
-        "botID": "XXX", // Bot Discord ID - important else it react to own messages 
-        "adminIDs": [ "XXX", "XXX", "XXX" ], // This discrod user IDs are able to use admin commands and bypass cooldowns
-        "moderatorIDs": [ "XXX" ], // This discrod user IDs are able to use moderator commands and bypass cooldowns
+        "botID": "739503322536345642", // Bot Discord ID - important else it react to own messages 
+        "adminIDs": [ "202145535086297088", "379831514197655564" ], // This discrod user IDs are able to use admin commands and bypass cooldowns
+        "moderatorIDs": [ "202145535086297088", "379831514197655564", "397761332453048320" ], // This discrod user IDs are able to use moderator commands and bypass cooldowns
         "vipGroupName": "Dev Team", // Users of this group are able to use vip commands and bypass cooldowns
-        "respondChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
-        "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot will post chain status 
-        "priceChannelID": "XXX", // Channel for Crypto prices to be posted in
+        "respondChannelIDs": ["740586465901412403"], // Discord server channel IDs the bot does listen to
+        "statusChannelIDs": ["740586537028419666"], // Discord server channel IDs the bot will post chain status 
+        "priceChannelID": "740586572247728289", // Channel for Crypto prices to be posted in
         "commandIgnor": [""], // commands to ignor because of other bots
-        "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
+        "stakePoolChannelID": "740586603809996870", // If staking is configured use this channel to broadcast stake pool payouts
         "newsChannelID": "XXX", // Channel for Crypto news articles to be posted in
         "allowDM": true, // Allow or disable direct messages for commands to the bot with true or false
-        "botToken": "XXX", // Discord bot token
+        "botToken": "NzM5NTAzMzIyNTM2MzQ1NjQy.XybaIw.DzWfFpdtI0tlthTIRfXkmHWGljk", // Discord bot token
         "discordLink": "https://discord.gg/eWB5z2E", // Main channel discord link
         "listUsers": 30, // Define how many users get listed in one message on rain or drop <- Take care about 2200 letters limit from discord
         "dropBotReactIcon":"✅", // If change -> http://twitter.github.io/twemoji/2/test/preview.html -> click icon copy from popup and past it into the string!, // SOME ARE NOT WORKING!! TEST IT BEFORE MAKE IT LIVE
@@ -31,34 +31,34 @@ module.exports = {
         "minDropValue": 0.00000001, // Minimum value for drop 
     }, 
     "mysql":{ // Dont forget to import the empty database before starting the bot
-        "dbHost": "XXX", // Database server
-        "dbName": "XXX", // Database name
-        "dbUser": "XXX", // Database user
-        "dbPassword": "XXX", // Database password
+        "dbHost": "127.0.0.1", // Database server
+        "dbName": "Scrypta", // Database name
+        "dbUser": "admin", // Database user
+        "dbPassword": "c20bebbba75010cc7d82aaa0fb5c35742bdd3460aa9a970b", // Database password
         "dbPort": 3306, // Database port
         "connectionLimit": 20, // Database maximal database pool connections
         "waitForConnections": true, // If true, the pool will queue the connection request and call it when one becomes available
     },
     "wallet":{
         "server": "127.0.0.1", // Wallet server
-        "user": "XXX", // Wallet username
-        "password": "XXX", // Wallet password
-        "port": "1234", // Wallet port
+        "user": "hgjkfdjkfhgkjd", // Wallet username
+        "password": "dlkgjlkdjflkgjdlkf", // Wallet password
+        "port": "42223", // Wallet port
         //Bellow pool settings are for mining pool rpc connection
         "poolserver": "127.0.0.1", // Wallet server
         "pooluser": "XXX", // Wallet username
         "poolpassword": "XXX", // Wallet password
         "poolport": "1234", // Wallet port
         // TODO ENCRYPTION KEY FOR WALLET
-        "coinSymbol": "Coin (CoinSymbol)", // Coin name
-        "coinSymbolShort": "Symbol", // Coin name
-        "thumbnailIcon": "https://domain.link/image.png", // Thumbnail icon for all messages (need to get enabled first in code to work = not ready)
+        "coinSymbol": "Scrypta (LYRA)", // Coin name
+        "coinSymbolShort": "LYRA", // Coin name
+        "thumbnailIcon": "https://scryptachain.org/assets/img/logo/logo-header.png", // Thumbnail icon for all messages (need to get enabled first in code to work = not ready)
         "check": true, // If enabled it checks (cron) for new transactions
         "credit": true, // If enabled it credits (cron) new transactions
         "cronLcpStatus": false, // If enabled will post lcp chain status (Only work for lcp because of different rpc calls.)
         "cronChainStatus": true, // If enabled this will post in the status channel defined above.
         "cronCoingeckoPrice": true, //If enabled the price from coingecko will be used.
-        "depositsToCheck": 60, // How many latest deposits should be checked from the wallet
+	"depositsToCheck": 60, // How many latest deposits should be checked from the wallet
         "depositsCreditTime": 120, // How often deposits get checked for credit in seconds
         "depositsConfirmationTime": 40, // How often confirmations get checked
         "minConfirmationsDeposit": 2000, // Until this confirmations the deposit cron will update the confirmations on database
@@ -66,17 +66,17 @@ module.exports = {
         "depositsHistory": 5, // How many deposits get shown on deposit history command !! Max value 7 !!
         "withdrawalsHistoryDisplayCount": 5, // How many withdrawals get shown on withdrawal history command !! Max value 5 !!
         "paymentHistoryCoun": 7, // How many payments get shown on withdrawals payments command !! Max value 7 !!
-        "explorerLinkAddress": "https://explorer.link/#/address/", // Explorer link address for addresses
-        "explorerLinkTransaction": "https://explorer.link/#/tx/", // Explorer link transaction
-        "explorerLink": "https://explorer.link/", // Main Explorer Link
-        "explorerBackupLink": "https://explorer.link/", // Main Explorer Link
-        "githubLink": "https://github.link/", // Main Explorer Link
-        "githubCurrentReleaseLink": "https://github.link/releases/latest", // Main Explorer Link
+        "explorerLinkAddress": "https://explorer.scryptachain.org/#/address/", // Explorer link address for addresses
+        "explorerLinkTransaction": "https://explorer.scryptachain.org/#/tx/", // Explorer link transaction
+        "explorerLink": "https://explorer.scryptachain.org", // Main Explorer Link
+        "explorerBackupLink": "https://blockbook.scryptachain.org", // Main Explorer Link
+        "githubLink": "http://github.com/scryptachain", // Main Explorer Link
+        "githubCurrentReleaseLink": "http://github.com/scryptachain/releases/latest", // Main Explorer Link
         "transactionFee": 0.01, // Fee taken for a transaction a user makes - Change value also on help command
         "minWithdrawalValue": 0.00000001, // Minimum value for withdrawal
         "minTipValue": 0.00000001, // Minimum value for tip 
         "maxRainRandomUsers": 15, // Please take care as the bot can crash if the value is to big as for each user a database query is fired!
-        "donateAddress":"XXX" // Address for donations
+        "donateAddress":"LiA14XmpDVuZty6B9wVaaALXv9X5mwzNJd" // Address for donations
     },
     "staking":{
         // Please hold this option disabled and configure it before!
@@ -92,9 +92,9 @@ module.exports = {
         "credit": true, // If enabled it credits (cron) all users with new stakes from database
         "creditTime": 80, // Credit new transactions in seconds
         "creditCount": 50, // How many transactions get credited to the users with one run
-        "balanceDisplay": true, // Enable stake balance display on balance command
+        "balanceDisplay": true, // Enable take balance display on balance command
         "minStake": .01, // Minimum value to stake
-        "minUnstake": .1, // Minimum value to unstake
+        "minUnstake": .01, // Minimum value to unstake
         "ownerPercentage": 95, // Bot owner percentage // Define how many percente users get from 100%
         "lockTime": 86400, // 24hours = 86400 - Lock time in seconds -> Check if the minimum time between payments and payouts as defined has been respected // Prevent stake pool hopping ;)
         "timezone": "America/New_York" // Used for detect if unstake command can be used or is blocked <- only change if you know what you do! Best value would be same as mysql database time
@@ -116,13 +116,14 @@ module.exports = {
 
     "apiLinks": {       
         "hasExplorerAPI": "true", //Enable explorer api (true is yes, false is no)
-        "explorerAPI": "https://explorer.link/api/",
+        "explorerAPI": "https://explorer.scryptachain.org/api/",
+	"blockBookAPI": "https://blockbook.scryptachain.org/api/v2/",
         "nomicsAPI": "https://api.nomics.com/v1/",
         "nomicsKey": "cd8335429190e6cba759f6a8253a30b9",
         "cryptoPanicAPI": "https://cryptopanic.com/api/v1/posts/",
         "cryptoPanicKey": "d84d1d92b8a88c279d01b624bf1079ca2421bbea",
         "coingeckoPriceAPI": "https://api.coingecko.com/api/v3/simple/price",
-        'coingeckoTicker': "XXX" //This is the coins ticker that must be all lower case IE:(news24) and not (News24)
+        'coingeckoTicker': "scrypta" //This is the coins ticker that must be all lower case IE:(news24) and not (News24)  
     },
     "emojis": { 
         //To get discord emoji ID's use \:emoji:
@@ -138,8 +139,8 @@ module.exports = {
         "getdeposits": true,
         "creditdeposits": true,
         // Please configure staking part first on top!!!!
-        "getstakes": false,
-        "creditstakes": false,
+        "getstakes": true,
+        "creditstakes": true,
         ///////
         "clear": false,
         // Normal commands
@@ -155,8 +156,8 @@ module.exports = {
         "history": true,
         "update": true,
         "donate": true,
-        "stake": false,
-        "unstake": false,
+        "stake": true,
+        "unstake": true,
         "notify": true,
         "version": true,
         "chain": true,

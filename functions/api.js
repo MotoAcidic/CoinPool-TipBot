@@ -16,7 +16,6 @@ const rp = require('request-promise');
 var command = require("./command.js");
 var wallet = require("./wallet.js");
 const NEWS_HOST = 'https://cryptopanic.com'
-
 /* ------------------------------------------------------------------------------ */
 // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 /* ------------------------------------------------------------------------------ */
@@ -38,6 +37,23 @@ module.exports = {
                 qs: {
                     hash: currentBlock
                 },
+                json: true
+            };
+            rp(requestOptions).then(response => {
+                //console.log(response);
+                resolve(response);
+            })
+        })
+    },
+
+    blockbook_api_block: async function () {
+        var chainInfo = await wallet.wallet_chain_info();
+        var currentBlock = chainInfo.bestblockhash;
+        return new Promise((resolve, reject) => {
+            var requestOptions = {};
+            requestOptions = {
+                method: 'GET',
+                uri: config.apiLinks.blockBookAPI + 'block/' + currentBlock,
                 json: true
             };
             rp(requestOptions).then(response => {
@@ -115,7 +131,7 @@ module.exports = {
         })
     },
 
-
+    // https://api-docs.cryptocontrol.io/?json-doc#introduction
     cryptoPanic_hot_news: async function () {
         return new Promise((resolve, reject) => {
             var requestOptions = {};

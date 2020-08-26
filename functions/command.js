@@ -2096,11 +2096,17 @@ module.exports = {
         var chainInfo = await wallet.wallet_chain_info();
         //var poolInfo = await wallet.wallet_pool_info();
         var explorerAPI = await api.explorer_api_getblock();
+        var blockbookAPI = await api.blockbook_api_block();
+
         // If wallet not reachable
         if (chainInfo === 'error') { chat.chat_reply(msg, 'embed', userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
             return; }
         if (explorerAPI === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.apioffline, false, false, false, false);
-            return; }
+            return;
+        }
+        if (blockbookAPI === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.apioffline, false, false, false, false);
+            return;
+        }
 
        // if (poolInfo === 'error') {
          //   chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.poolWalletOffline, false, false, false, false);
@@ -2110,9 +2116,10 @@ module.exports = {
         //var poolBlock = poolInfo.blocks;
         //var poolBlockhash = poolInfo.bestblockhash;
 
-        var explorerHash = explorerAPI.hash;
-        var explorerBlock = explorerAPI.height;
-        var explorerTX = explorerAPI.tx;
+        var explorerHash = blockbookAPI.hash;
+        var explorerBlock = blockbookAPI.height;
+        var explorerTX = blockbookAPI.txCount;
+
         var chainExplorer = config.wallet.explorerLink;
         var chainBackupExplorer = config.wallet.explorerBackupLink;
         var chainBlock = chainInfo.blocks;
@@ -2126,12 +2133,12 @@ module.exports = {
                 [config.messages.chain.chainbestblockhash, chainBlockhash, false],
                 [config.messages.chain.explorerblockhash, explorerHash, true],
                 [config.messages.chain.explorertx, explorerTX, false],
-                [config.messages.chain.explorerblocklink, chainExplorer + '/block/' + explorerHash, false]
+                [config.messages.chain.explorerblocklink, chainBackupExplorer + '/block/' + explorerHash, false]
             ], false, false, false, false).then(function (reactCollectorMessage) {
             // Save message to global eventCollectorMessage
             eventCollectorMessage = reactCollectorMessage;
-            chat.chat_delete_price_message(eventCollectorMessage);
-            });
+            chat.chat_delete_chain_status_message(eventCollectorMessage);
+        });
 
         return;
     },
@@ -2152,16 +2159,16 @@ module.exports = {
         }
 
         //BTC
-        var coinPriceBTC = coingeckoBtcPrice.news24.btc;
+        var coinPriceBTC = coingeckoBtcPrice.scrypta.btc;
         var BTCAlthPrice = coingeckoInfo.market_data.ath.btc;
-        var dailyVolumeBTC = coingeckoBtcPrice.news24.btc_24h_vol;
-        var marketCapBTC = coingeckoBtcPrice.news24.btc_market_cap;
+        var dailyVolumeBTC = coingeckoBtcPrice.scrypta.btc_24h_vol;
+        var marketCapBTC = coingeckoBtcPrice.scrypta.btc_market_cap;
 
         //LTC
-        var coinPriceLTC = coingeckoLtcPrice.news24.ltc;
+        var coinPriceLTC = coingeckoLtcPrice.scrypta.ltc;
         var LTCAlthPrice = coingeckoInfo.market_data.ath.ltc;
-        var dailyVolumeLTC = coingeckoLtcPrice.news24.ltc_24h_vol;
-        var marketCapLTC = coingeckoLtcPrice.news24.ltc_market_cap;
+        var dailyVolumeLTC = coingeckoLtcPrice.scrypta.ltc_24h_vol;
+        var marketCapLTC = coingeckoLtcPrice.scrypta.ltc_market_cap;
 
         //USD
         var USDPrice = coingeckoInfo.market_data.current_price.usd;
@@ -2176,7 +2183,7 @@ module.exports = {
 
             [
                 //BTC
-                [config.messages.price.currentPriceBTC, coinPriceBTC + ' ' + config.emojis.btc, true],                
+                [config.messages.price.currentPriceBTC, coinPriceBTC + ' ' + config.emojis.btc, true],
                 [config.messages.price.dailyVolumeBTC, dailyVolumeBTC + ' ' + config.emojis.btc, true],
                 [config.messages.price.allTimeHighBTC, BTCAlthPrice + ' ' + config.emojis.btc, true],
 
@@ -2195,11 +2202,12 @@ module.exports = {
             ], false, false, false, false).then(function (reactCollectorMessage) {
                 // Save message to global eventCollectorMessage
                 eventCollectorMessage = reactCollectorMessage;
-                chat.chat_delete_chain_status_message(eventCollectorMessage);
+                chat.chat_delete_price_message(eventCollectorMessage);
             });
 
         return;
     },
+
 
     /* ------------------------------------------------------------------------------ */
     // !news -> Get current crypto news
@@ -2220,6 +2228,7 @@ module.exports = {
             eventCollectorMessage = reactCollectorMessage;
             chat.chat_delete_chain_status_message(eventCollectorMessage);
         });
+
         return;
     },
 
