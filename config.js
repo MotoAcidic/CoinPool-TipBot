@@ -15,6 +15,7 @@ module.exports = {
         "vipGroupName": "Dev Team", // Users of this group are able to use vip commands and bypass cooldowns
         "respondChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
         "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot will post chain status 
+        "priceChannelID": "XXX", // Channel for Crypto prices to be posted in
         "commandIgnor": [""], // commands to ignor because of other bots
         "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
         "newsChannelID": "XXX", // Channel for Crypto news articles to be posted in
@@ -54,6 +55,9 @@ module.exports = {
         "thumbnailIcon": "https://domain.link/image.png", // Thumbnail icon for all messages (need to get enabled first in code to work = not ready)
         "check": true, // If enabled it checks (cron) for new transactions
         "credit": true, // If enabled it credits (cron) new transactions
+        "cronLcpStatus": false, // If enabled will post lcp chain status (Only work for lcp because of different rpc calls.)
+        "cronChainStatus": true, // If enabled this will post in the status channel defined above.
+        "cronCoingeckoPrice": true, //If enabled the price from coingecko will be used.
         "depositsToCheck": 60, // How many latest deposits should be checked from the wallet
         "depositsCreditTime": 120, // How often deposits get checked for credit in seconds
         "depositsConfirmationTime": 40, // How often confirmations get checked
@@ -106,7 +110,9 @@ module.exports = {
     "cronTimes": {
         "statusLcpCronTime": 30,
         "statusChainCronTime": 60,
-        "priceCronTime": 180
+        "priceCronTime": 180,
+        "priceCronTimeDelete": 179
+
     },
 
     "apiLinks": {       
@@ -124,7 +130,9 @@ module.exports = {
         //To get discord emoji ID's use \:emoji:
         "btc": "<:btc:701228640683294721>",
         "ltc": "<:ltc:716711436151160924>",
-        "eth": "<:eth:716711436268863559>"
+        "eth": "<:eth:716711436268863559>",
+        "moneyBag": "<:moneybag:717885311430033478>"
+
     },
     "commands": {
         // Enable or disable commands -> true/false
@@ -159,7 +167,8 @@ module.exports = {
         "getinfo": true, //Does project have getinfo?
         "listrules": false, //Does project have listrules. LitecoinPlus?
         "testrule": false, //Does project have testrule. LitecoinPlus?
-        "newsAPI": true // enable if you have a news api set
+        "coingeckoAPI": true // enable if you have a coingecko api set
+
     },
     "colors": {
         "normal": "0xecf0f1", // grey
@@ -519,20 +528,29 @@ module.exports = {
         "price": {
             //BTC Section
             "title": "Current Price Information",
-            "currentNewsPriceBTC": "News24 BTC Price",
-            "newsMarketCapBTC": "News24 BTC Market Cap",
-            "dailyVolumeNewsBTC": "News24 BTC 24hr Volume",
-            "news24hChangeBTC": "News24 BTC 24hr Change",
+
+            "currentPriceBTC": "Current BTC Price",
+            "marketCapBTC": "Current BTC Market Cap",
+            "dailyVolumeBTC": "Current BTC 24hr Volume",
+            "24hChangeBTC": "Current BTC 24hr Change",
+            "allTimeHighBTC": "All Time High BTC Price",
 
             //Ranks
-            "newsMarketcapRank": "News24 Market Cap Rank",
-            "newsCoingeckoRank": "News24 Coingecko Rank",
+            "marketcapRank": "Current Market Cap Rank",
+            "coingeckoRank": "Current Coingecko Rank",
+
+            //USD Price
+            "priceUSD": "Current Price in USD",
+            "allTimeHighUSD": "All Time High USD Price",
+            "allTimeLowUSD": "All Time Low USD Price",
 
             //LTC
-            "currentNewsPriceLTC": "News24 LTC Price",
-            "newsMarketCapLTC": "News24 LTC Market Cap",
-            "dailyVolumeNewsLTC": "News24 LTC 24hr Volume",
-            "news24hChangeLTC": "News24 LTC 24hr Change"
+            "currentPriceLTC": "Current LTC Price",
+            "marketCapLTC": "Current LTC Market Cap",
+            "dailyVolumeLTC": "Current LTC 24hr Volume",
+            "24hChangeLTC": "Current LTC 24hr Change",
+            "allTimeHighLTC": "All Time High LTC Price"
+
         },
         "news": {
             "title": "Crypto News",

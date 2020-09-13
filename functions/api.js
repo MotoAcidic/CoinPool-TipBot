@@ -16,6 +16,7 @@ const rp = require('request-promise');
 var command = require("./command.js");
 var wallet = require("./wallet.js");
 const NEWS_HOST = 'https://cryptopanic.com'
+
 /* ------------------------------------------------------------------------------ */
 // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 /* ------------------------------------------------------------------------------ */
@@ -132,6 +133,7 @@ module.exports = {
     },
 
     // https://api-docs.cryptocontrol.io/?json-doc#introduction
+
     cryptoPanic_hot_news: async function () {
         return new Promise((resolve, reject) => {
             var requestOptions = {};
