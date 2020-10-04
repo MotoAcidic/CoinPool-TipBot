@@ -113,10 +113,12 @@ module.exports = {
     // Build chat reply
     /* ------------------------------------------------------------------------------ */
     chat_reply: function(msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp){
+
         if (replyType == 'pool') {
             var poolChannel = globalClient.channels.get(config.bot.stakePoolChannelID);
             return poolChannel.send(this.chat_build_reply(replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp));
         }
+
         if (msg == 'status') {
             return globalClient.channels.get(check.check_getRandomFromArray(config.bot.statusChannelIDs, 1)[0]).send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
         }
@@ -126,9 +128,20 @@ module.exports = {
             return priceChannel.send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
         }
 
+        if (msg == 'airdrop') {
+            var airDropChannel = globalClient.channels.get(config.bot.airDropChannelID);
+            return airDropChannel.send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
+        }
+
+        if (msg == 'rain') {
+            var rainChannel = globalClient.channels.get(config.bot.rainChannelID);
+            return rainChannel.send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
+        }
+
         if (msg == 'news') {
             return globalClient.channels.get(check.check_getRandomFromArray(config.bot.newsChannelID, 1)[0]).send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
         }
+
         if (replyType == 'private') {
             return msg.author.send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
         } else {
@@ -137,45 +150,36 @@ module.exports = {
 
     },
 
+/* ------------------------------------------------------------------------------ */
+    // Delete chat messages
+/* ------------------------------------------------------------------------------ */
+
     chat_delete_chain_status_message: function (message) {
         try {
-
-            message.delete(59000); //59 sec
-
+            message.delete(config.cronTimes.statusChainCronTimeDelete * 1000);
         } catch (error) {
         }
     },
+
     chat_delete_price_message: function (message) {
         try {
-
-            message.delete(config.cronTimes.priceCronTimeDelete * 1000); // 2 mins 59 sec
-
+            message.delete(config.cronTimes.priceCronTimeDelete * 1000);
         } catch (error) {
         }
     },
+
     chat_delete_lcp_status_message: function (message) {
 
-        try {
-            message.delete(29000); //19 sec
+        try {            
+            message.delete(config.cronTimes.statusLcpCronTimeDelete * 1000);
         } catch (error) {
         }
     },
+
     chat_delete_balance_message: function (message) {
 
         try {
-            message.delete(5000); //5 sec
-        } catch (error) {
-        }
-    },
-    chat_delete_balance_message: function (message) {
-        try {
-            message.delete(5000);
-        } catch (error) {
-        }
-    },
-    chat_delete_balance_message: function (message) {
-        try {
-            message.delete(5000);
+            message.delete(config.cronTimes.balanceTimeDelete * 1000);
         } catch (error) {
         }
     },

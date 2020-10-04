@@ -1,36 +1,72 @@
 module.exports = {
-    "bot": {
+    "bot": {        
+    /* ------------------------------------------------------------------------------ */
+    // Bot related params
+    /* ------------------------------------------------------------------------------ */
+        
         "version": "1.3.2", // Current bot version
+        "botID": "XXX", // Bot Discord ID - important else it react to own messages 
+        "botToken": "XXX", // Discord bot token
+        "commandIgnor": [""], // commands to ignor because of other bots
+        "avatar": "./avatar.png", // Set bot avatar img -> local file path
+        "gameMessage": "+r | +help", // Message under the bot name in the discord user list
+        "commandPrefix": "+", // Bot prefix to trigger the bot <- if symbol changed it needs to get allowed on check.js
+        "discordLink": "https://discord.gg/eWB5z2E", // Main channel discord link
+
+    /* ------------------------------------------------------------------------------ */
+    // True / False params
+    /* ------------------------------------------------------------------------------ */
+ 
         "setNewAvatar": false, // Bot does crash if avatar gets changed too often! If you set a new image, set the value to true and the bot sets the new avatar. After change the value back to false!!!!
-        "avatar":"./avatar.png", // Set bot avatar img -> local file path
-        "gameMessage":"+r | +help", // Message under the bot name in the discord user list
+        "allowDM": true, // Allow or disable direct messages for commands to the bot with true or false
         "adminMode": false, // If enabled the bot only accepts commands from admins
         "errorLogging": true, // Enable error logging to file discordbot.log
-        "commandPrefix": "+", // Bot prefix to trigger the bot <- if symbol changed it needs to get allowed on check.js
+
+    /* ------------------------------------------------------------------------------ */
+    // Cooldowns / time specs
+    /* ------------------------------------------------------------------------------ */
+         
+        "listUsers": 30, // Define how many users get listed in one message on rain or drop <- Take care about 2200 letters limit from discord
         "cooldownTime": 10, // Cooldown a user need to wait between commands in seconds
         "activeUserTime": 600, // Seconds a user counts as active for rain online users
-        "botID": "XXX", // Bot Discord ID - important else it react to own messages 
+
+    /* ------------------------------------------------------------------------------ */
+    // User ID params
+    /* ------------------------------------------------------------------------------ */
+         
         "adminIDs": [ "XXX", "XXX", "XXX" ], // This discrod user IDs are able to use admin commands and bypass cooldowns
         "moderatorIDs": [ "XXX" ], // This discrod user IDs are able to use moderator commands and bypass cooldowns
         "vipGroupName": "Dev Team", // Users of this group are able to use vip commands and bypass cooldowns
-        "respondChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
-        "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot will post chain status 
-        "priceChannelID": "XXX", // Channel for Crypto prices to be posted in
-        "commandIgnor": [""], // commands to ignor because of other bots
-        "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
-        "newsChannelID": "XXX", // Channel for Crypto news articles to be posted in
-        "allowDM": true, // Allow or disable direct messages for commands to the bot with true or false
-        "botToken": "XXX", // Discord bot token
-        "discordLink": "https://discord.gg/eWB5z2E", // Main channel discord link
-        "listUsers": 30, // Define how many users get listed in one message on rain or drop <- Take care about 2200 letters limit from discord
-        "dropBotReactIcon":"✅", // If change -> http://twitter.github.io/twemoji/2/test/preview.html -> click icon copy from popup and past it into the string!, // SOME ARE NOT WORKING!! TEST IT BEFORE MAKE IT LIVE
+
+    /* ------------------------------------------------------------------------------ */
+    // Airdrop params
+    /* ------------------------------------------------------------------------------ */
+        
+        "dropBotReactIcon": "✅", // If change -> http://twitter.github.io/twemoji/2/test/preview.html -> click icon copy from popup and past it into the string!, // SOME ARE NOT WORKING!! TEST IT BEFORE MAKE IT LIVE
         "dropReactIcon":"🍀", // If change -> http://twitter.github.io/twemoji/2/test/preview.html -> click icon copy from popup and past it into the string!, // SOME ARE NOT WORKING!! TEST IT BEFORE MAKE IT LIVE
         "dropMinSeconds": 10, // Drop message min reply time in seconds
         "dropMaxSeconds": 300, // Drop message max reply time in seconds
         "dropMinUsers": 1, // Users minimum needed for drop
         "minDropValue": 0.00000001, // Minimum value for drop 
+
+    /* ------------------------------------------------------------------------------ */
+    // Channel IDs
+    /* ------------------------------------------------------------------------------ */
+        
+        "airDropChannelID": "XXX", //Channel we will use to only allow airdrops in
+        "rainChannelID": "XXX", // Channel we would like to use for rains
+        "respondChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
+        "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot will post chain status 
+        "priceChannelID": "XXX", // Channel for Crypto prices to be posted in
+        "stakePoolChannelID": "XXX", // If staking is configured use this channel to broadcast stake pool payouts
+        "newsChannelID": "XXX", // Channel for Crypto news articles to be posted in
     }, 
-    "mysql":{ // Dont forget to import the empty database before starting the bot
+
+/* ---------------------------------------------------------------------------------- */
+    // DB Settings, Dont forget to import the empty database before starting the bot
+/* ---------------------------------------------------------------------------------- */
+
+    "mysql":{
         "dbHost": "XXX", // Database server
         "dbName": "XXX", // Database name
         "dbUser": "XXX", // Database user
@@ -39,6 +75,11 @@ module.exports = {
         "connectionLimit": 20, // Database maximal database pool connections
         "waitForConnections": true, // If true, the pool will queue the connection request and call it when one becomes available
     },
+
+/* ---------------------------------------------------------------------------------- */
+    // Wallet Settings
+/* ---------------------------------------------------------------------------------- */
+
     "wallet":{
         "server": "127.0.0.1", // Wallet server
         "user": "XXX", // Wallet username
@@ -78,6 +119,10 @@ module.exports = {
         "maxRainRandomUsers": 15, // Please take care as the bot can crash if the value is to big as for each user a database query is fired!
         "donateAddress":"XXX" // Address for donations
     },
+
+/* ---------------------------------------------------------------------------------- */
+    // Staking Settings
+/* ---------------------------------------------------------------------------------- */
     "staking":{
         // Please hold this option disabled and configure it before!
         // 1. The database connection needs to work
@@ -99,6 +144,10 @@ module.exports = {
         "lockTime": 86400, // 24hours = 86400 - Lock time in seconds -> Check if the minimum time between payments and payouts as defined has been respected // Prevent stake pool hopping ;)
         "timezone": "America/New_York" // Used for detect if unstake command can be used or is blocked <- only change if you know what you do! Best value would be same as mysql database time
     },
+
+/* ---------------------------------------------------------------------------------- */
+    // Price Settings
+/* ---------------------------------------------------------------------------------- */
     "coinPrice": { // If enabled the current coin price will be saved next to each transaction made from the bot and into the price history database table
         "enabled": false,
         "cronTime": 1800, // Cron time in seconds
@@ -107,16 +156,27 @@ module.exports = {
         "coinSymbol": "Symbol", // e.g. BTC
         "currency": "EUR" // Cent prices in this currency
     },
-    "cronTimes": {
-        "statusLcpCronTime": 30,
-        "statusChainCronTime": 60,
-        "priceCronTime": 180,
-        "priceCronTimeDelete": 179
 
+/* ---------------------------------------------------------------------------------- */
+    // Time Settings
+/* ---------------------------------------------------------------------------------- */
+    "cronTimes": {
+        // All times are in seconds
+        "statusLcpCronTime": 30,
+        "statusLcpCronTimeDelete": 29,
+        "statusChainCronTime": 60,
+        "statusChainCronTimeDelete": 59,
+        "priceCronTime": 180,
+        "priceCronTimeDelete": 179,
+        "balanceTimeDelete": 10,
     },
 
+/* ---------------------------------------------------------------------------------- */
+    // Links used in API calls
+/* ---------------------------------------------------------------------------------- */
     "apiLinks": {       
         "hasExplorerAPI": "true", //Enable explorer api (true is yes, false is no)
+        "useBlockBook": "false", //To use Block Book api for explorer calls instead of the normal explorer link
         "explorerAPI": "https://explorer.link/api/",
         "blockBookAPI": "https://blockbook.scryptachain.org/api/v2/",
         "nomicsAPI": "https://api.nomics.com/v1/",
@@ -126,6 +186,10 @@ module.exports = {
         "coingeckoPriceAPI": "https://api.coingecko.com/api/v3/simple/price",
         'coingeckoTicker': "XXX" //This is the coins ticker that must be all lower case IE:(news24) and not (News24)
     },
+
+/* ---------------------------------------------------------------------------------- */
+    // Base Emoji IDs
+/* ---------------------------------------------------------------------------------- */
     "emojis": { 
         //To get discord emoji ID's use \:emoji:
         "btc": "<:btc:701228640683294721>",
@@ -134,6 +198,21 @@ module.exports = {
         "moneyBag": "<:moneybag:717885311430033478>"
 
     },
+
+/* ---------------------------------------------------------------------------------- */
+    // Base Color IDs
+/* ---------------------------------------------------------------------------------- */
+    "colors": {
+        "normal": "0xecf0f1", // grey
+        "success": "0x2ecc71", // green
+        "warning": "0xe67e22", // orange
+        "error": "0xe74c3c", // red
+        "special": "0xE91E63" // pink
+    },
+
+/* ---------------------------------------------------------------------------------- */
+    // All Commands we can turn on and off
+/* ---------------------------------------------------------------------------------- */
     "commands": {
         // Enable or disable commands -> true/false
         // Admin commands
@@ -170,13 +249,11 @@ module.exports = {
         "coingeckoAPI": true // enable if you have a coingecko api set
 
     },
-    "colors": {
-        "normal": "0xecf0f1", // grey
-        "success": "0x2ecc71", // green
-        "warning": "0xe67e22", // orange
-        "error": "0xe74c3c", // red
-        "special": "0xE91E63" // pink
-    },
+
+/* ---------------------------------------------------------------------------------- */
+    // Predefined messages
+/* ---------------------------------------------------------------------------------- */
+
     "messages": { // Some messages contain markdown -> http://markdown.de
         // Not command related messages
         "botStarted": "Bot started and online as",
@@ -245,7 +322,7 @@ module.exports = {
         "balance": {
             "balance":"Balance",
             "username":"Username",
-            "stakeTitle": "Stake balance", // Stake balance title
+            "stakeTitle": "Stake balance", 
         },
         "clear": {
             "no": "I am not allowed to delete private messages!",
