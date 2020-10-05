@@ -1254,7 +1254,7 @@ module.exports = {
                 // Remove user from command block list
                 remove_blocklist(userID);
                     
-                chat.chat_reply(msg'rain'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.tip.no,false,false,false,false);
+                chat.chat_reply('rain',embed,userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.tip.no,false,false,false,false);
                 return; 
             }
             // Calculate min tip value for user count calculated with config min value for each tip
