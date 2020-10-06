@@ -1193,14 +1193,18 @@ module.exports = {
         var serverActiveUsersCount = serverActiveUsers.length;
         //console.log(serverUsersCount + ' - ' + activeUsersCount + ' - ' + serverActiveUsersCount);
         // Rain on private message not allowed
-        if(messageType === 'dm'){
-            chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.rain.private,false,false,false,false);
+        if (messageType === 'dm' && userRole > 1) {
+            chat.chat_reply('rain', 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.rain.private, false, false, false, false);
+            return;
+        } else {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.rain.private, false, false, false, false);
             return;
         }
+
         // First check before do long queries -> is partTwo not empty and is partTwo numeric and not out of range
         if(!partTwo || partTwo !== 'online' && partTwo !== 'all' && partTwo !== 'random' || !tipAmount || !check.check_isNumeric(tipAmount) || check.check_out_of_int_range(tipAmount)){
             //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-            chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.notValidCommand,false,false,false,false);
+            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.notValidCommand,false,false,false,false);
             return;
         }
         // Set value BigInt and from minus to plus for all values
@@ -1211,29 +1215,29 @@ module.exports = {
         // Check if user is registered
         var isUserRegistered = await user.user_registered_check(userID);
         if(isUserRegistered == 'error'){
-            chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
             return;
         }
         if(!isUserRegistered){
-            chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.accountNotRegistered,false,false,false,false);
+            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.accountNotRegistered,false,false,false,false);
             return;
         }
         // Get user balance
         var userBalance = await user.user_get_balance(userID);
         if(!userBalance){
-            chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
             return;
         }
         //  Check if tip amount is smaller as balance
         var tipAmount = Big(tipAmount).toString();
         var userBalance = Big(userBalance).toString();
         if(Big(tipAmount).gt(Big(userBalance))){
-            chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.rain.big+' `'+Big(tipAmount).toFixed(8)+' '+config.wallet.coinSymbolShort+'` '+config.messages.rain.big1+' `'+Big(userBalance).toFixed(8)+' '+config.wallet.coinSymbolShort+'`'+config.messages.rain.big2,false,false,false,false);
+            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.rain.big+' `'+Big(tipAmount).toFixed(8)+' '+config.wallet.coinSymbolShort+'` '+config.messages.rain.big1+' `'+Big(userBalance).toFixed(8)+' '+config.wallet.coinSymbolShort+'`'+config.messages.rain.big2,false,false,false,false);
             return;
         }
         // Check if user is currently blocked to use this command
         if(commandBlockedUsers.includes(userID)){
-            chat.chat_reply('rain','embed',false,messageType,config.colors.warning,false,config.messages.title.warning,false,config.messages.currentlyBlocked,false,false,false,false);
+            chat.chat_reply(msg,'embed',false,messageType,config.colors.warning,false,config.messages.title.warning,false,config.messages.currentlyBlocked,false,false,false,false);
             return;
         }else{
             // Add user when this command fired to blocked list until he can get removed when function is over
@@ -1244,7 +1248,7 @@ module.exports = {
             // Get all database users count
             var databaseUsersCount = await user.user_get_total_count();
             if(!databaseUsersCount){
-                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                 return;
             }
             databaseUsersCount = databaseUsersCount[0].totalusers;
@@ -1254,7 +1258,7 @@ module.exports = {
                 // Remove user from command block list
                 remove_blocklist(userID);
                     
-                chat.chat_reply('rain',embed,userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.tip.no,false,false,false,false);
+                chat.chat_reply(msg,embed,userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.tip.no,false,false,false,false);
                 return; 
             }
             // Calculate min tip value for user count calculated with config min value for each tip
@@ -1264,7 +1268,7 @@ module.exports = {
                 // Remove user from command block list
                 remove_blocklist(userID);
                     
-                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.rain.minimum+' `'+Big(minServerUsersTipAmount).toFixed(8)+'` '+config.messages.rain.minimum1+' `'+databaseUsersCount+'` '+config.messages.rain.minimum2,false,false,false,false);
+                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.rain.minimum+' `'+Big(minServerUsersTipAmount).toFixed(8)+'` '+config.messages.rain.minimum1+' `'+databaseUsersCount+'` '+config.messages.rain.minimum2,false,false,false,false);
                 return;
             }
             // Calculate tip for each user and round down value to loose no own sat
@@ -1281,7 +1285,7 @@ module.exports = {
                 // Remove user from command block list
                 remove_blocklist(userID);
                     
-                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                 return;  
             }
             // Old rain all with users from discord
@@ -1317,7 +1321,7 @@ module.exports = {
             // Credit balance to each rain user
             var creditallusers = await user.user_add_balance_all(Big(tipSingleUserAmount).toString());
             if(!creditallusers){
-                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                 return;
             }
             // Write to payment table send and received
@@ -1326,7 +1330,7 @@ module.exports = {
                 // Remove user from command block list
                 remove_blocklist(userID);
                     
-                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                 return;
             }
             var saveTipReceived = await transaction.transaction_save_payment_to_db(Big(tipSingleUserAmount).toString(),'rainall','rainall',config.messages.payment.tip.received);
@@ -1334,13 +1338,19 @@ module.exports = {
                 // Remove user from command block list
                 remove_blocklist(userID);
                                 
-                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                 return;  
             }
             // Return success message
             //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-            chat.chat_reply('rain','embed',userName,messageType,config.colors.success,false,config.messages.rain.title,[[config.messages.rain.amount,Big(tipAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.rain.rounded,Big(valueToRemoveFromUser).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.rain.users,databaseUsersCount,true],[config.messages.rain.each,Big(tipSingleUserAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true]],config.messages.rain.description,false,false,false,false);
-            chat.chat_reply('rain','normal',false,messageType,false,false,false,false,'@everyone',false,false,false,false);
+            if (userRole < 1) {
+                chat.chat_reply('rain', 'embed', userName, messageType, config.colors.success, false, config.messages.rain.title, [[config.messages.rain.amount, Big(tipAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.rounded, Big(valueToRemoveFromUser).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.users, databaseUsersCount, true], [config.messages.rain.each, Big(tipSingleUserAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true]], config.messages.rain.description, false, false, false, false);
+                chat.chat_reply('rain', 'normal', false, messageType, false, false, false, false, '@everyone', false, false, false, false);
+            } else {
+                chat.chat_reply(msg, 'embed', userName, messageType, config.colors.success, false, config.messages.rain.title, [[config.messages.rain.amount, Big(tipAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.rounded, Big(valueToRemoveFromUser).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.users, databaseUsersCount, true], [config.messages.rain.each, Big(tipSingleUserAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true]], config.messages.rain.description, false, false, false, false);
+                chat.chat_reply(msg, 'normal', false, messageType, false, false, false, false, '@everyone', false, false, false, false);
+            }
+
             // List rained users
             /*var listUsers = '';
             var userCount = 0;
@@ -1372,7 +1382,7 @@ module.exports = {
                 // Remove user from command block list
                 remove_blocklist(userID);
                     
-                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.tip.no,false,false,false,false);
+                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.tip.no,false,false,false,false);
                 return; 
             }
             // Calculate min tip value for user count calculated with config min value for each tip
@@ -1382,7 +1392,7 @@ module.exports = {
                 // Remove user from command block list
                 remove_blocklist(userID);
                     
-                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.rain.minimum+' `'+Big(minActiveUsersTipAmount).toFixed(8)+'` '+config.messages.rain.minimum1+' `'+activeUsersCount+'` '+config.messages.rain.minimum2,false,false,false,false);
+                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.rain.minimum+' `'+Big(minActiveUsersTipAmount).toFixed(8)+'` '+config.messages.rain.minimum1+' `'+activeUsersCount+'` '+config.messages.rain.minimum2,false,false,false,false);
                 return;
             }
             // Calculate tip for each user and round down value to loose no own sat
@@ -1399,7 +1409,7 @@ module.exports = {
                 // Remove user from command block list
                 remove_blocklist(userID);
                     
-                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                 return;  
             }
             // Credit balance to each rain user
@@ -1410,7 +1420,7 @@ module.exports = {
                     // Remove user from command block list
                     remove_blocklist(userID);
                         
-                    chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                     return;  
                 }
                 // Write to payment table send and received
@@ -1419,7 +1429,7 @@ module.exports = {
                     // Remove user from command block list
                     remove_blocklist(userID);
                         
-                    chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                     return;
                 }
                 var saveTipReceived = await transaction.transaction_save_payment_to_db(Big(tipSingleUserAmount).toString(),activeUsers[i],userID,config.messages.payment.tip.received);
@@ -1427,12 +1437,16 @@ module.exports = {
                     // Remove user from command block list
                     remove_blocklist(userID);
                         
-                    chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                     return;  
                 }
             }
             // Return success message
-            chat.chat_reply('rain','embed',userName,messageType,config.colors.success,false,config.messages.rain.title,[[config.messages.rain.amount,Big(tipAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.rain.rounded,Big(valueToRemoveFromUser).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.rain.users,activeUsersCount,true],[config.messages.rain.each,Big(tipSingleUserAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true]],config.messages.rain.description,false,false,false,false);
+            if (userRole < 1) {
+                chat.chat_reply('rain', 'embed', userName, messageType, config.colors.success, false, config.messages.rain.title, [[config.messages.rain.amount, Big(tipAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.rounded, Big(valueToRemoveFromUser).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.users, activeUsersCount, true], [config.messages.rain.each, Big(tipSingleUserAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true]], config.messages.rain.description, false, false, false, false);
+            } else {
+                chat.chat_reply(msg, 'embed', userName, messageType, config.colors.success, false, config.messages.rain.title, [[config.messages.rain.amount, Big(tipAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.rounded, Big(valueToRemoveFromUser).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.users, activeUsersCount, true], [config.messages.rain.each, Big(tipSingleUserAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true]], config.messages.rain.description, false, false, false, false);
+            }
             // List rained users
             var listUsers = '';
             var userCount = 0;
@@ -1459,13 +1473,20 @@ module.exports = {
                 }
                 if(userCount == config.bot.listUsers){
                     //chat.chat_reply('rain','embed',userName,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],false,false,false,false,false);
-                    chat.chat_reply('rain','normal',false,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],listUsers,false,false,false,false);
-                    var listUsers = '';
-                    userCount = 0;
+                    if (userRole < 1) {
+                        chat.chat_reply('rain', 'normal', false, messageType, config.colors.success, false, false, [[config.messages.rain.users, listUsers, false]], listUsers, false, false, false, false);
+                        var listUsers = '';
+                        userCount = 0;
+                    } else {
+                        chat.chat_reply(msg, 'normal', false, messageType, config.colors.success, false, false, [[config.messages.rain.users, listUsers, false]], listUsers, false, false, false, false);
+                        var listUsers = '';
+                        userCount = 0;
+                    }
+
                 }
                 if(i == activeUsers.length-1){
                     //chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],false,false,false,false,false);
-                    chat.chat_reply('rain','normal',false,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],listUsers,false,false,false,false)
+                    chat.chat_reply(msg,'normal',false,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],listUsers,false,false,false,false)
                 }
             }
             // Remove user from command block list
@@ -1481,7 +1502,7 @@ module.exports = {
                 remove_blocklist(userID);
                     
                 //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.notValidCommand,false,false,false,false);
+                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.notValidCommand,false,false,false,false);
                 return;
             }
             // If users to tip value is negative make it positiv
@@ -1496,8 +1517,14 @@ module.exports = {
                 remove_blocklist(userID);
                     
                 //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.rain.randommax+' `'+config.wallet.maxRainRandomUsers+'` '+config.messages.rain.randommax1,false,false,false,false);
-                return;
+                if (userRole < 1) {
+                    chat.chat_reply('rain', 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.rain.randommax + ' `' + config.wallet.maxRainRandomUsers + '` ' + config.messages.rain.randommax1, false, false, false, false);
+                    return;
+                } else {
+                    chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.rain.randommax + ' `' + config.wallet.maxRainRandomUsers + '` ' + config.messages.rain.randommax1, false, false, false, false);
+                    return;
+                }
+
             }
             // If no user to tip
             if(serverActiveUsersCount === 0 || serverActiveUsersCount == undefined){
