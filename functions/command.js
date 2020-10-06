@@ -2235,16 +2235,16 @@ module.exports = {
         }
 
         //BTC
-        var coinPriceBTC = coingeckoBtcPrice.news24.btc;
+        var coinPriceBTC = coingeckoInfo.market_data.current_price.btc;
         var BTCAlthPrice = coingeckoInfo.market_data.ath.btc;
-        var dailyVolumeBTC = coingeckoBtcPrice.news24.btc_24h_vol;
-        var marketCapBTC = coingeckoBtcPrice.news24.btc_market_cap;
+        //var dailyVolumeBTC = coingeckoInfo.total_volume.btc;
+        var marketCapBTC = coingeckoBtcPrice.btc_market_cap;
 
         //LTC
-        var coinPriceLTC = coingeckoLtcPrice.news24.ltc;
+        var coinPriceLTC = coingeckoInfo.market_data.current_price.ltc;
         var LTCAlthPrice = coingeckoInfo.market_data.ath.ltc;
-        var dailyVolumeLTC = coingeckoLtcPrice.news24.ltc_24h_vol;
-        var marketCapLTC = coingeckoLtcPrice.news24.ltc_market_cap;
+        //var dailyVolumeLTC = coingeckoLtcPrice.ltc_24h_vol;
+        var marketCapLTC = coingeckoLtcPrice.ltc_market_cap;
 
         //USD
         var USDPrice = coingeckoInfo.market_data.current_price.usd;
@@ -2259,13 +2259,13 @@ module.exports = {
 
             [
                 //BTC
-                [config.messages.price.currentPriceBTC, coinPriceBTC + ' ' + config.emojis.btc, true],                
-                [config.messages.price.dailyVolumeBTC, dailyVolumeBTC + ' ' + config.emojis.btc, true],
+                [config.messages.price.currentPriceBTC, coinPriceBTC + ' ' + config.emojis.btc, true],
+                //[config.messages.price.dailyVolumeBTC, dailyVolumeBTC + ' ' + config.emojis.btc, true],
                 [config.messages.price.allTimeHighBTC, BTCAlthPrice + ' ' + config.emojis.btc, true],
 
                 //LTC
                 [config.messages.price.currentPriceLTC, coinPriceLTC + ' ' + config.emojis.ltc, true],
-                [config.messages.price.dailyVolumeLTC, dailyVolumeLTC + ' ' + config.emojis.ltc, true],
+                //[config.messages.price.dailyVolumeLTC, dailyVolumeLTC + ' ' + config.emojis.ltc, true],
                 [config.messages.price.allTimeHighLTC, LTCAlthPrice + ' ' + config.emojis.ltc, true],
 
                 //USD Price
@@ -2284,70 +2284,6 @@ module.exports = {
         return;
     },
 
-    /* ------------------------------------------------------------------------------ */
-    // !price -> Get current price info
-    /* ------------------------------------------------------------------------------ */
-
-    command_price: async function (userID, userName, messageType, msg) {
-        var coingeckoBtcPrice = await api.coingecko_btc_price();
-        var coingeckoInfo = await api.coingecko_coin_info();
-        var coingeckoLtcPrice = await api.coingecko_ltc_price();
-        // If api not reachable
-
-        if (coingeckoInfo === 'error') {
-            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.apioffline, false, false, false, false);
-            return;
-        }
-
-        //BTC
-        var coinPriceBTC = coingeckoBtcPrice.scrypta.btc;
-        var BTCAlthPrice = coingeckoInfo.market_data.ath.btc;
-        var dailyVolumeBTC = coingeckoBtcPrice.scrypta.btc_24h_vol;
-        var marketCapBTC = coingeckoBtcPrice.scrypta.btc_market_cap;
-
-        //LTC
-        var coinPriceLTC = coingeckoLtcPrice.scrypta.ltc;
-        var LTCAlthPrice = coingeckoInfo.market_data.ath.ltc;
-        var dailyVolumeLTC = coingeckoLtcPrice.scrypta.ltc_24h_vol;
-        var marketCapLTC = coingeckoLtcPrice.scrypta.ltc_market_cap;
-
-        //USD
-        var USDPrice = coingeckoInfo.market_data.current_price.usd;
-        var USDAltlPrice = coingeckoInfo.market_data.atl.usd;
-        var USDAlthPrice = coingeckoInfo.market_data.ath.usd;
-
-        //Ranks
-        var marketCapRank = coingeckoInfo.market_cap_rank;
-        var coinGeckoRank = coingeckoInfo.coingecko_rank;
-
-        chat.chat_reply('price', 'embed', false, messageType, config.colors.success, false, config.messages.price.title,
-
-            [
-                //BTC
-                [config.messages.price.currentPriceBTC, coinPriceBTC + ' ' + config.emojis.btc, true],
-                [config.messages.price.dailyVolumeBTC, dailyVolumeBTC + ' ' + config.emojis.btc, true],
-                [config.messages.price.allTimeHighBTC, BTCAlthPrice + ' ' + config.emojis.btc, true],
-
-                //LTC
-                [config.messages.price.currentPriceLTC, coinPriceLTC + ' ' + config.emojis.ltc, true],
-                [config.messages.price.dailyVolumeLTC, dailyVolumeLTC + ' ' + config.emojis.ltc, true],
-                [config.messages.price.allTimeHighLTC, LTCAlthPrice + ' ' + config.emojis.ltc, true],
-
-                //USD Price
-                [config.messages.price.priceUSD, USDPrice + ' ' + config.emojis.moneyBag, true],
-                [config.messages.price.allTimeLowUSD, USDAltlPrice + ' ' + config.emojis.moneyBag, true],
-                [config.messages.price.allTimeHighUSD, USDAlthPrice + ' ' + config.emojis.moneyBag, true],
-
-                [config.messages.price.marketcapRank, marketCapRank, true],
-                [config.messages.price.coingeckoRank, coinGeckoRank, true]
-            ], false, false, false, false).then(function (reactCollectorMessage) {
-                // Save message to global eventCollectorMessage
-                eventCollectorMessage = reactCollectorMessage;
-                chat.chat_delete_price_message(eventCollectorMessage);
-            });
-
-        return;
-    },
 
     /* ------------------------------------------------------------------------------ */
     // !news -> Get current crypto news
