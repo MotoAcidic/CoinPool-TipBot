@@ -116,8 +116,8 @@ module.exports = {
         "transactionFee": 0.01, // Fee taken for a transaction a user makes - Change value also on help command
         "minWithdrawalValue": 0.00000001, // Minimum value for withdrawal
         "minTipValue": 0.00000001, // Minimum value for tip 
-        "maxRainRandomUsers": 15, // Please take care as the bot can crash if the value is to big as for each user a database query is fired!
-        "donateAddress":"XXX" // Address for donations
+        "maxRainRandomUsers": 15 // Please take care as the bot can crash if the value is to big as for each user a database query is fired!
+        //"donateAddress":"XXX" // Address for donations
     },
 
 /* ---------------------------------------------------------------------------------- */
@@ -186,6 +186,17 @@ module.exports = {
         "cryptoPanicKey": "d84d1d92b8a88c279d01b624bf1079ca2421bbea",
         "coingeckoPriceAPI": "https://api.coingecko.com/api/v3/simple/price",
         'coingeckoTicker': "XXX" //This is the coins ticker that must be all lower case IE:(news24) and not (News24)
+    },
+
+/* ---------------------------------------------------------------------------------- */
+    // Donation Address'
+/* ---------------------------------------------------------------------------------- */
+
+    "donations": {
+        "coinDonateAddress": "XXX", // Address for donations
+        "btcDonateAddress": "3HHtWL1oxsynQ4Bf9u6LEsGNaWHf5ptHbv", // BTC Address for donations
+        "ltcDonateAddress": "M8FwP7eRySXMW8X6zcLCZwFgXWeVrQyAAk", // LTC Address for donations
+        "ethDonateAddress": "0x895C78233AC8c3FB470959Ad522829335Ed7ed50", // ETH Address for donations
     },
 
 /* ---------------------------------------------------------------------------------- */
@@ -341,8 +352,11 @@ module.exports = {
         },
         "donate": {
             "title":"Donate",
-            "address":"Address",
-            "description":"Feel free to send a tip to the following address if you want to support the bot creator. Thank you! :o)"
+            "coinsAddress": "Coin Address",
+            "btcAddress": "BTC Address",
+            "ltcAddress": "LTC Address",
+            "ethAddress": "ETH Address",
+            "description":"Feel free to send a tip to the following address' if you want to support the bot creator. Thank you! :o)"
         },
         "drop": {
             "private":"Please use the public chat to drop.",

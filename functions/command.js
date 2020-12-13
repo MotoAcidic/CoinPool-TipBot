@@ -405,7 +405,17 @@ module.exports = {
     /* ------------------------------------------------------------------------------ */
 
     command_donate: function(userID,userName,messageType,msg){
-        chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,config.messages.donate.title,[[config.messages.donate.address,config.wallet.donateAddress,false]],config.messages.donate.description,false,config.wallet.thumbnailIcon,'http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl='+config.wallet.donateAddress+'&choe=UTF-8&chld=L',false);
+        chat.chat_reply(msg, 'embed', userName, messageType, config.colors.success, false, config.messages.donate.title,
+            [
+                [config.messages.donate.coinsAddress, config.donations.coinDonateAddress, true],
+                [config.messages.donate.btcAddress, config.donations.btcDonateAddress, true],
+                [config.messages.donate.ltcAddress, config.donations.ltcDonateAddress, true],
+                [config.messages.donate.ethAddress, config.donations.ethDonateAddress, true]
+            ],
+              config.messages.donate.description, false, config.wallet.thumbnailIcon,
+            //'http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=' + config.donations.btcDonateAddress + '&choe=UTF-8&chld=L', false);
+            'https://www.bitcoinqrcodemaker.com/api/?style=bitcoin&color=1&border=3&address=' + config.donations.btcDonateAddress + '&choe=UTF-8&chld=L', false);
+        
         return;
     },
 
