@@ -174,8 +174,9 @@ module.exports = {
 /* ---------------------------------------------------------------------------------- */
     // Links used in API calls
 /* ---------------------------------------------------------------------------------- */
-    "apiLinks": {       
+    "apiLinks": {
         "hasExplorerAPI": "true", //Enable explorer api (true is yes, false is no)
+        "useNormalExplorer": "true", // The base liquidis explorer every project uses
         "useBlockBook": "false", //To use Block Book api for explorer calls instead of the normal explorer link
         "explorerAPI": "https://explorer.link/api/",
         "blockBookAPI": "https://blockbook.scryptachain.org/api/v2/",

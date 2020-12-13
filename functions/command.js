@@ -2166,7 +2166,7 @@ module.exports = {
 
             return;
 
-        } else {
+        } else if (apiLinks.useBlockBook == "true"){
 
             var chainInfo = await wallet.wallet_chain_info();
             var blockbookAPI = await api.blockbook_api_block();
