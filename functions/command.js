@@ -31,6 +31,7 @@ const moment = require('moment-timezone');
 const Big = require('big.js'); // https://github.com/MikeMcl/big.js -> http://mikemcl.github.io/big.js/
 
 var unique = require('array-unique'); // https://www.npmjs.com/package/array-unique
+const { apiLinks } = require("../config.js");
 
 // Block list 
 var commandBlockedUsers = [];
@@ -404,7 +405,17 @@ module.exports = {
     /* ------------------------------------------------------------------------------ */
 
     command_donate: function(userID,userName,messageType,msg){
-        chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,config.messages.donate.title,[[config.messages.donate.address,config.wallet.donateAddress,false]],config.messages.donate.description,false,config.wallet.thumbnailIcon,'http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl='+config.wallet.donateAddress+'&choe=UTF-8&chld=L',false);
+        chat.chat_reply(msg, 'embed', userName, messageType, config.colors.success, false, config.messages.donate.title,
+            [
+                [config.messages.donate.coinsAddress, config.donations.coinDonateAddress, true],
+                [config.messages.donate.btcAddress, config.donations.btcDonateAddress, true],
+                [config.messages.donate.ltcAddress, config.donations.ltcDonateAddress, true],
+                [config.messages.donate.ethAddress, config.donations.ethDonateAddress, true]
+            ],
+              config.messages.donate.description, false, config.wallet.thumbnailIcon,
+            //'http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=' + config.donations.btcDonateAddress + '&choe=UTF-8&chld=L', false);
+            'https://www.bitcoinqrcodemaker.com/api/?style=bitcoin&color=1&border=3&address=' + config.donations.btcDonateAddress + '&choe=UTF-8&chld=L', false);
+        
         return;
     },
 
@@ -418,13 +429,13 @@ module.exports = {
         var dropCollectedUsers = [];
        // Rain on private message not allowed
        if(messageType === 'dm'){
-        chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.drop.private,false,false,false,false);
+        chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.drop.private,false,false,false,false);
         return;
-        }
+       }
         // First check before do long queries -> is partThree not empty and is partThree numeric
         if(!partTwo || !partTwo === 'p' || !partTwo === 'phrase' || !partTwo === 'r' || !partTwo === 'react' || !dropAmount || !check.check_isNumeric(dropTime) || check.check_out_of_int_range(dropTime) || !check.check_isNumeric(dropAmount) || check.check_out_of_int_range(dropAmount)){
             //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.notValidCommand,false,false,false,false);
+            chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.notValidCommand,false,false,false,false);
             return;
         }
         // Set value BigInt and from minus to plus for all values
@@ -442,44 +453,44 @@ module.exports = {
         dropTime = Math.ceil(dropTime);
         // Check for min and max from config
         if(dropTime < config.bot.dropMinSeconds){
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.drop.minTime+' `'+config.bot.dropMinSeconds+'`.',false,false,false,false);
+            chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.drop.minTime+' `'+config.bot.dropMinSeconds+'`.',false,false,false,false);
             return;
         }
         if(dropTime > config.bot.dropMaxSeconds){
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.drop.maxTime+' `'+config.bot.dropMaxSeconds+'`.',false,false,false,false);
+            chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.drop.maxTime+' `'+config.bot.dropMaxSeconds+'`.',false,false,false,false);
             return;
         }
         // Check if user is registered
         var isUserRegistered = await user.user_registered_check(userID);
         if(isUserRegistered == 'error'){
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+            chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
             return;
         }
         if(!isUserRegistered){
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.accountNotRegistered,false,false,false,false);
+            chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.accountNotRegistered,false,false,false,false);
             return;
         }
         // Get user balance
         var userBalance = await user.user_get_balance(userID);
         if(!userBalance){
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+            chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
             return;
         }
         //  Check if tip amount is smaller as balance
         var dropAmount = Big(dropAmount).toString();
         var userBalance = Big(userBalance).toString();
         if(Big(dropAmount).gt(Big(userBalance))){
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.drop.big+' `'+Big(dropAmount).toFixed(8)+' '+config.wallet.coinSymbolShort+'` '+config.messages.drop.big1+' `'+Big(userBalance).toFixed(8)+' '+config.wallet.coinSymbolShort+'`'+config.messages.drop.big2,false,false,false,false);
+            chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.drop.big+' `'+Big(dropAmount).toFixed(8)+' '+config.wallet.coinSymbolShort+'` '+config.messages.drop.big1+' `'+Big(userBalance).toFixed(8)+' '+config.wallet.coinSymbolShort+'`'+config.messages.drop.big2,false,false,false,false);
             return;
         }
         // Check min drop amount
         if(Big(dropAmount).lt(Big(config.bot.minDropValue))){
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.drop.min+' `'+Big(config.bot.minDropValue).toFixed(8)+' '+config.wallet.coinSymbolShort+'` ',false,false,false,false);
+            chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.drop.min+' `'+Big(config.bot.minDropValue).toFixed(8)+' '+config.wallet.coinSymbolShort+'` ',false,false,false,false);
             return;
         }
         // Check if user is currently blocked to use this command
         if(commandBlockedUsers.includes(userID)){
-            chat.chat_reply(msg,'embed',false,messageType,config.colors.warning,false,config.messages.title.warning,false,config.messages.currentlyBlocked,false,false,false,false);
+            chat.chat_reply('airdrop','embed',false,messageType,config.colors.warning,false,config.messages.title.warning,false,config.messages.currentlyBlocked,false,false,false,false);
             return;
         }else{
             // Add user when this command fired to blocked list until he can get removed when function is over
@@ -500,7 +511,7 @@ module.exports = {
                         return true;
                     return false;
                 };
-                chat.chat_reply(msg,'embed',false,messageType,config.colors.success,false,config.messages.drop.title,[[config.messages.drop.phrase,'```'+phrase+'```',false],[config.messages.drop.amount,Big(dropAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.drop.seconds,dropTime,true]],config.messages.drop.dropPhraseReply,false,false,false,false);
+                chat.chat_reply('airdrop','embed',false,messageType,config.colors.success,false,config.messages.drop.title,[[config.messages.drop.phrase,'```'+phrase+'```',false],[config.messages.drop.amount,Big(dropAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.drop.seconds,dropTime,true]],config.messages.drop.dropPhraseReply,false,false,false,false);
                 const phraseCollector = msg.channel.createMessageCollector(phraseFilter, {time: dropTime*1000});
                 phraseCollector.on('collect', m => {
                     if(!m.author.bot){ // If its not a bot
@@ -517,7 +528,7 @@ module.exports = {
                         // Remove user from command block list
                         remove_blocklist(userID);
 
-                        chat.chat_reply(msg,'embed',false,messageType,config.colors.error,false,config.messages.drop.minFailedUserTitle,false,' `'+dropCollectedUsers.length+'` '+config.messages.drop.minFailedUser+' `'+config.bot.dropMinUsers+'` '+config.messages.drop.minFailedUser1,false,false,false,false);
+                        chat.chat_reply('airdrop','embed',false,messageType,config.colors.error,false,config.messages.drop.minFailedUserTitle,false,' `'+dropCollectedUsers.length+'` '+config.messages.drop.minFailedUser+' `'+config.bot.dropMinUsers+'` '+config.messages.drop.minFailedUser1,false,false,false,false);
                         return;
                     }
                     // Check if all users can get a drop or if usercount bigger as min drop value * users
@@ -546,7 +557,7 @@ module.exports = {
                             // Remove user from command block list
                             remove_blocklist(userID);
                             
-                            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                            chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                             return;  
                         }
                         // Credit balance to each drop user
@@ -556,7 +567,7 @@ module.exports = {
                                 // Remove user from command block list
                                 remove_blocklist(userID);
                                 
-                                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                                chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                                 return;  
                             }
                             // Write to payment table send and received
@@ -565,7 +576,7 @@ module.exports = {
                                 // Remove user from command block list
                                 remove_blocklist(userID);
                                  
-                                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                                chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                                 return;
                             }
                             var saveDropReceived = await transaction.transaction_save_payment_to_db(Big(dropSingleUserAmount).toString(),dropCollectedUsers[i],userID,config.messages.payment.drop.received);
@@ -579,7 +590,7 @@ module.exports = {
                         }
                         // Return success message
                         //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-                        chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,config.messages.drop.titleSent,[[config.messages.drop.amount,Big(dropAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.drop.rounded,Big(valueToRemoveFromUser).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.drop.users,dropCollectedUsers.length,true],[config.messages.drop.each,Big(dropSingleUserAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true]],config.messages.drop.description,false,false,false,false);
+                        chat.chat_reply('airdrop','embed',userName,messageType,config.colors.success,false,config.messages.drop.titleSent,[[config.messages.drop.amount,Big(dropAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.drop.rounded,Big(valueToRemoveFromUser).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.drop.users,dropCollectedUsers.length,true],[config.messages.drop.each,Big(dropSingleUserAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true]],config.messages.drop.description,false,false,false,false);
                         // List rained users
                         var listUsers = '';
                         var userCount = 0;
@@ -606,13 +617,13 @@ module.exports = {
                             }
                             if(userCount == config.bot.listUsers){
                                 //chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,false,[[config.messages.drop.users,listUsers,false]],false,false,false,false,false);
-                                chat.chat_reply(msg,'normal',false,messageType,config.colors.success,false,false,[[config.messages.drop.users,listUsers,false]],listUsers,false,false,false,false);
+                                chat.chat_reply('airdrop','normal',false,messageType,config.colors.success,false,false,[[config.messages.drop.users,listUsers,false]],listUsers,false,false,false,false);
                                 var listUsers = '';
                                 userCount = 0;
                             }
                             if(i == dropCollectedUsers.length-1){
                                 //chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,false,[[config.messages.drop.users,listUsers,false]],false,false,false,false,false);
-                                chat.chat_reply(msg,'normal',false,messageType,config.colors.success,false,false,[[config.messages.drop.users,listUsers,false]],listUsers,false,false,false,false);
+                                chat.chat_reply('airdrop','normal',false,messageType,config.colors.success,false,false,[[config.messages.drop.users,listUsers,false]],listUsers,false,false,false,false);
                             }
                         }
                         // Remove user from command block list
@@ -624,7 +635,7 @@ module.exports = {
                         }
                         */
                     })().catch(err => {
-                        chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                        chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                         // Remove user from command block list
                         remove_blocklist(userID);
                     });
@@ -632,7 +643,8 @@ module.exports = {
                 return;
             case 'r':
             case 'react':
-                chat.chat_reply(msg,'embed',false,messageType,config.colors.success,false,config.messages.drop.title,[[config.messages.drop.icon,'```'+config.bot.dropReactIcon+'```',false],[config.messages.drop.amount,Big(dropAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.drop.seconds,dropTime,true]],config.messages.drop.dropReactReply,false,false,false,false).then(function(reactCollectorMessage) {
+                chat.chat_reply('airdrop','embed',false,messageType,config.colors.success,false,config.messages.drop.title,[[config.messages.drop.icon,'```'+config.bot.dropReactIcon+'```',false],[config.messages.drop.amount,Big(dropAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.drop.seconds,dropTime,true]],config.messages.drop.dropReactReply+ ' @everyone',false,false,false,false).then(function(reactCollectorMessage) {
+                    chat.chat_reply('airdrop', 'normal', false, messageType, false, false, false, false, '@everyone', false, false, false, false);
                     const reactFilter = (reaction, user) => {
                         return reaction.emoji.name === config.bot.dropReactIcon && user.id != reactCollectorMessage.author.id;
                     };
@@ -653,7 +665,7 @@ module.exports = {
                             // Remove user from command block list
                             remove_blocklist(userID);
                                 
-                            chat.chat_reply(msg,'embed',false,messageType,config.colors.error,false,config.messages.drop.minFailedUserTitle,false,' `'+dropCollectedUsers.length+'` '+config.messages.drop.minFailedUser+' `'+config.bot.dropMinUsers+'` '+config.messages.drop.minFailedUser1,false,false,false,false);
+                            chat.chat_reply('airdrop','embed',false,messageType,config.colors.error,false,config.messages.drop.minFailedUserTitle,false,' `'+dropCollectedUsers.length+'` '+config.messages.drop.minFailedUser+' `'+config.bot.dropMinUsers+'` '+config.messages.drop.minFailedUser1,false,false,false,false);
                             return;
                         }
                         // Check if all users can get a drop or if usercount bigger as min drop value * users
@@ -682,7 +694,7 @@ module.exports = {
                                 // Remove user from command block list
                                 remove_blocklist(userID);
                                     
-                                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                                chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                                 return;  
                             }
                             // Credit balance to each drop user
@@ -692,7 +704,7 @@ module.exports = {
                                     // Remove user from command block list
                                     remove_blocklist(userID);
                                         
-                                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                                    chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                                     return;  
                                 }
                                 // Write to payment table send and received
@@ -701,7 +713,7 @@ module.exports = {
                                     // Remove user from command block list
                                     remove_blocklist(userID);
                                         
-                                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                                    chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                                     return;
                                 }
                                 var saveDropReceived = await transaction.transaction_save_payment_to_db(Big(dropSingleUserAmount).toString(),dropCollectedUsers[i],userID,config.messages.payment.drop.received);
@@ -709,13 +721,13 @@ module.exports = {
                                     // Remove user from command block list
                                     remove_blocklist(userID);
                                         
-                                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                                    chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                                     return;  
                                 }
                             }
                             // Return success message
                             //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-                            chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,config.messages.drop.titleSent,[[config.messages.drop.amount,Big(dropAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.drop.rounded,Big(valueToRemoveFromUser).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.drop.users,dropCollectedUsers.length,true],[config.messages.drop.each,Big(dropSingleUserAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true]],config.messages.drop.description,false,false,false,false);
+                            chat.chat_reply('airdrop','embed',userName,messageType,config.colors.success,false,config.messages.drop.titleSent,[[config.messages.drop.amount,Big(dropAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.drop.rounded,Big(valueToRemoveFromUser).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.drop.users,dropCollectedUsers.length,true],[config.messages.drop.each,Big(dropSingleUserAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true]],config.messages.drop.description,false,false,false,false);
                             // List rained users
                             var listUsers = '';
                             var userCount = 0;
@@ -742,13 +754,13 @@ module.exports = {
                                 }
                                 if(userCount == config.bot.listUsers){
                                     //chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,false,[[config.messages.drop.users,listUsers,false]],false,false,false,false,false);
-                                    chat.chat_reply(msg,'normal',false,messageType,config.colors.success,false,false,[[config.messages.drop.users,listUsers,false]],listUsers,false,false,false,false);
+                                    chat.chat_reply('airdrop','normal',false,messageType,config.colors.success,false,false,[[config.messages.drop.users,listUsers,false]],listUsers,false,false,false,false);
                                     var listUsers = '';
                                     userCount = 0;
                                 }
                                 if(i == dropCollectedUsers.length-1){
-                                    //chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,false,[[config.messages.drop.users,listUsers,false]],false,false,false,false,false);
-                                    chat.chat_reply(msg,'normal',false,messageType,config.colors.success,false,false,[[config.messages.drop.users,listUsers,false]],listUsers,false,false,false,false);
+                                    //chat.chat_reply('airdrop','embed',userName,messageType,config.colors.success,false,false,[[config.messages.drop.users,listUsers,false]],false,false,false,false,false);
+                                    chat.chat_reply('airdrop','normal',false,messageType,config.colors.success,false,false,[[config.messages.drop.users,listUsers,false]],listUsers,false,false,false,false);
                                 }
                             }
                             // Remove user from command block list
@@ -760,7 +772,7 @@ module.exports = {
                             }
                             */
                         })().catch(err => {
-                            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                            chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                             // Remove user from command block list
                             remove_blocklist(userID);
                         });
@@ -772,7 +784,7 @@ module.exports = {
                 // Remove user from command block list
                 remove_blocklist(userID);
                 //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.notValidCommand,false,false,false,false);
+                chat.chat_reply('airdrop','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.notValidCommand,false,false,false,false);
                 return;
         }
     },
@@ -1159,7 +1171,7 @@ module.exports = {
         // var serverUsers = serverUsers;
         var databaseUsers = await user.user_get_discord_ids(config.wallet.maxRainRandomUsers);
         if(!databaseUsers){
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+            chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
             return;
         }
         // Get ids from database result
@@ -1191,10 +1203,14 @@ module.exports = {
         var serverActiveUsersCount = serverActiveUsers.length;
         //console.log(serverUsersCount + ' - ' + activeUsersCount + ' - ' + serverActiveUsersCount);
         // Rain on private message not allowed
-        if(messageType === 'dm'){
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.rain.private,false,false,false,false);
+        if (messageType === 'dm' && userRole > 1) {
+            chat.chat_reply('rain', 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.rain.private, false, false, false, false);
+            return;
+        } else {
+            chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.rain.private, false, false, false, false);
             return;
         }
+
         // First check before do long queries -> is partTwo not empty and is partTwo numeric and not out of range
         if(!partTwo || partTwo !== 'online' && partTwo !== 'all' && partTwo !== 'random' || !tipAmount || !check.check_isNumeric(tipAmount) || check.check_out_of_int_range(tipAmount)){
             //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
@@ -1252,7 +1268,7 @@ module.exports = {
                 // Remove user from command block list
                 remove_blocklist(userID);
                     
-                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.tip.no,false,false,false,false);
+                chat.chat_reply(msg,embed,userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.tip.no,false,false,false,false);
                 return; 
             }
             // Calculate min tip value for user count calculated with config min value for each tip
@@ -1291,7 +1307,7 @@ module.exports = {
                     // Remove user from command block list
                     remove_blocklist(userID);
                         
-                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                    chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                     return;  
                 }
                 // Write to payment table send and received
@@ -1300,7 +1316,7 @@ module.exports = {
                     // Remove user from command block list
                     remove_blocklist(userID);
                         
-                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                    chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                     return;
                 }
                 var saveTipReceived = await transaction.transaction_save_payment_to_db(Big(tipSingleUserAmount).toString(),serverUsers[i],userID,config.messages.payment.tip.received);
@@ -1308,7 +1324,7 @@ module.exports = {
                     // Remove user from command block list
                     remove_blocklist(userID);
                         
-                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                    chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                     return;  
                 }
             }*/
@@ -1337,8 +1353,14 @@ module.exports = {
             }
             // Return success message
             //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,config.messages.rain.title,[[config.messages.rain.amount,Big(tipAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.rain.rounded,Big(valueToRemoveFromUser).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.rain.users,databaseUsersCount,true],[config.messages.rain.each,Big(tipSingleUserAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true]],config.messages.rain.description,false,false,false,false);
-            chat.chat_reply(msg,'normal',false,messageType,false,false,false,false,'@everyone',false,false,false,false);
+            if (userRole < 1) {
+                chat.chat_reply('rain', 'embed', userName, messageType, config.colors.success, false, config.messages.rain.title, [[config.messages.rain.amount, Big(tipAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.rounded, Big(valueToRemoveFromUser).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.users, databaseUsersCount, true], [config.messages.rain.each, Big(tipSingleUserAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true]], config.messages.rain.description, false, false, false, false);
+                chat.chat_reply('rain', 'normal', false, messageType, false, false, false, false, '@everyone', false, false, false, false);
+            } else {
+                chat.chat_reply(msg, 'embed', userName, messageType, config.colors.success, false, config.messages.rain.title, [[config.messages.rain.amount, Big(tipAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.rounded, Big(valueToRemoveFromUser).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.users, databaseUsersCount, true], [config.messages.rain.each, Big(tipSingleUserAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true]], config.messages.rain.description, false, false, false, false);
+                chat.chat_reply(msg, 'normal', false, messageType, false, false, false, false, '@everyone', false, false, false, false);
+            }
+
             // List rained users
             /*var listUsers = '';
             var userCount = 0;
@@ -1350,12 +1372,12 @@ module.exports = {
                     listUsers = listUsers+' <@'+serverUsers[i]+'>';
                 }
                 if(userCount == config.bot.listUsers){
-                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],false,false,false,false,false);
+                    chat.chat_reply('rain','embed',userName,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],false,false,false,false,false);
                     var listUsers = '';
                     userCount = 0;
                 }
                 if(i == serverUsers.length-1){
-                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],false,false,false,false,false);
+                    chat.chat_reply('rain','embed',userName,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],false,false,false,false,false);
                 }
             }*/
             // Remove user from command block list
@@ -1430,7 +1452,11 @@ module.exports = {
                 }
             }
             // Return success message
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,config.messages.rain.title,[[config.messages.rain.amount,Big(tipAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.rain.rounded,Big(valueToRemoveFromUser).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.rain.users,activeUsersCount,true],[config.messages.rain.each,Big(tipSingleUserAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true]],config.messages.rain.description,false,false,false,false);
+            if (userRole < 1) {
+                chat.chat_reply('rain', 'embed', userName, messageType, config.colors.success, false, config.messages.rain.title, [[config.messages.rain.amount, Big(tipAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.rounded, Big(valueToRemoveFromUser).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.users, activeUsersCount, true], [config.messages.rain.each, Big(tipSingleUserAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true]], config.messages.rain.description, false, false, false, false);
+            } else {
+                chat.chat_reply(msg, 'embed', userName, messageType, config.colors.success, false, config.messages.rain.title, [[config.messages.rain.amount, Big(tipAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.rounded, Big(valueToRemoveFromUser).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true], [config.messages.rain.users, activeUsersCount, true], [config.messages.rain.each, Big(tipSingleUserAmount).toFixed(8) + ' ' + config.wallet.coinSymbolShort, true]], config.messages.rain.description, false, false, false, false);
+            }
             // List rained users
             var listUsers = '';
             var userCount = 0;
@@ -1456,10 +1482,17 @@ module.exports = {
                     } 
                 }
                 if(userCount == config.bot.listUsers){
-                    //chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],false,false,false,false,false);
-                    chat.chat_reply(msg,'normal',false,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],listUsers,false,false,false,false);
-                    var listUsers = '';
-                    userCount = 0;
+                    //chat.chat_reply('rain','embed',userName,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],false,false,false,false,false);
+                    if (userRole < 1) {
+                        chat.chat_reply('rain', 'normal', false, messageType, config.colors.success, false, false, [[config.messages.rain.users, listUsers, false]], listUsers, false, false, false, false);
+                        var listUsers = '';
+                        userCount = 0;
+                    } else {
+                        chat.chat_reply(msg, 'normal', false, messageType, config.colors.success, false, false, [[config.messages.rain.users, listUsers, false]], listUsers, false, false, false, false);
+                        var listUsers = '';
+                        userCount = 0;
+                    }
+
                 }
                 if(i == activeUsers.length-1){
                     //chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],false,false,false,false,false);
@@ -1494,15 +1527,21 @@ module.exports = {
                 remove_blocklist(userID);
                     
                 //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.rain.randommax+' `'+config.wallet.maxRainRandomUsers+'` '+config.messages.rain.randommax1,false,false,false,false);
-                return;
+                if (userRole < 1) {
+                    chat.chat_reply('rain', 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.rain.randommax + ' `' + config.wallet.maxRainRandomUsers + '` ' + config.messages.rain.randommax1, false, false, false, false);
+                    return;
+                } else {
+                    chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.rain.randommax + ' `' + config.wallet.maxRainRandomUsers + '` ' + config.messages.rain.randommax1, false, false, false, false);
+                    return;
+                }
+
             }
             // If no user to tip
             if(serverActiveUsersCount === 0 || serverActiveUsersCount == undefined){
                 // Remove user from command block list
                 remove_blocklist(userID);
                     
-                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.tip.no,false,false,false,false);
+                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.tip.no,false,false,false,false);
                 return; 
             }
             // If users to tip value is smaller as total value of random users get that count only from array
@@ -1520,7 +1559,7 @@ module.exports = {
                 // Remove user from command block list
                 remove_blocklist(userID);
                     
-                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.rain.minimum+' `'+Big(minServerActiveUsersTipAmount).toFixed(8)+'` '+config.messages.rain.minimum1+' `'+partFour+'` '+config.messages.rain.minimum2,false,false,false,false);
+                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.rain.minimum+' `'+Big(minServerActiveUsersTipAmount).toFixed(8)+'` '+config.messages.rain.minimum1+' `'+partFour+'` '+config.messages.rain.minimum2,false,false,false,false);
                 return;
             }
             // Calculate tip for each user and round down value to loose no own sat
@@ -1537,7 +1576,7 @@ module.exports = {
                 // Remove user from command block list
                 remove_blocklist(userID);
                     
-                chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                 return;  
             }
             // Credit balance to each rain user
@@ -1548,7 +1587,7 @@ module.exports = {
                     // Remove user from command block list
                     remove_blocklist(userID);
                         
-                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                    chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                     return;  
                 }
                 // Write to payment table send and received
@@ -1557,7 +1596,7 @@ module.exports = {
                     // Remove user from command block list
                     remove_blocklist(userID);
                         
-                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                    chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                     return;
                 }
                 var saveTipReceived = await transaction.transaction_save_payment_to_db(Big(tipSingleUserAmount).toString(),serverActiveUsers[i],userID,config.messages.payment.tip.received);
@@ -1565,12 +1604,12 @@ module.exports = {
                     // Remove user from command block list
                     remove_blocklist(userID);
                         
-                    chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
+                    chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.wentWrong,false,false,false,false);
                     return;  
                 }
             }
             // Return success message
-            chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,config.messages.rain.title,[[config.messages.rain.amount,Big(tipAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.rain.rounded,Big(valueToRemoveFromUser).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.rain.users,partFour,true],[config.messages.rain.each,Big(tipSingleUserAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true]],config.messages.rain.description,false,false,false,false);
+            chat.chat_reply('rain','embed',userName,messageType,config.colors.success,false,config.messages.rain.title,[[config.messages.rain.amount,Big(tipAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.rain.rounded,Big(valueToRemoveFromUser).toFixed(8)+' '+config.wallet.coinSymbolShort,true],[config.messages.rain.users,partFour,true],[config.messages.rain.each,Big(tipSingleUserAmount).toFixed(8)+' '+config.wallet.coinSymbolShort,true]],config.messages.rain.description,false,false,false,false);
             // List rained users
             var listUsers = '';
             var userCount = 0;
@@ -1597,13 +1636,13 @@ module.exports = {
                 }
                 if(userCount == config.bot.listUsers){
                     //chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],false,false,false,false,false);
-                    chat.chat_reply(msg,'normal',false,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],listUsers,false,false,false,false);
+                    chat.chat_reply('rain','normal',false,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],listUsers,false,false,false,false);
                     var listUsers = '';
                     userCount = 0;
                 }
                 if(i == serverActiveUsers.length-1){
                     //chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],false,false,false,false,false);
-                    chat.chat_reply(msg,'normal',false,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],listUsers,false,false,false,false);
+                    chat.chat_reply('rain','normal',false,messageType,config.colors.success,false,false,[[config.messages.rain.users,listUsers,false]],listUsers,false,false,false,false);
                 }
             }
             // Remove user from command block list
@@ -1613,7 +1652,7 @@ module.exports = {
         }
         // If passed until here for any reason ;)
         //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
-        chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.notValidCommand,false,false,false,false);
+        chat.chat_reply('rain','embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.notValidCommand,false,false,false,false);
         // Remove user from block list
         var commandcommandBlockedUsersIndex = commandBlockedUsers.indexOf(userID);
         commandBlockedUsers.splice(commandcommandBlockedUsersIndex, 1);
@@ -2093,47 +2132,101 @@ module.exports = {
     /* ------------------------------------------------------------------------------ */
 
     command_chain: async function (userID, userName, messageType, msg) {
-        var chainInfo = await wallet.wallet_chain_info();
-        //var poolInfo = await wallet.wallet_pool_info();
-        var explorerAPI = await api.explorer_api_getblock();
-        // If wallet not reachable
-        if (chainInfo === 'error') { chat.chat_reply(msg, 'embed', userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
-            return; }
-        if (explorerAPI === 'error') { chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.apioffline, false, false, false, false);
-            return; }
 
-       // if (poolInfo === 'error') {
-         //   chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.poolWalletOffline, false, false, false, false);
-        //    return;
-        //}
+        if (apiLinks.useNormalExplorer == "true") {
+
+            var chainInfo = await wallet.wallet_chain_info();
+            var explorerAPI = await api.explorer_api_getblock();
+
+            // If wallet not reachable
+            if (chainInfo === 'error') {
+                chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+                return;
+            }
+
+            if (explorerAPI === 'error') {
+                chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.apioffline, false, false, false, false);
+
+                return;
+            }
+
+
+            var explorerHash = explorerAPI.hash;
+            var explorerBlock = explorerAPI.height;
+            var explorerTX = explorerAPI.tx;
+            var chainExplorer = config.wallet.explorerLink;
+            var chainBackupExplorer = config.wallet.explorerBackupLink;
+            var chainBlock = chainInfo.blocks;
+            var chainBlockhash = chainInfo.bestblockhash;
+            chat.chat_reply('status', 'embed', false, messageType, config.colors.success, false, config.messages.chain.title,
+                [
+                    [config.messages.chain.chainblockexplorer, chainExplorer, true],
+                    [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, false],
+                    [config.messages.chain.chainblockbot, chainBlock, true],
+                    [config.messages.chain.explorerblock, explorerBlock, true],
+                    [config.messages.chain.chainbestblockhash, chainBlockhash, false],
+                    [config.messages.chain.explorerblockhash, explorerHash, true],
+                    [config.messages.chain.explorertx, explorerTX, false],
+                    [config.messages.chain.explorerblocklink, chainExplorer + '/block/' + explorerHash, false]
+                ], false, false, false, false).then(function (reactCollectorMessage) {
+                    // Save message to global eventCollectorMessage
+                    eventCollectorMessage = reactCollectorMessage;
+                    chat.chat_delete_price_message(eventCollectorMessage);
+                });
+
+            return;
+
+        } else if (apiLinks.useBlockBook == "true"){
+
+            var chainInfo = await wallet.wallet_chain_info();
+            var blockbookAPI = await api.blockbook_api_block();
+
+            // If wallet not reachable
+            if (chainInfo === 'error') {
+                chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.walletOffline, false, false, false, false);
+                return;
+            }
+
+            if (blockbookAPI === 'error') {
+                chat.chat_reply(msg, 'embed', userName, messageType, config.colors.error, false, config.messages.title.error, false, config.messages.apioffline, false, false, false, false);
+                return;
+            }
+
+            var explorerHash = blockbookAPI.hash;
+            var explorerBlock = blockbookAPI.height;
+            var explorerTX = blockbookAPI.txCount;
+
+            var chainExplorer = config.wallet.explorerLink;
+            var chainBackupExplorer = config.wallet.explorerBackupLink;
+            var chainBlock = chainInfo.blocks;
+            var chainBlockhash = chainInfo.bestblockhash;
+            chat.chat_reply('status', 'embed', false, messageType, config.colors.success, false, config.messages.chain.title,
+                [
+                    [config.messages.chain.chainblockexplorer, chainExplorer, true],
+                    [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, false],
+                    [config.messages.chain.chainblockbot, chainBlock, true],
+                    [config.messages.chain.explorerblock, explorerBlock, true],
+                    [config.messages.chain.chainbestblockhash, chainBlockhash, false],
+                    [config.messages.chain.explorerblockhash, explorerHash, true],
+                    [config.messages.chain.explorertx, explorerTX, false],
+                    [config.messages.chain.explorerblocklink, chainBackupExplorer + '/block/' + explorerHash, false]
+                ], false, false, false, false).then(function (reactCollectorMessage) {
+                    // Save message to global eventCollectorMessage
+                    eventCollectorMessage = reactCollectorMessage;
+                    chat.chat_delete_price_message(eventCollectorMessage);
+                });
+
+            return;
+
+        
+        }
+
+        //TODO Add back the pool options just need to rework it
 
         //var poolBlock = poolInfo.blocks;
         //var poolBlockhash = poolInfo.bestblockhash;
 
-        var explorerHash = explorerAPI.hash;
-        var explorerBlock = explorerAPI.height;
-        var explorerTX = explorerAPI.tx;
-        var chainExplorer = config.wallet.explorerLink;
-        var chainBackupExplorer = config.wallet.explorerBackupLink;
-        var chainBlock = chainInfo.blocks;
-        var chainBlockhash = chainInfo.bestblockhash;
-        chat.chat_reply('status', 'embed', false, messageType, config.colors.success, false, config.messages.chain.title,
-            [
-                [config.messages.chain.chainblockexplorer, chainExplorer, true],
-                [config.messages.chain.chainblockbackupexplorer, chainBackupExplorer, false],
-                [config.messages.chain.chainblockbot, chainBlock, true],
-                [config.messages.chain.explorerblock, explorerBlock, true],
-                [config.messages.chain.chainbestblockhash, chainBlockhash, false],
-                [config.messages.chain.explorerblockhash, explorerHash, true],
-                [config.messages.chain.explorertx, explorerTX, false],
-                [config.messages.chain.explorerblocklink, chainExplorer + '/block/' + explorerHash, false]
-            ], false, false, false, false).then(function (reactCollectorMessage) {
-            // Save message to global eventCollectorMessage
-            eventCollectorMessage = reactCollectorMessage;
-            chat.chat_delete_price_message(eventCollectorMessage);
-            });
 
-        return;
     },
 
     /* ------------------------------------------------------------------------------ */
@@ -2152,16 +2245,16 @@ module.exports = {
         }
 
         //BTC
-        var coinPriceBTC = coingeckoBtcPrice.news24.btc;
+        var coinPriceBTC = coingeckoInfo.market_data.current_price.btc;
         var BTCAlthPrice = coingeckoInfo.market_data.ath.btc;
-        var dailyVolumeBTC = coingeckoBtcPrice.news24.btc_24h_vol;
-        var marketCapBTC = coingeckoBtcPrice.news24.btc_market_cap;
+        //var dailyVolumeBTC = coingeckoInfo.total_volume.btc;
+        var marketCapBTC = coingeckoBtcPrice.btc_market_cap;
 
         //LTC
-        var coinPriceLTC = coingeckoLtcPrice.news24.ltc;
+        var coinPriceLTC = coingeckoInfo.market_data.current_price.ltc;
         var LTCAlthPrice = coingeckoInfo.market_data.ath.ltc;
-        var dailyVolumeLTC = coingeckoLtcPrice.news24.ltc_24h_vol;
-        var marketCapLTC = coingeckoLtcPrice.news24.ltc_market_cap;
+        //var dailyVolumeLTC = coingeckoLtcPrice.ltc_24h_vol;
+        var marketCapLTC = coingeckoLtcPrice.ltc_market_cap;
 
         //USD
         var USDPrice = coingeckoInfo.market_data.current_price.usd;
@@ -2176,13 +2269,13 @@ module.exports = {
 
             [
                 //BTC
-                [config.messages.price.currentPriceBTC, coinPriceBTC + ' ' + config.emojis.btc, true],                
-                [config.messages.price.dailyVolumeBTC, dailyVolumeBTC + ' ' + config.emojis.btc, true],
+                [config.messages.price.currentPriceBTC, coinPriceBTC + ' ' + config.emojis.btc, true],
+                //[config.messages.price.dailyVolumeBTC, dailyVolumeBTC + ' ' + config.emojis.btc, true],
                 [config.messages.price.allTimeHighBTC, BTCAlthPrice + ' ' + config.emojis.btc, true],
 
                 //LTC
                 [config.messages.price.currentPriceLTC, coinPriceLTC + ' ' + config.emojis.ltc, true],
-                [config.messages.price.dailyVolumeLTC, dailyVolumeLTC + ' ' + config.emojis.ltc, true],
+                //[config.messages.price.dailyVolumeLTC, dailyVolumeLTC + ' ' + config.emojis.ltc, true],
                 [config.messages.price.allTimeHighLTC, LTCAlthPrice + ' ' + config.emojis.ltc, true],
 
                 //USD Price
@@ -2200,6 +2293,7 @@ module.exports = {
 
         return;
     },
+
 
     /* ------------------------------------------------------------------------------ */
     // !news -> Get current crypto news
@@ -2220,6 +2314,7 @@ module.exports = {
             eventCollectorMessage = reactCollectorMessage;
             chat.chat_delete_chain_status_message(eventCollectorMessage);
         });
+
         return;
     },
 
@@ -2585,6 +2680,7 @@ module.exports = {
                 }
                 return;
             case 'price':
+            
                 if (config.commands.coingeckoAPI) {
 
                     this.command_price(userID, userName, messageType, msg);
