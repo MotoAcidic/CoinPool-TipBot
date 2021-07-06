@@ -134,8 +134,7 @@ module.exports = {
         }
 
         if (msg == 'rain') {
-            var rainChannel = globalClient.channels.get(config.bot.rainChannelID);
-            return rainChannel.send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
+            return globalClient.channels.get(check.check_getRandomFromArray(config.bot.rainChannelIDs, 1)[0]).send(this.chat_build_reply(replyType, replyUsername, senderMessageType, replyEmbedColor, replyAuthor, replyTitle, replyFields, replyDescription, replyFooter, replyThumbnail, replyImage, replyTimestamp));
         }
 
         if (msg == 'news') {

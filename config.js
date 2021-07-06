@@ -54,7 +54,7 @@ module.exports = {
     /* ------------------------------------------------------------------------------ */
         
         "airDropChannelID": "XXX", //Channel we will use to only allow airdrops in
-        "rainChannelID": "XXX", // Channel we would like to use for rains
+        "rainChannelIDs": ["XXX"], // Channel we would like to use for rains
         "respondChannelIDs": ["XXX"], // Discord server channel IDs the bot does listen to
         "statusChannelIDs": ["XXX"], // Discord server channel IDs the bot will post chain status 
         "priceChannelID": "XXX", // Channel for Crypto prices to be posted in
