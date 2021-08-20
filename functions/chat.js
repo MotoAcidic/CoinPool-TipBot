@@ -183,6 +183,14 @@ module.exports = {
         }
     },
 
+    chat_delete_deposit_address: function (message) {
+
+        try {
+            message.delete(config.cronTimes.depositTimeDelete * 1000);
+        } catch (error) {
+        }
+    },
+
     chat_edit_message: function (messageID, message) {
         try {
             messageID.edit(message);

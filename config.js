@@ -169,6 +169,7 @@ module.exports = {
         "priceCronTime": 180,
         "priceCronTimeDelete": 179,
         "balanceTimeDelete": 10,
+        "depositTimeDelete": 10,
     },
 
 /* ---------------------------------------------------------------------------------- */

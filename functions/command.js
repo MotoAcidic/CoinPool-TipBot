@@ -390,6 +390,9 @@ module.exports = {
         if(!userDepositAddress){
             //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
             chat.chat_reply(msg,'embed',userName,messageType,config.colors.error,false,config.messages.title.error,false,config.messages.walletOffline,false,false,false,false);
+            // Save message to global eventCollectorMessage
+            eventCollectorMessage = reactCollectorMessage;
+            chat.chat_delete_deposit_address(eventCollectorMessage);
             return;
         }else{
             // Write to logs in case of false requests to be able to check
@@ -397,6 +400,9 @@ module.exports = {
             // Display the address
             //msg,replyType,replyUsername,senderMessageType,replyEmbedColor,replyAuthor,replyTitle,replyFields,replyDescription,replyFooter,replyThumbnail,replyImage,replyTimestamp
             chat.chat_reply(msg,'embed',userName,messageType,config.colors.success,false,config.messages.deposit.title,[[config.messages.deposit.address,userDepositAddress,false]],config.messages.deposit.description,false,config.wallet.thumbnailIcon,'http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl='+userDepositAddress+'&choe=UTF-8&chld=L',false);
+            // Save message to global eventCollectorMessage
+            eventCollectorMessage = reactCollectorMessage;
+            chat.chat_delete_deposit_address(eventCollectorMessage);
         }   
     },
 
