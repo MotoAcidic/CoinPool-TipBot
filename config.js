@@ -34,7 +34,8 @@ module.exports = {
     // User ID params
     /* ------------------------------------------------------------------------------ */
          
-        "adminIDs": [ "XXX", "XXX", "XXX" ], // This discrod user IDs are able to use admin commands and bypass cooldowns
+        "adminIDs": ["XXX", "XXX", "XXX"], // This discrod user IDs are able to use admin commands and bypass cooldowns
+        "ownerID": "", // This discrod ID of the owner for staking dev fee
         "moderatorIDs": [ "XXX" ], // This discrod user IDs are able to use moderator commands and bypass cooldowns
         "vipGroupName": "Dev Team", // Users of this group are able to use vip commands and bypass cooldowns
 
